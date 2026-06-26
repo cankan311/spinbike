@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D29 GitHub Claude OFM 3D Hide Fix</title>
+<title>Japan Ride D30 Terrain 3D Toggle</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--display-font:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','Kosugi Maru','M PLUS Rounded 1c','Hiragino Maru Gothic ProN',ui-rounded,sans-serif;--ink:#17202c;--sub:#6f7785;--blue:#2f6bff;--green:#12b77a;--coral:#ff5872;--gold:#d59b2b;--line:#e4e8f0;}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:58px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab,.terrain-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off),.terrain-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err,.terrain-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
 /* D案：Cの整理感 + Bの景色面積。上下とも薄く浮かせる */
 .top{pointer-events:none}.hero{position:relative;border-radius:25px;padding:10px 12px 9px;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(250,252,255,.84));border:1px solid rgba(255,255,255,.88);box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.hero-main{display:flex;align-items:center;gap:10px}.hero-icon{width:42px;height:42px;border-radius:17px;background:linear-gradient(180deg,#fff7d7,#ffe5a0);display:flex;align-items:center;justify-content:center;font-size:23px;border:1px solid #ffdda1;box-shadow:0 6px 14px rgba(213,155,43,.18),inset 0 1px 0 #fff}.eyebrow{font-size:10.5px;color:var(--gold);font-weight:900;letter-spacing:.14em}.landmark{font-family:var(--display-font);font-size:30px;line-height:1.02;font-weight:900;letter-spacing:.045em;color:#111827;-webkit-text-stroke:.35px #111827;text-shadow:0 1.4px 0 rgba(255,255,255,.95),0 4px 11px rgba(20,30,45,.15)}.remain{font-size:13.5px;color:#4a5363;font-weight:900;font-variant-numeric:tabular-nums}.mode{position:absolute;right:10px;top:10px;background:rgba(27,31,39,.68);color:#fff;border-radius:999px;padding:5px 8px;font-size:9.5px;font-weight:900;letter-spacing:.03em;pointer-events:auto;cursor:pointer}.progress{position:relative;height:12px;margin-top:8px}.base,.fill{position:absolute;top:5px;height:4px;border-radius:999px}.base{left:0;right:0;background:#e1e6ef}.fill{left:0;width:0;background:linear-gradient(90deg,#86adff,var(--blue))}.dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:#c7ceda}.dot.small{width:5px;height:5px}.dot.medium{width:9px;height:9px;background:var(--blue);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.dot.large{width:10px;height:10px;background:var(--gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.bike{position:absolute;top:-5px;transform:translateX(-50%);font-size:14px}.subgoals{display:flex;justify-content:space-between;gap:10px;margin-top:5px;color:var(--sub);font-size:10.5px;font-weight:900}.subgoals span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 上部の速度・現在地 */
 .top-chips{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-top:7px}.meter-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(104px,.86fr);gap:6px;margin-bottom:4px}.speed-chip{display:flex;align-items:center;justify-content:center;background:rgba(20,24,32,.92);color:#fff;border-radius:18px;padding:6px 12px;min-width:140px;box-shadow:0 8px 18px rgba(0,0,0,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.speed-num{font-family:var(--display-font);font-size:30px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.speed-unit{font-size:11px;font-weight:900;opacity:.88;margin-left:6px}.place{max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.86);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle{pointer-events:auto;cursor:pointer;border:0;background:rgba(20,24,32,.72);color:#fff;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle.off{background:rgba(255,255,255,.78);color:#111827}.label-toggle.warn{background:#b45309;color:#fff}.ring-card{min-width:0;border-radius:18px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:4px 8px;display:flex;align-items:center;justify-content:center}.ring-wrap{display:flex;align-items:center;gap:8px;width:100%}.ring-svg{width:44px;height:44px;flex:0 0 44px}.ring-track{stroke:#d9deea;stroke-width:7;fill:none}.ring-progress{stroke:#16B978;stroke-width:7;fill:none;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}.ring-value{font-size:16px;font-weight:900;fill:#111827}.ring-labels{min-width:0;display:flex;flex-direction:column;line-height:1}.ring-main{font-size:15px;font-weight:900;color:#111827;font-variant-numeric:tabular-nums}.ring-sub{font-size:8.5px;font-weight:900;color:#6b7280;margin-top:2px}.action-card{padding:0!important;overflow:hidden}.action-btn{width:100%;height:100%;min-height:56px;border:0;border-radius:16px;background:#ff5d6c;color:#fff;font-size:15px;font-weight:900;letter-spacing:.02em;padding:0 8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}.action-btn.stop{background:#ef4444}
 .bottom{pointer-events:none;display:flex;flex-direction:column;gap:3px}.mini-dock{position:relative;pointer-events:auto;border-radius:20px;background:linear-gradient(180deg,rgba(247,249,253,.92),rgba(232,236,245,.88));border:1px solid rgba(255,255,255,.78);box-shadow:0 -5px 18px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:5px 5px 4px}.zone-card{border-radius:17px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 5px 10px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:6px 8px 5px}.zone-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.zone-left{display:flex;align-items:center;gap:8px;min-width:0}.zone-dot{width:14px;height:14px;border-radius:50%;background:#16B978;box-shadow:0 0 0 2px rgba(22,185,120,.12)}.zone-kicker{font-size:9px;font-weight:900;color:var(--sub);letter-spacing:.02em}.zone-main{font-family:var(--display-font);font-size:18px;line-height:1.0;font-weight:900;color:#14b46f;letter-spacing:.02em;white-space:nowrap}.zone-fire{font-size:20px;margin-left:5px}.zone-bpm{display:flex;align-items:flex-end;gap:4px;white-space:nowrap}.zone-bpm .num{font-size:22px;line-height:1;font-weight:900;color:var(--coral);font-variant-numeric:tabular-nums}.zone-bpm .u{font-size:10px;font-weight:900;color:var(--sub);padding-bottom:4px}.zone-line{height:7px;display:flex;gap:5px;margin-top:6px}.zone-seg{flex:1;border-radius:999px;opacity:.22}.zone-seg.active{opacity:1;box-shadow:0 0 0 1px rgba(255,255,255,.8) inset, 0 1px 4px rgba(0,0,0,.08)}.zone-guide{margin-top:4px;font-size:8.8px;line-height:1.2;font-weight:900;color:#596273}.zone-guide .zone-name{display:inline-block;margin-right:6px;color:#111827}.zone-guide .zone-tip{color:#667085}.dock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:4px}.dock-card{min-width:0;border-radius:15px;background:linear-gradient(180deg,#fff,#f6f8fc);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:5px 6px 4px;cursor:pointer}.dock-card.tap{position:relative}.dock-card.tap:after{content:'+';position:absolute;right:8px;top:6px;font-size:12px;font-weight:900;color:#a4abbb}.dock-card.tap.open:after{content:'–'}.label{font-size:8.5px;font-weight:900;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.value{font-size:15px;line-height:1.0;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}.unit{font-size:8px;color:var(--sub);font-weight:900;margin-left:1px}.hr .value{color:var(--coral)}.secondary-wrap{overflow:hidden;max-height:0;opacity:0;transform:translateY(-6px);transition:max-height .24s ease, opacity .2s ease, transform .24s ease}.secondary-wrap.open{max-height:92px;opacity:1;transform:translateY(0)}.mini-note{display:none}.control-row{display:flex;align-items:center;gap:8px;margin-top:4px}.control-row input{width:100%;accent-color:var(--blue);height:18px}.pill{border:0;border-radius:999px;background:#171b23;color:#fff;font-size:8.5px;font-weight:900;padding:5px 8px;white-space:nowrap}.maplibregl-ctrl-bottom-left{display:none!important}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important;right:10px!important;opacity:.78}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}.maplibregl-ctrl-group{border-radius:14px!important;overflow:hidden!important}
-@media(max-height:740px){.right-map-tools{right:10px;bottom:calc(env(safe-area-inset-bottom) + 250px);gap:5px}.recenter-btn{width:42px;height:42px}.recenter-svg{width:42px;height:42px}.building-fab{font-size:9px;padding:6px 8px;min-width:54px}.hero{padding:8px 10px}.hero-icon{width:38px;height:38px;border-radius:15px;font-size:21px}.landmark{font-size:26px}.remain{font-size:12px}.subgoals{font-size:9.5px}.top-chips{margin-top:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(98px,.84fr);gap:5px}.speed-chip{min-width:132px;padding:6px 10px}.speed-num{font-size:28px}.speed-unit{font-size:10px}.ring-svg{width:40px;height:40px}.ring-main{font-size:14px}.action-btn{min-height:52px;font-size:14px}.mini-dock{padding:4px}.zone-main{font-size:17px}.zone-bpm .num{font-size:21px}.dock-grid{gap:4px}.dock-card{padding:4px}.value{font-size:14px}.zone-guide{font-size:8.6px}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important}}@media(max-width:370px){.right-map-tools{right:9px;bottom:calc(env(safe-area-inset-bottom) + 236px);gap:5px}.recenter-btn{width:40px;height:40px}.recenter-svg{width:40px;height:40px}.building-fab{font-size:9px;padding:6px 7px;min-width:52px}.landmark{font-size:25px}.top-chips{gap:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(92px,.82fr);gap:4px}.speed-chip{min-width:118px;padding:5px 8px}.speed-num{font-size:25px}.speed-unit{font-size:9px}.ring-svg{width:38px;height:38px}.ring-main{font-size:13px}.action-btn{min-height:48px;font-size:13px}.dock-grid{grid-template-columns:repeat(3,1fr);gap:4px}.value{font-size:14px}.label{font-size:8px}.place{display:none}.mode{display:none}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}}
+@media(max-height:740px){.right-map-tools{right:10px;bottom:calc(env(safe-area-inset-bottom) + 250px);gap:5px}.recenter-btn{width:42px;height:42px}.recenter-svg{width:42px;height:42px}.building-fab,.terrain-fab{font-size:9px;padding:6px 8px;min-width:58px}.hero{padding:8px 10px}.hero-icon{width:38px;height:38px;border-radius:15px;font-size:21px}.landmark{font-size:26px}.remain{font-size:12px}.subgoals{font-size:9.5px}.top-chips{margin-top:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(98px,.84fr);gap:5px}.speed-chip{min-width:132px;padding:6px 10px}.speed-num{font-size:28px}.speed-unit{font-size:10px}.ring-svg{width:40px;height:40px}.ring-main{font-size:14px}.action-btn{min-height:52px;font-size:14px}.mini-dock{padding:4px}.zone-main{font-size:17px}.zone-bpm .num{font-size:21px}.dock-grid{gap:4px}.dock-card{padding:4px}.value{font-size:14px}.zone-guide{font-size:8.6px}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important}}@media(max-width:370px){.right-map-tools{right:9px;bottom:calc(env(safe-area-inset-bottom) + 236px);gap:5px}.recenter-btn{width:40px;height:40px}.recenter-svg{width:40px;height:40px}.building-fab,.terrain-fab{font-size:9px;padding:6px 7px;min-width:56px}.landmark{font-size:25px}.top-chips{gap:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(92px,.82fr);gap:4px}.speed-chip{min-width:118px;padding:5px 8px}.speed-num{font-size:25px}.speed-unit{font-size:9px}.ring-svg{width:38px;height:38px}.ring-main{font-size:13px}.action-btn{min-height:48px;font-size:13px}.dock-grid{grid-template-columns:repeat(3,1fr);gap:4px}.value{font-size:14px}.label{font-size:8px}.place{display:none}.mode{display:none}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}}
 </style>
 </head>
 <body>
@@ -31,7 +31,8 @@
         <circle cx="32" cy="32" r="3.7" fill="#2f6bff"/>
       </svg>
     </button>
-    <button class="building-fab off" id="buildingToggle" aria-label="3D切替">3D OFF</button>
+    <button class="building-fab off" id="buildingToggle" aria-label="建物3D切替">建物 OFF</button>
+    <button class="terrain-fab off" id="terrainToggle" aria-label="地形3D切替">地形 OFF</button>
   </div>
   <div class="ui">
     <div class="top">
@@ -83,7 +84,7 @@
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[]};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -117,7 +118,7 @@ function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D29 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D30 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -229,7 +230,7 @@ function hideAllBuilding3DOnLoad(){
  });
  const btn=document.getElementById('buildingToggle');
  if(btn){
-   btn.textContent='3D OFF';
+   btn.textContent='建物 OFF';
    btn.classList.add('off');
    btn.classList.remove('err');
  }
@@ -296,7 +297,7 @@ function ensureBuildingLayer(){
 function toggleBuildings(){
  const btn=document.getElementById('buildingToggle');
  if(!ensureBuildingLayer()){
-   if(btn){btn.textContent='3D不可'; btn.classList.add('err');}
+   if(btn){btn.textContent='建物不可'; btn.classList.add('err');}
    return;
  }
  st.buildingsOn=!st.buildingsOn;
@@ -304,9 +305,50 @@ function toggleBuildings(){
    try{map.setLayoutProperty(id,'visibility',st.buildingsOn?'visible':'none');}catch(e){}
  });
  if(btn){
-   btn.textContent=st.buildingsOn?'3D ON':'3D OFF';
+   btn.textContent=st.buildingsOn?'建物 ON':'建物 OFF';
    btn.classList.toggle('off',!st.buildingsOn);
    btn.classList.remove('err');
+ }
+}
+
+function ensureTerrainSource(){
+ if(!map) return false;
+ try{
+   if(!map.getSource('gsi-dem')){
+     // 国土地理院 DEM。地形起伏用。encodingはMapLibreのterrarium/raster-dem互換として試す。
+     map.addSource('gsi-dem',{
+       type:'raster-dem',
+       tiles:['https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png'],
+       tileSize:256,
+       encoding:'gsi'
+     });
+   }
+   st.terrainReady=true;
+   return true;
+ }catch(e){
+   return false;
+ }
+}
+
+function toggleTerrain(){
+ const btn=document.getElementById('terrainToggle');
+ if(!map) return;
+ if(!st.terrainOn){
+   if(!ensureTerrainSource()){
+     if(btn){btn.textContent='地形不可'; btn.classList.add('err');}
+     return;
+   }
+   try{
+     map.setTerrain({source:'gsi-dem', exaggeration:1.45});
+     st.terrainOn=true;
+     if(btn){btn.textContent='地形 ON'; btn.classList.remove('off','err');}
+   }catch(e){
+     if(btn){btn.textContent='地形不可'; btn.classList.add('err');}
+   }
+ }else{
+   try{ map.setTerrain(null); }catch(e){}
+   st.terrainOn=false;
+   if(btn){btn.textContent='地形 OFF'; btn.classList.add('off'); btn.classList.remove('err');}
  }
 }
 
@@ -338,7 +380,7 @@ function updateCamera(p, heading){
 function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
+document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
 setupDots();renderUI();initMap();requestAnimationFrame(tick);
 </script>
 </body>

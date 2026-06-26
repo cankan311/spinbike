@@ -1,10 +1,11 @@
-# Japan Ride D29 3D OFF Hides Buildings
+# Japan Ride D30 Terrain 3D Toggle
 
-D29変更点:
-- D28の「3D OFFでも建物立体が残る」問題を修正
-- 起動直後にOpenFreeMap既存の fill-extrusion レイヤーをすべてOFF
-- 3D ON/OFFは、既存fill-extrusionと必要時に追加した建物レイヤーをまとめて制御
-- 3D OFFで立体グラフィックを非表示、3D ONで表示
-- D23/D28同様、Claude方式 / OpenFreeMap / 地理院航空写真 / D10 UI を維持
+D30変更点:
+- D29ベース
+- 右側ツールに「建物 OFF/ON」と「地形 OFF/ON」を分離追加
+- 建物3D: OpenFreeMap/OpenMapTilesのfill-extrusionをON/OFF
+- 地形3D: 地理院DEMをraster-demとして追加し、MapLibre setTerrainでON/OFF
+- 初期状態は 建物OFF / 地形OFF
+- 焼津周辺は平地なので地形ONの変化は小さめ。山間部で確認すると分かりやすい可能性があります。
 
 GitHub Pagesでは `index.html` を公開してください。
