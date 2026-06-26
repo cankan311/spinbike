@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D30 Terrain 3D Toggle</title>
+<title>Japan Ride D31 Terrain Terrarium Fix</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -118,7 +118,7 @@ function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D30 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D31 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -314,18 +314,22 @@ function toggleBuildings(){
 function ensureTerrainSource(){
  if(!map) return false;
  try{
-   if(!map.getSource('gsi-dem')){
-     // 国土地理院 DEM。地形起伏用。encodingはMapLibreのterrarium/raster-dem互換として試す。
-     map.addSource('gsi-dem',{
+   if(!map.getSource('terrain-dem')){
+     // D31: MapLibreが直接読める Mapzen Terrarium DEM を使用。
+     // D30の地理院dem_png + encoding:gsi はMapLibre標準のraster-demでは解釈されず、地形が平らになる。
+     map.addSource('terrain-dem',{
        type:'raster-dem',
-       tiles:['https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png'],
+       tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
        tileSize:256,
-       encoding:'gsi'
+       maxzoom:15,
+       encoding:'terrarium',
+       attribution:'Terrain tiles by Mapzen'
      });
    }
    st.terrainReady=true;
    return true;
  }catch(e){
+   console.warn('terrain source failed', e);
    return false;
  }
 }
@@ -339,10 +343,12 @@ function toggleTerrain(){
      return;
    }
    try{
-     map.setTerrain({source:'gsi-dem', exaggeration:1.45});
+     // 富士山や箱根などでも変化が見えやすいよう少し強めに誇張。
+     map.setTerrain({source:'terrain-dem', exaggeration:1.8});
      st.terrainOn=true;
      if(btn){btn.textContent='地形 ON'; btn.classList.remove('off','err');}
    }catch(e){
+     console.warn('setTerrain failed', e);
      if(btn){btn.textContent='地形不可'; btn.classList.add('err');}
    }
  }else{
