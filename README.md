@@ -1,12 +1,8 @@
-# Japan Ride D31 Terrain Terrarium Fix
+# Japan Ride D32 Terrain 1.5
 
-D31変更点:
-- D30の地形3Dが真っ平らに見える問題を修正
-- 地理院 dem_png + encoding:gsi をやめる
-- MapLibreが直接読める Mapzen Terrarium DEM を raster-dem source として使用
-- 地形ON: map.setTerrain({ source: 'terrain-dem', exaggeration: 1.8 })
-- 地形OFF: map.setTerrain(null)
-- 建物OFF/ONはD29/D30のまま維持
-- 初期状態は 建物OFF / 地形OFF
+D32変更点:
+- D31ベース
+- 地形3Dの誇張倍率を 1.8 → 1.5 に変更
+- 建物ON/OFF、地形ON/OFF、Claude方式、D10 UIは維持
 
 GitHub Pagesでは `index.html` を公開してください。

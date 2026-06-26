@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D31 Terrain Terrarium Fix</title>
+<title>Japan Ride D32 Terrain 1.5</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -118,7 +118,7 @@ function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D31 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D32 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -343,8 +343,8 @@ function toggleTerrain(){
      return;
    }
    try{
-     // 富士山や箱根などでも変化が見えやすいよう少し強めに誇張。
-     map.setTerrain({source:'terrain-dem', exaggeration:1.8});
+     // 富士山や箱根などでも変化が見えやすいよう自然寄りに誇張。
+     map.setTerrain({source:'terrain-dem', exaggeration:1.5});
      st.terrainOn=true;
      if(btn){btn.textContent='地形 ON'; btn.classList.remove('off','err');}
    }catch(e){
