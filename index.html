@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D28 GitHub Claude OFM 3D Lazy</title>
+<title>Japan Ride D29 GitHub Claude OFM 3D Hide Fix</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,7 +83,7 @@
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[]};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -117,7 +117,7 @@ function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D28 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D29 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -180,6 +180,8 @@ function initMap(){
      b.classList.toggle('off',!st.symbolLayerIds.length);
    }
 
+   hideAllBuilding3DOnLoad(); setTimeout(()=>{if(!st.buildingsOn) hideAllBuilding3DOnLoad();},800);
+
    let el=document.createElement('div');el.style.width='24px';el.style.height='24px';el.style.borderRadius='50%';el.style.background='#2f6bff';el.style.border='4px solid white';el.style.boxShadow='0 2px 10px rgba(0,0,0,.35)'; marker=new maplibregl.Marker({element:el}).setLngLat([138.309,34.835]).addTo(map);
 
    let coords=[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250],[138.3425,34.8215],[138.3565,34.8188]];
@@ -207,6 +209,32 @@ function toggleOfmLabels(){
  st.symbolLayerIds.forEach(id=>{try{map.setLayoutProperty(id,'visibility',st.labelsOn?'visible':'none');}catch(e){}});
 }
 
+function collectExistingBuildingLayers(){
+ if(!map) return [];
+ const ids=[];
+ (map.getStyle().layers||[]).forEach(l=>{
+   if(l.type==='fill-extrusion'){
+     ids.push(l.id);
+   }
+ });
+ return ids;
+}
+
+function hideAllBuilding3DOnLoad(){
+ // OpenFreeMap側の既存3D建物レイヤーが最初から表示されるケースがあるため、
+ // 起動直後にfill-extrusionを全部OFFにする。
+ st.buildingLayerIds=collectExistingBuildingLayers();
+ st.buildingLayerIds.forEach(id=>{
+   try{map.setLayoutProperty(id,'visibility','none');}catch(e){}
+ });
+ const btn=document.getElementById('buildingToggle');
+ if(btn){
+   btn.textContent='3D OFF';
+   btn.classList.add('off');
+   btn.classList.remove('err');
+ }
+}
+
 function findVectorSourceForBuildings(){
  const sources=(map.getStyle()&&map.getStyle().sources)||{};
  for(const id of Object.keys(sources)){
@@ -216,15 +244,21 @@ function findVectorSourceForBuildings(){
      return id;
    }
  }
- // 最後の保険：vector sourceが1つだけならそれを使う
  const vectorIds=Object.keys(sources).filter(id=>sources[id]&&sources[id].type==='vector');
  return vectorIds.length ? vectorIds[0] : null;
 }
 
 function ensureBuildingLayer(){
  if(!map) return false;
- if(st.buildingLayerId && map.getLayer(st.buildingLayerId)) return true;
 
+ // まずOpenFreeMap styleにもともと存在するfill-extrusionを使う
+ const existing=collectExistingBuildingLayers();
+ if(existing.length){
+   st.buildingLayerIds=existing;
+   return true;
+ }
+
+ // 既存が無い場合だけ、押した時に自前のfill-extrusionを作る
  const sourceId=findVectorSourceForBuildings();
  if(!sourceId) return false;
 
@@ -252,6 +286,7 @@ function ensureBuildingLayer(){
        }, beforeId);
      }
      st.buildingLayerId=id;
+     st.buildingLayerIds=[id];
      return true;
    }catch(e){}
  }
@@ -265,7 +300,9 @@ function toggleBuildings(){
    return;
  }
  st.buildingsOn=!st.buildingsOn;
- try{map.setLayoutProperty(st.buildingLayerId,'visibility',st.buildingsOn?'visible':'none');}catch(e){}
+ st.buildingLayerIds.forEach(id=>{
+   try{map.setLayoutProperty(id,'visibility',st.buildingsOn?'visible':'none');}catch(e){}
+ });
  if(btn){
    btn.textContent=st.buildingsOn?'3D ON':'3D OFF';
    btn.classList.toggle('off',!st.buildingsOn);

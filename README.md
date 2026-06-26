@@ -1,12 +1,10 @@
-# Japan Ride D28 3D Lazy No Break
+# Japan Ride D29 3D OFF Hides Buildings
 
-D28変更点:
-- D23の「地図が映る状態」をベースに戻した
-- 3Dボタンは現在地ボタンの下に表示
-- 3Dレイヤーは起動時に追加しない
-- 3Dボタンを押した時だけ building fill-extrusion レイヤーを遅延作成
-- これにより3Dボタンがあっても地図読み込みを邪魔しない
-- ローカル/HTML疑似ラベルなし
-- Claude方式 / OpenFreeMap / 地理院航空写真 / D10 UI は維持
+D29変更点:
+- D28の「3D OFFでも建物立体が残る」問題を修正
+- 起動直後にOpenFreeMap既存の fill-extrusion レイヤーをすべてOFF
+- 3D ON/OFFは、既存fill-extrusionと必要時に追加した建物レイヤーをまとめて制御
+- 3D OFFで立体グラフィックを非表示、3D ONで表示
+- D23/D28同様、Claude方式 / OpenFreeMap / 地理院航空写真 / D10 UI を維持
 
 GitHub Pagesでは `index.html` を公開してください。
