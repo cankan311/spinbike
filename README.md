@@ -1,8 +1,14 @@
-# Japan Ride D32 Terrain 1.5
+# Japan Ride D34 Mapillary Center Search
 
-D32変更点:
-- D31ベース
-- 地形3Dの誇張倍率を 1.8 → 1.5 に変更
-- 建物ON/OFF、地形ON/OFF、Claude方式、D10 UIは維持
+D34変更点:
+- D33の「どこへ行っても画像が出ない」問題への対処版
+- 検索対象を仮想自転車位置ではなく、画面中央に変更
+- 地図を富士山・箱根・都市部などに動かしてから「画面中央を検索」できる
+- 検索範囲を 約1km / 約3km / 約6km から選択
+- Mapillary APIの取得フィールドを thumb_original_url に変更
+- エラー時のメッセージを詳しく表示
 
-GitHub Pagesでは `index.html` を公開してください。
+注意:
+- Mapillary Client Access Tokenが必要です。
+- GitHub Pagesなどhttps配信で検証してください。
+- Mapillary画像が少ない場所では約6kmでも出ないことがあります。

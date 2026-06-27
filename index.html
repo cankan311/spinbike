@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D33 Mapillary Street Sample</title>
+<title>Japan Ride D34 Mapillary Center Search</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--display-font:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','Kosugi Maru','M PLUS Rounded 1c','Hiragino Maru Gothic ProN',ui-rounded,sans-serif;--ink:#17202c;--sub:#6f7785;--blue:#2f6bff;--green:#12b77a;--coral:#ff5872;--gold:#d59b2b;--line:#e4e8f0;}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab,.terrain-fab,.street-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off),.terrain-fab:not(.off),.street-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err,.terrain-fab.err,.street-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.street-panel{position:absolute;z-index:13;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 154px);border-radius:20px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.82);box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:10px;display:none;pointer-events:auto}.street-panel.open{display:block}.street-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.street-kicker{font-size:9px;font-weight:900;color:#6b7280}.street-title{font-size:15px;font-weight:900;color:#111827}.street-close{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-weight:900;width:28px;height:28px}.token-box{margin-top:8px;display:none}.token-box.open{display:block}.token-note{font-size:10px;line-height:1.35;font-weight:800;color:#596273;margin-bottom:6px}.token-box input{width:100%;border:1px solid #d8deea;border-radius:12px;padding:8px;font-size:11px}.token-box button{margin-top:6px;width:100%;border:0;border-radius:999px;background:#2f6bff;color:#fff;font-weight:900;padding:8px}.street-body{margin-top:8px;min-height:112px;border-radius:14px;background:#111827;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff}.street-empty{font-size:11px;font-weight:800;line-height:1.5;padding:16px;text-align:center;color:#e5e7eb}.street-photo{position:relative;width:100%;height:174px;background:#111827}.street-photo img{width:100%;height:100%;object-fit:cover;display:block}.street-meta{position:absolute;left:8px;right:8px;bottom:8px;border-radius:999px;background:rgba(17,24,39,.72);color:#fff;font-size:10px;font-weight:900;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.street-controls{display:flex;gap:6px;margin-top:8px}.street-controls button{flex:1;border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:11px;font-weight:900;padding:8px}.mly-dot{width:9px;height:9px;border-radius:50%;background:#ff2f7d;border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab,.terrain-fab,.street-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off),.terrain-fab:not(.off),.street-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err,.terrain-fab.err,.street-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.street-panel{position:absolute;z-index:13;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 154px);border-radius:20px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.82);box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:10px;display:none;pointer-events:auto}.street-panel.open{display:block}.street-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.street-kicker{font-size:9px;font-weight:900;color:#6b7280}.street-title{font-size:15px;font-weight:900;color:#111827}.street-close{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-weight:900;width:28px;height:28px}.token-box{margin-top:8px;display:none}.token-box.open{display:block}.token-note{font-size:10px;line-height:1.35;font-weight:800;color:#596273;margin-bottom:6px}.token-box input{width:100%;border:1px solid #d8deea;border-radius:12px;padding:8px;font-size:11px}.token-box button{margin-top:6px;width:100%;border:0;border-radius:999px;background:#2f6bff;color:#fff;font-weight:900;padding:8px}.street-body{margin-top:8px;min-height:112px;border-radius:14px;background:#111827;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff}.street-empty{font-size:11px;font-weight:800;line-height:1.5;padding:16px;text-align:center;color:#e5e7eb}.street-photo{position:relative;width:100%;height:174px;background:#111827}.street-photo img{width:100%;height:100%;object-fit:cover;display:block}.street-meta{position:absolute;left:8px;right:8px;bottom:8px;border-radius:999px;background:rgba(17,24,39,.72);color:#fff;font-size:10px;font-weight:900;padding:6px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.street-controls{display:flex;gap:6px;margin-top:8px}.street-controls button,.street-controls select{flex:1;border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:11px;font-weight:900;padding:8px;min-width:0}.street-controls select{max-width:74px;text-align:center}.mly-dot{width:9px;height:9px;border-radius:50%;background:#ff2f7d;border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.3)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
 /* D案：Cの整理感 + Bの景色面積。上下とも薄く浮かせる */
 .top{pointer-events:none}.hero{position:relative;border-radius:25px;padding:10px 12px 9px;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(250,252,255,.84));border:1px solid rgba(255,255,255,.88);box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.hero-main{display:flex;align-items:center;gap:10px}.hero-icon{width:42px;height:42px;border-radius:17px;background:linear-gradient(180deg,#fff7d7,#ffe5a0);display:flex;align-items:center;justify-content:center;font-size:23px;border:1px solid #ffdda1;box-shadow:0 6px 14px rgba(213,155,43,.18),inset 0 1px 0 #fff}.eyebrow{font-size:10.5px;color:var(--gold);font-weight:900;letter-spacing:.14em}.landmark{font-family:var(--display-font);font-size:30px;line-height:1.02;font-weight:900;letter-spacing:.045em;color:#111827;-webkit-text-stroke:.35px #111827;text-shadow:0 1.4px 0 rgba(255,255,255,.95),0 4px 11px rgba(20,30,45,.15)}.remain{font-size:13.5px;color:#4a5363;font-weight:900;font-variant-numeric:tabular-nums}.mode{position:absolute;right:10px;top:10px;background:rgba(27,31,39,.68);color:#fff;border-radius:999px;padding:5px 8px;font-size:9.5px;font-weight:900;letter-spacing:.03em;pointer-events:auto;cursor:pointer}.progress{position:relative;height:12px;margin-top:8px}.base,.fill{position:absolute;top:5px;height:4px;border-radius:999px}.base{left:0;right:0;background:#e1e6ef}.fill{left:0;width:0;background:linear-gradient(90deg,#86adff,var(--blue))}.dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:#c7ceda}.dot.small{width:5px;height:5px}.dot.medium{width:9px;height:9px;background:var(--blue);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.dot.large{width:10px;height:10px;background:var(--gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.bike{position:absolute;top:-5px;transform:translateX(-50%);font-size:14px}.subgoals{display:flex;justify-content:space-between;gap:10px;margin-top:5px;color:var(--sub);font-size:10.5px;font-weight:900}.subgoals span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 上部の速度・現在地 */
@@ -44,16 +44,21 @@
       <button class="street-close" id="streetClose">×</button>
     </div>
     <div class="token-box" id="tokenBox">
-      <div class="token-note">MapillaryのClient Access Tokenを入れると、現在地周辺の画像を検索できます。</div>
+      <div class="token-note">MapillaryのClient Access Tokenを入れると、画面中央周辺の画像を検索できます。</div>
       <input id="mlyToken" placeholder="MLY|... のClient Access Token" autocomplete="off"/>
       <button id="tokenSave">保存して検索</button>
     </div>
     <div class="street-body" id="streetBody">
-      <div class="street-empty">写真モードをONにすると、現在の仮想位置周辺のMapillary画像を探します。</div>
+      <div class="street-empty">写真モードをONにすると、いま画面中央に表示している場所のMapillary画像を探します。</div>
     </div>
     <div class="street-controls">
       <button id="prevImg">前</button>
-      <button id="scanRoute">周辺検索</button>
+      <select id="mlyRadius" class="mly-radius">
+        <option value="0.01">約1km</option>
+        <option value="0.03" selected>約3km</option>
+        <option value="0.06">約6km</option>
+      </select>
+      <button id="scanRoute">画面中央を検索</button>
       <button id="nextImg">次</button>
     </div>
   </div>
@@ -141,7 +146,7 @@ function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D33 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D34 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -449,32 +454,43 @@ async function searchMapillaryNearBike(){
  setStreetPanel(true);
  showTokenBox(!token);
  if(!token){
-   document.getElementById('streetBody').innerHTML='<div class="street-empty">MapillaryのClient Access Tokenを入力すると、現在地周辺の画像を検索できます。</div>';
+   document.getElementById('streetBody').innerHTML='<div class="street-empty">MapillaryのClient Access Tokenを入力すると、画面中央周辺の画像を検索できます。<br>※このサンプルはTokenなしでは画像取得できません。</div>';
    document.getElementById('streetTitle').textContent='Tokenが必要';
    return;
  }
- const p=st.lastPoint || (marker ? marker.getLngLat().toArray() : map.getCenter().toArray());
- const d=0.0045; // 約400〜500m
+ // D34: 仮想自転車位置ではなく「いま画面中央に表示している場所」を検索する。
+ // これで富士山・箱根・川根などへ地図を動かしてから検索できる。
+ const c=map.getCenter();
+ const p=[c.lng,c.lat];
+ const sel=document.getElementById('mlyRadius');
+ const d=sel ? parseFloat(sel.value||'0.03') : 0.03; // 約1〜6km
  const bbox=[p[0]-d,p[1]-d,p[0]+d,p[1]+d].join(',');
- const fields='id,computed_geometry,thumb_1024_url,captured_at,compass_angle';
- const url='https://graph.mapillary.com/images?access_token='+encodeURIComponent(token)+'&fields='+encodeURIComponent(fields)+'&bbox='+bbox+'&limit=50';
+ const fields='id,computed_geometry,thumb_original_url,captured_at,computed_compass_angle';
+ const url='https://graph.mapillary.com/images?access_token='+encodeURIComponent(token)+'&fields='+encodeURIComponent(fields)+'&bbox='+bbox+'&limit=100';
  const body=document.getElementById('streetBody');
  document.getElementById('streetTitle').textContent='検索中...';
- body.innerHTML='<div class="street-empty">現在地周辺のMapillary画像を検索中...</div>';
+ body.innerHTML='<div class="street-empty">画面中央周辺のMapillary画像を検索中...<br>検索範囲：'+(d===0.01?'約1km':d===0.03?'約3km':'約6km')+'</div>';
  try{
-   const json=await fetch(url).then(r=>r.json());
+   const json=await fetch(url).then(async r=>{
+     const t=await r.text();
+     try{return JSON.parse(t);}catch(e){throw new Error('API response is not JSON: '+t.slice(0,120));}
+   });
    if(json.error) throw new Error(json.error.message||'Mapillary API error');
    const imgs=(json.data||[]).map(x=>{
      const c=x.computed_geometry && x.computed_geometry.coordinates;
-     if(!c || !x.thumb_1024_url) return null;
-     return {id:x.id,coords:c,thumb:x.thumb_1024_url,captured_at:x.captured_at,dist:distanceMeters(p,c)};
-   }).filter(Boolean).sort((a,b)=>a.dist-b.dist).slice(0,20);
+     if(!c || !x.thumb_original_url) return null;
+     return {id:x.id,coords:c,thumb:x.thumb_original_url,captured_at:x.captured_at,dist:distanceMeters(p,c)};
+   }).filter(Boolean).sort((a,b)=>a.dist-b.dist).slice(0,30);
    st.mlyImages=imgs; st.mlyIndex=0;
    renderMlyImage();
    addMlyMarkers();
+   if(!imgs.length){
+     document.getElementById('streetTitle').textContent='画像なし';
+     body.innerHTML='<div class="street-empty">この画面中央周辺ではMapillary画像が見つかりませんでした。<br>範囲を約6kmにするか、都市部・幹線道路・駅周辺で試してください。</div>';
+   }
  }catch(e){
    document.getElementById('streetTitle').textContent='取得失敗';
-   body.innerHTML='<div class="street-empty">Mapillary画像を取得できませんでした。Token、GitHub Pages配信、API制限を確認してください。<br>'+String(e.message||e)+'</div>';
+   body.innerHTML='<div class="street-empty">Mapillary画像を取得できませんでした。<br>Token、GitHub Pages配信、API制限、または指定フィールドを確認してください。<br>'+String(e.message||e)+'</div>';
  }
 }
 
