@@ -1,9 +1,10 @@
-# Japan Ride D41 Single HTML
+# Japan Ride D42 Single HTML View Test Jump
 
-D41変更点:
-- D40のViewシーケンス画像をすべてindex.html内にBase64埋め込み
-- GitHub Pagesへアップロードするファイルは index.html だけ
-- assets/view フォルダ不要
-- スマホGitHubで写真を1枚ずつ選ぶ必要なし
+D42変更点:
+- D41ベース
+- 右側に View TEST ボタン追加
+- 押すと最初のView区間へ即ジャンプし、そのままView ON
+- テストのために0.8km走る必要なし
+- 単体HTMLなので、GitHub Pagesには index.html だけアップロード
 
 GitHub Pagesでは、この index.html だけを既存の index.html と置き換えてください。
