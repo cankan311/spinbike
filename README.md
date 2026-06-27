@@ -1,13 +1,15 @@
-# Japan Ride D36 Mapillary Button Fix
+# Japan Ride D37 Mapillary Availability UX
 
-D36変更点:
-- D35で「画面中央を検索」ボタンが反応しない問題への対処
-- ボタンに inline onclick を追加して、Android Chromeでも確実に関数を呼ぶ
-- 「保存して検索」と「画面中央を検索」は同じ処理に統一
-- Token欄が空なら、必ず「Token未入力」と画面に反応表示
-- Token入力済みなら保存して検索
-- window関数として mlySaveTokenAndSearch / jumpAndSearch / nextMly を公開
+D37変更点:
+- D32ベース
+- Google Street Viewは使わない前提
+- Mapillary表示可能区間のUXサンプルを追加
+- 通常は航空写真3Dで走行
+- Mapillary表示可能区間が近づくと上部に「あと何km」通知
+- 表示可能区間内では「ここはMapillary表示できます」と表示
+- ユーザーはSV OFF/ONで航空写真のまま走るか、ストリートビュー風表示に切替可能
+- 右側にSV OFFボタン追加
+- 地図上にMapillary表示可能区間のピンを表示
+- 現段階ではAPI接続ではなくUXサンプル用の仮区間データ
 
-注意:
-- スクショの状態ではToken欄が空なので、Mapillary画像は取得できません。
-- ただしD36ではToken未入力でもボタン反応が画面に出ます。
+GitHub Pagesでは `index.html` を公開してください。
