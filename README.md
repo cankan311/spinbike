@@ -1,14 +1,13 @@
-# Japan Ride D34 Mapillary Center Search
+# Japan Ride D36 Mapillary Button Fix
 
-D34変更点:
-- D33の「どこへ行っても画像が出ない」問題への対処版
-- 検索対象を仮想自転車位置ではなく、画面中央に変更
-- 地図を富士山・箱根・都市部などに動かしてから「画面中央を検索」できる
-- 検索範囲を 約1km / 約3km / 約6km から選択
-- Mapillary APIの取得フィールドを thumb_original_url に変更
-- エラー時のメッセージを詳しく表示
+D36変更点:
+- D35で「画面中央を検索」ボタンが反応しない問題への対処
+- ボタンに inline onclick を追加して、Android Chromeでも確実に関数を呼ぶ
+- 「保存して検索」と「画面中央を検索」は同じ処理に統一
+- Token欄が空なら、必ず「Token未入力」と画面に反応表示
+- Token入力済みなら保存して検索
+- window関数として mlySaveTokenAndSearch / jumpAndSearch / nextMly を公開
 
 注意:
-- Mapillary Client Access Tokenが必要です。
-- GitHub Pagesなどhttps配信で検証してください。
-- Mapillary画像が少ない場所では約6kmでも出ないことがあります。
+- スクショの状態ではToken欄が空なので、Mapillary画像は取得できません。
+- ただしD36ではToken未入力でもボタン反応が画面に出ます。
