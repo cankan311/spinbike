@@ -1,13 +1,15 @@
-# Japan Ride D39 View Photo Background
+# Japan Ride D40 View Sequence Prototype
 
-D39変更点:
-- 画面表記を「現地ビュー」から「View」に変更
-- 右側ボタンは View OFF / View ON
-- View区間通知も「View区間まで あと◯km」に変更
-- 3D風の仮道路表現を削除
-- View ON時は背景全体に実写風景写真を表示
-- 小窓表示ではなく、地図背景そのものをView表示へ切り替える
+D40変更点:
+- D39ベース
+- View ON時の固定写真を廃止
+- アップロード動画から切り出した道路前方フレームをViewシーケンスとして使用
+- View区間内では走行距離に合わせて背景画像が順番に切り替わる
+- 画像切り替えはクロスフェード
+- 小窓ではなく背景全体がViewになる
+- View区間外ではView ON不可
+- View区間終了時はMapへ戻る
 - HUD、ペダル±、建物3D、地形3Dは維持
-- 現段階ではUX確認用。実装時はこの背景レイヤーをMapillaryJS/画像シーケンスに差し替える
+- 画面上はMapillary名を出さず View / Map 表記
 
-GitHub Pagesでは `index.html` を公開してください。
+GitHub Pagesでは index.html と assets/view フォルダを一緒に公開してください。

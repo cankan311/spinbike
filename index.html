@@ -20,7 +20,7 @@
 
 /* D38: Viewは小窓ではなく背景全体を切り替える */
 .street-notice{
-  top:calc(env(safe-area-inset-top) + 154px)!important;
+  top:calc(env(safe-area-inset-top) + 162px)!important;
   left:12px!important;
   right:12px!important;
   z-index:21!important;
@@ -40,16 +40,24 @@
 .street-photo-bg{
   position:absolute;
   inset:0;
-  background-image:url('https://cdn.bfldr.com/UTM69Z3S/at/qz8xptqwmq9gh2923pxgc9/iStock-1316006749-HEADER_MOBILE.jpg?auto=webp&enable=upscale&fit=cover&format=avif&quality=70');
   background-size:cover;
   background-position:center center;
-  transform:scale(1.03);
-  filter:saturate(1.05) contrast(1.03);
+  opacity:0;
+  transform:scale(1.045);
+  transition:opacity .42s ease, transform 1.2s linear;
+  filter:saturate(1.06) contrast(1.04);
+  will-change:opacity,transform;
+}
+.street-photo-bg.active{
+  opacity:1;
+  transform:scale(1.015);
 }
 .street-photo-vignette{
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,0) 28%,rgba(0,0,0,.22) 100%);
+  background:
+    linear-gradient(180deg,rgba(0,0,0,.14) 0%,rgba(0,0,0,0) 25%,rgba(0,0,0,.32) 100%),
+    radial-gradient(circle at center, transparent 0 58%, rgba(0,0,0,.20) 100%);
 }
 .view-badge{
   position:absolute;
@@ -57,7 +65,7 @@
   right:12px;
   bottom:calc(env(safe-area-inset-bottom) + 136px);
   border-radius:999px;
-  background:rgba(17,24,39,.72);
+  background:rgba(17,24,39,.74);
   color:white;
   font-size:11px;
   font-weight:900;
@@ -127,7 +135,8 @@
     <button class="street-notice-btn" id="streetQuickBtn">View</button>
   </div>
   <div class="street-full" id="streetFull">
-    <div class="street-photo-bg" id="streetPhotoBg"></div>
+    <div class="street-photo-bg active" id="viewImgA"></div>
+    <div class="street-photo-bg" id="viewImgB"></div>
     <div class="street-photo-vignette"></div>
     <div class="view-badge" id="streetCaption">View ON</div>
   </div>
@@ -186,21 +195,18 @@
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-const MLY_ZONES=[
-  {start:9.0,end:11.8,name:'焼津駅周辺・市街地'},
-  {start:18.4,end:21.0,name:'静岡市街地テスト区間'},
-  {start:63.0,end:66.5,name:'浜松市街地テスト区間'},
-  {start:120.0,end:124.0,name:'豊橋市街地テスト区間'},
-  {start:166.0,end:170.0,name:'岡崎市街地テスト区間'},
-  {start:190.0,end:195.0,name:'名古屋市街地テスト区間'}
+const VIEW_ZONES=[
+  {start:9.0,end:11.8,name:'焼津駅周辺'},
+  {start:18.4,end:21.0,name:'静岡市街地'},
+  {start:63.0,end:66.5,name:'浜松市街地'},
+  {start:120.0,end:124.0,name:'豊橋市街地'},
+  {start:166.0,end:170.0,name:'岡崎市街地'},
+  {start:190.0,end:195.0,name:'名古屋市街地'}
 ];
-const VIEW_PHOTOS=[
-  'https://cdn.bfldr.com/UTM69Z3S/at/qz8xptqwmq9gh2923pxgc9/iStock-1316006749-HEADER_MOBILE.jpg?auto=webp&enable=upscale&fit=cover&format=avif&quality=70',
-  'https://cdn.bfldr.com/UTM69Z3S/at/jkrcnrx8nrqq29pzs3jh29v8/pexels-2150776194-31384128_-_edited.jpg?auto=webp&enable=upscale&fit=cover&format=pjpg&quality=70'
-];
+const VIEW_SEQUENCE=['assets/view/view_001.jpg','assets/view/view_002.jpg','assets/view/view_003.jpg','assets/view/view_004.jpg','assets/view/view_005.jpg','assets/view/view_006.jpg','assets/view/view_007.jpg','assets/view/view_008.jpg','assets/view/view_009.jpg','assets/view/view_010.jpg','assets/view/view_011.jpg','assets/view/view_012.jpg','assets/view/view_013.jpg','assets/view/view_014.jpg','assets/view/view_015.jpg','assets/view/view_016.jpg','assets/view/view_017.jpg','assets/view/view_018.jpg','assets/view/view_019.jpg','assets/view/view_020.jpg','assets/view/view_021.jpg','assets/view/view_022.jpg','assets/view/view_023.jpg','assets/view/view_024.jpg'];
 
 
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, streetMode:false, streetMarkers:[], activeStreet:null};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, streetMode:false, streetMarkers:[], activeStreet:null, viewFrameIndex:-1};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -231,25 +237,40 @@ function angleLerp(a,b,t){let d=((b-a+540)%360)-180; return (a+d*t+360)%360;}
 function nowMs(){return Date.now();}
 let map,marker;
 function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms;}
-function updateViewPhoto(){
- const bg=$('streetPhotoBg');
- if(!bg) return;
+function updateViewFrame(){
  const cur=currentStreetZone();
- const idx=cur ? Math.abs(Math.round(cur.start)) % VIEW_PHOTOS.length : 0;
- bg.style.backgroundImage="url('"+VIEW_PHOTOS[idx]+"')";
+ if(!cur) return;
+ const span=Math.max(0.001,cur.end-cur.start);
+ const ratio=Math.max(0,Math.min(0.999,(st.km-cur.start)/span));
+ const idx=Math.floor(ratio*VIEW_SEQUENCE.length);
+ if(st.viewFrameIndex===idx) return;
+ st.viewFrameIndex=idx;
+ const a=$('viewImgA'), b=$('viewImgB');
+ if(!a||!b) return;
+ const url=VIEW_SEQUENCE[idx];
+ const front=a.classList.contains('active')?a:b;
+ const back=front===a?b:a;
+ back.style.backgroundImage="url('"+url+"')";
+ back.classList.add('active');
+ front.classList.remove('active');
+}
+
+function preloadViewSequence(){
+ VIEW_SEQUENCE.forEach(src=>{const img=new Image(); img.src=src;});
 }
 
 function currentStreetZone(){
- return MLY_ZONES.find(z=>st.km>=z.start && st.km<=z.end) || null;
+ return VIEW_ZONES.find(z=>st.km>=z.start && st.km<=z.end) || null;
 }
 function nextStreetZone(){
- return MLY_ZONES.find(z=>z.start>st.km) || null;
+ return VIEW_ZONES.find(z=>z.start>st.km) || null;
 }
 function updateStreetUX(){
  const notice=$('streetNotice'), main=$('streetNoticeMain'), btn=$('streetQuickBtn');
  const cur=currentStreetZone();
  const nextZ=nextStreetZone();
  st.activeStreet=cur;
+ if(!cur && st.streetMode){st.streetMode=false;}
  if(cur){
    notice.classList.add('show');
    main.textContent='ここはViewで走れます：'+cur.name;
@@ -266,14 +287,15 @@ function updateStreetUX(){
  const full=$('streetFull');
  if(full){full.classList.toggle('open',!!(st.streetMode&&cur));}
  if(st.streetMode&&cur){
-   updateViewPhoto();
+   updateViewFrame();
    const cap=$('streetCaption');
-   if(cap) cap.textContent='View：'+cur.name;
+   if(cap) cap.textContent='View：'+cur.name+' / Mapに戻す';
  }
 }
 function toggleStreetMode(){
  const cur=currentStreetZone();
  st.streetMode=!st.streetMode;
+ if(st.streetMode){st.viewFrameIndex=-1;}
  if(st.streetMode && !cur){
    const nz=nextStreetZone();
    st.streetMode=false;
@@ -287,7 +309,7 @@ function addStreetZoneMarkers(){
  if(!map || !st.route || !st.routeDist) return;
  (st.streetMarkers||[]).forEach(m=>{try{m.remove();}catch(e){}});
  st.streetMarkers=[];
- MLY_ZONES.forEach((z,i)=>{
+ VIEW_ZONES.forEach((z,i)=>{
    const p=pointAt(st.route, Math.min(z.start*1000, st.routeDist-10));
    const el=document.createElement('div');
    el.className='street-pin';
@@ -305,7 +327,7 @@ function adjustPedal(delta){
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D39 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、Mapを最初のsymbol直下へ差し込む。
+ // D40 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、Mapを最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -575,7 +597,7 @@ function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  updateStreetUX(); renderUI(); requestAnimationFrame(tick);}
 document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const streetBtn=e.target.closest('#streetToggle,#streetQuickBtn'); if(streetBtn){toggleStreetMode(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-setupDots();renderUI();initMap();requestAnimationFrame(tick);
+preloadViewSequence();setupDots();renderUI();initMap();requestAnimationFrame(tick);
 </script>
 </body>
 </html>
