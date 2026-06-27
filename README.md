@@ -1,15 +1,13 @@
-# Japan Ride D37 Mapillary Availability UX
+# Japan Ride D38 Street Background UX
 
-D37変更点:
-- D32ベース
-- Google Street Viewは使わない前提
-- Mapillary表示可能区間のUXサンプルを追加
-- 通常は航空写真3Dで走行
-- Mapillary表示可能区間が近づくと上部に「あと何km」通知
-- 表示可能区間内では「ここはMapillary表示できます」と表示
-- ユーザーはSV OFF/ONで航空写真のまま走るか、ストリートビュー風表示に切替可能
-- 右側にSV OFFボタン追加
-- 地図上にMapillary表示可能区間のピンを表示
+D38変更点:
+- D37ベース
+- ペダル速度調整ボタンを復活: ペダル− / ペダル＋
+- 現地ビュー通知が上部UIと被らないよう位置を下げた
+- UI表記からMapillaryを出さず、「現地ビュー」に変更
+- Mapillary表示可能区間に入った時、小窓ではなく背景全体を路面目線表示に切り替えるUXへ変更
+- 現地ビューONでもHUDは残る
+- 航空写真へ戻したい場合は「航空写真」または右側の現地ON/OFFで切替
 - 現段階ではAPI接続ではなくUXサンプル用の仮区間データ
 
 GitHub Pagesでは `index.html` を公開してください。

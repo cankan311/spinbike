@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D37 Mapillary Availability UX</title>
+<title>Japan Ride D38 Street View Background UX</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +17,137 @@
 .top-chips{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-top:7px}.meter-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(104px,.86fr);gap:6px;margin-bottom:4px}.speed-chip{display:flex;align-items:center;justify-content:center;background:rgba(20,24,32,.92);color:#fff;border-radius:18px;padding:6px 12px;min-width:140px;box-shadow:0 8px 18px rgba(0,0,0,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.speed-num{font-family:var(--display-font);font-size:30px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.speed-unit{font-size:11px;font-weight:900;opacity:.88;margin-left:6px}.place{max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.86);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle{pointer-events:auto;cursor:pointer;border:0;background:rgba(20,24,32,.72);color:#fff;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle.off{background:rgba(255,255,255,.78);color:#111827}.label-toggle.warn{background:#b45309;color:#fff}.ring-card{min-width:0;border-radius:18px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:4px 8px;display:flex;align-items:center;justify-content:center}.ring-wrap{display:flex;align-items:center;gap:8px;width:100%}.ring-svg{width:44px;height:44px;flex:0 0 44px}.ring-track{stroke:#d9deea;stroke-width:7;fill:none}.ring-progress{stroke:#16B978;stroke-width:7;fill:none;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}.ring-value{font-size:16px;font-weight:900;fill:#111827}.ring-labels{min-width:0;display:flex;flex-direction:column;line-height:1}.ring-main{font-size:15px;font-weight:900;color:#111827;font-variant-numeric:tabular-nums}.ring-sub{font-size:8.5px;font-weight:900;color:#6b7280;margin-top:2px}.action-card{padding:0!important;overflow:hidden}.action-btn{width:100%;height:100%;min-height:56px;border:0;border-radius:16px;background:#ff5d6c;color:#fff;font-size:15px;font-weight:900;letter-spacing:.02em;padding:0 8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}.action-btn.stop{background:#ef4444}
 .bottom{pointer-events:none;display:flex;flex-direction:column;gap:3px}.mini-dock{position:relative;pointer-events:auto;border-radius:20px;background:linear-gradient(180deg,rgba(247,249,253,.92),rgba(232,236,245,.88));border:1px solid rgba(255,255,255,.78);box-shadow:0 -5px 18px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:5px 5px 4px}.zone-card{border-radius:17px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 5px 10px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:6px 8px 5px}.zone-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.zone-left{display:flex;align-items:center;gap:8px;min-width:0}.zone-dot{width:14px;height:14px;border-radius:50%;background:#16B978;box-shadow:0 0 0 2px rgba(22,185,120,.12)}.zone-kicker{font-size:9px;font-weight:900;color:var(--sub);letter-spacing:.02em}.zone-main{font-family:var(--display-font);font-size:18px;line-height:1.0;font-weight:900;color:#14b46f;letter-spacing:.02em;white-space:nowrap}.zone-fire{font-size:20px;margin-left:5px}.zone-bpm{display:flex;align-items:flex-end;gap:4px;white-space:nowrap}.zone-bpm .num{font-size:22px;line-height:1;font-weight:900;color:var(--coral);font-variant-numeric:tabular-nums}.zone-bpm .u{font-size:10px;font-weight:900;color:var(--sub);padding-bottom:4px}.zone-line{height:7px;display:flex;gap:5px;margin-top:6px}.zone-seg{flex:1;border-radius:999px;opacity:.22}.zone-seg.active{opacity:1;box-shadow:0 0 0 1px rgba(255,255,255,.8) inset, 0 1px 4px rgba(0,0,0,.08)}.zone-guide{margin-top:4px;font-size:8.8px;line-height:1.2;font-weight:900;color:#596273}.zone-guide .zone-name{display:inline-block;margin-right:6px;color:#111827}.zone-guide .zone-tip{color:#667085}.dock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:4px}.dock-card{min-width:0;border-radius:15px;background:linear-gradient(180deg,#fff,#f6f8fc);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:5px 6px 4px;cursor:pointer}.dock-card.tap{position:relative}.dock-card.tap:after{content:'+';position:absolute;right:8px;top:6px;font-size:12px;font-weight:900;color:#a4abbb}.dock-card.tap.open:after{content:'–'}.label{font-size:8.5px;font-weight:900;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.value{font-size:15px;line-height:1.0;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}.unit{font-size:8px;color:var(--sub);font-weight:900;margin-left:1px}.hr .value{color:var(--coral)}.secondary-wrap{overflow:hidden;max-height:0;opacity:0;transform:translateY(-6px);transition:max-height .24s ease, opacity .2s ease, transform .24s ease}.secondary-wrap.open{max-height:92px;opacity:1;transform:translateY(0)}.mini-note{display:none}.control-row{display:flex;align-items:center;gap:8px;margin-top:4px}.control-row input{width:100%;accent-color:var(--blue);height:18px}.pill{border:0;border-radius:999px;background:#171b23;color:#fff;font-size:8.5px;font-weight:900;padding:5px 8px;white-space:nowrap}.maplibregl-ctrl-bottom-left{display:none!important}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important;right:10px!important;opacity:.78}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}.maplibregl-ctrl-group{border-radius:14px!important;overflow:hidden!important}
 @media(max-height:740px){.right-map-tools{right:10px;bottom:calc(env(safe-area-inset-bottom) + 250px);gap:5px}.recenter-btn{width:42px;height:42px}.recenter-svg{width:42px;height:42px}.building-fab,.terrain-fab,.street-fab{font-size:9px;padding:6px 8px;min-width:58px}.hero{padding:8px 10px}.hero-icon{width:38px;height:38px;border-radius:15px;font-size:21px}.landmark{font-size:26px}.remain{font-size:12px}.subgoals{font-size:9.5px}.top-chips{margin-top:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(98px,.84fr);gap:5px}.speed-chip{min-width:132px;padding:6px 10px}.speed-num{font-size:28px}.speed-unit{font-size:10px}.ring-svg{width:40px;height:40px}.ring-main{font-size:14px}.action-btn{min-height:52px;font-size:14px}.mini-dock{padding:4px}.zone-main{font-size:17px}.zone-bpm .num{font-size:21px}.dock-grid{gap:4px}.dock-card{padding:4px}.value{font-size:14px}.zone-guide{font-size:8.6px}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important}}@media(max-width:370px){.right-map-tools{right:9px;bottom:calc(env(safe-area-inset-bottom) + 236px);gap:5px}.recenter-btn{width:40px;height:40px}.recenter-svg{width:40px;height:40px}.building-fab,.terrain-fab,.street-fab{font-size:9px;padding:6px 7px;min-width:56px}.landmark{font-size:25px}.top-chips{gap:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(92px,.82fr);gap:4px}.speed-chip{min-width:118px;padding:5px 8px}.speed-num{font-size:25px}.speed-unit{font-size:9px}.ring-svg{width:38px;height:38px}.ring-main{font-size:13px}.action-btn{min-height:48px;font-size:13px}.dock-grid{grid-template-columns:repeat(3,1fr);gap:4px}.value{font-size:14px}.label{font-size:8px}.place{display:none}.mode{display:none}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}}
+
+/* D38: 現地ビューは小窓ではなく背景全体を切り替える */
+.street-notice{
+  top:calc(env(safe-area-inset-top) + 154px)!important;
+  left:12px!important;
+  right:12px!important;
+  z-index:21!important;
+}
+.street-notice-main{font-size:11.5px!important}
+.street-notice-btn{background:#2f6bff!important}
+.street-full{
+  position:absolute;
+  inset:0;
+  z-index:3;
+  display:none;
+  overflow:hidden;
+  background:#111827;
+  pointer-events:none;
+}
+.street-full.open{display:block}
+.street-full-bg{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(#82c7f4 0 42%,#47743c 42% 54%,#202329 54% 100%);
+  overflow:hidden;
+}
+.street-sky{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 73% 16%,rgba(255,255,255,.95) 0 5%,rgba(255,255,255,.35) 6%,transparent 11%),
+    linear-gradient(#82c7f4 0 44%,transparent 44%);
+}
+.street-mountains{
+  position:absolute;
+  left:-12%;
+  right:-12%;
+  top:31%;
+  height:24%;
+  background:linear-gradient(135deg,#315d46 0 30%,#406f4f 31% 52%,#2d513e 53% 72%,#4f814f 73%);
+  clip-path:polygon(0 80%,10% 35%,24% 72%,35% 28%,50% 80%,63% 38%,77% 68%,91% 24%,100% 82%,100% 100%,0 100%);
+  opacity:.9;
+}
+.street-side{
+  position:absolute;
+  bottom:0;
+  width:45%;
+  height:50%;
+  background:linear-gradient(180deg,#4e8a45,#24331f);
+  opacity:.95;
+}
+.street-side.left{left:-10%;clip-path:polygon(0 0,58% 0,100% 100%,0 100%)}
+.street-side.right{right:-10%;clip-path:polygon(42% 0,100% 0,100% 100%,0 100%)}
+.street-road-full{
+  position:absolute;
+  left:14%;
+  right:14%;
+  bottom:-22%;
+  height:74%;
+  background:linear-gradient(90deg,#15171b,#42464e 47%,#252830 52%,#15171b);
+  clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);
+  box-shadow:0 -30px 60px rgba(0,0,0,.25);
+}
+.street-centerline{
+  position:absolute;
+  left:49.2%;
+  top:2%;
+  width:1.6%;
+  height:100%;
+  background:repeating-linear-gradient(to bottom,rgba(255,255,255,.88) 0 24px,transparent 24px 52px);
+  transform:perspective(180px) rotateX(35deg);
+  transform-origin:top;
+  opacity:.86;
+}
+.street-full-caption{
+  position:absolute;
+  z-index:4;
+  left:12px;
+  right:12px;
+  bottom:calc(env(safe-area-inset-bottom) + 136px);
+  border-radius:999px;
+  background:rgba(17,24,39,.72);
+  color:white;
+  font-size:11px;
+  font-weight:900;
+  padding:8px 11px;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pedal-control{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:5px;
+  align-items:center;
+  margin:5px 0;
+}
+.pedal-btn{
+  border:0;
+  border-radius:999px;
+  background:#eef2f7;
+  color:#17202c;
+  font-size:11px;
+  font-weight:900;
+  padding:8px 6px;
+}
+.pedal-btn.plus{background:#e8f0ff;color:#2155d8}
+.pedal-readout{
+  min-width:62px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid #e3e7ef;
+  text-align:center;
+  padding:6px 9px;
+  font-size:14px;
+  font-weight:900;
+  color:#111827;
+}
+.pedal-readout small{font-size:9px;color:#6b7280;margin-left:2px}
+@media(max-height:740px){
+  .street-notice{top:calc(env(safe-area-inset-top) + 136px)!important}
+  .pedal-control{margin:4px 0}
+  .pedal-btn{font-size:10px;padding:6px 5px}
+  .pedal-readout{padding:5px 8px}
+}
+@media(max-height:670px){
+  .street-notice{top:calc(env(safe-area-inset-top) + 118px)!important}
+  .street-full-caption{bottom:calc(env(safe-area-inset-bottom) + 118px)}
+}
+
 </style>
 </head>
 <body>
@@ -33,28 +164,22 @@
     </button>
     <button class="building-fab off" id="buildingToggle" aria-label="建物3D切替">建物 OFF</button>
     <button class="terrain-fab off" id="terrainToggle" aria-label="地形3D切替">地形 OFF</button>
-    <button class="street-fab off" id="streetToggle" aria-label="ストリート表示切替">SV OFF</button>
+    <button class="street-fab off" id="streetToggle" aria-label="現地ビュー切替">現地 OFF</button>
   </div>
   <div class="street-notice" id="streetNotice">
-    <div class="street-notice-main" id="streetNoticeMain">Mapillary表示可能区間まで —</div>
-    <button class="street-notice-btn" id="streetQuickBtn">SV表示</button>
+    <div class="street-notice-main" id="streetNoticeMain">現地ビュー区間まで —</div>
+    <button class="street-notice-btn" id="streetQuickBtn">現地ビュー</button>
   </div>
-  <div class="street-view-panel" id="streetViewPanel">
-    <div class="street-view-head">
-      <div>
-        <div class="street-kicker">Mapillary区間サンプル</div>
-        <div class="street-view-title" id="streetViewTitle">ストリートビュー風表示</div>
+  <div class="street-full" id="streetFull">
+    <div class="street-full-bg">
+      <div class="street-sky"></div>
+      <div class="street-mountains"></div>
+      <div class="street-side left"></div>
+      <div class="street-side right"></div>
+      <div class="street-road-full">
+        <div class="street-centerline"></div>
       </div>
-      <button class="street-close" id="streetClose">×</button>
-    </div>
-    <div class="street-view-body" id="streetViewBody">
-      <div class="street-road">
-        <div class="sky"></div>
-        <div class="road">
-          <div class="centerline"></div>
-        </div>
-        <div class="street-caption" id="streetCaption">Mapillary画像がある区間では、この枠を実画像ビューアに置き換える想定</div>
-      </div>
+      <div class="street-full-caption" id="streetCaption">現地ビュー対応区間：背景全体を路面目線表示に切替中</div>
     </div>
   </div>
   <div class="ui">
@@ -80,6 +205,11 @@
           <div class="speed-chip"><span class="speed-num" id="speed">14.6</span><span class="speed-unit">km/h</span></div>
           <div class="ring-card"><div class="ring-wrap"><svg class="ring-svg" viewBox="0 0 52 52" aria-label="cadence ring"><circle class="ring-track" cx="26" cy="26" r="18"></circle><circle class="ring-progress" id="cadenceRing" cx="26" cy="26" r="18" stroke-dasharray="113.1" stroke-dashoffset="56"></circle><text class="ring-value" id="ringValue" x="26" y="31" text-anchor="middle">58</text></svg><div class="ring-labels"><div class="ring-main" id="ringMain">58 rpm</div><div class="ring-sub">ケイデンス</div></div></div></div>
           <div class="action-card"><button class="action-btn stop" id="runBtnTop">ストップ</button></div>
+        </div>
+        <div class="pedal-control">
+          <button class="pedal-btn" id="pedalDown">ペダル −</button>
+          <div class="pedal-readout"><span id="pedalRpm">58</span><small>rpm</small></div>
+          <button class="pedal-btn plus" id="pedalUp">ペダル ＋</button>
         </div>
         <div class="zone-card">
           <div class="zone-head">
@@ -127,7 +257,7 @@ function renderUI(){const kmh=st.rpm*2*2.1/60*3.6; const prog=Math.min(100,st.km
  $('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —'; $('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
  const stats=[['距離',st.sess.toFixed(2),'km'],['時間',fmtTime(st.t),''],['消費',Math.round(st.cal),'kcal'],['最高',st.mx.toFixed(1),'km/h'],['XP',Math.round(st.cal*0.9),''],['累計',st.km.toFixed(1),'km']];
  $('metrics').innerHTML=stats.map(m=>'<div class="dock-card"><div class="label">'+m[0]+'</div><div class="value">'+m[1]+'<span class="unit">'+m[2]+'</span></div></div>').join('');
- const topBtn=$('runBtnTop'); if(topBtn){topBtn.textContent=st.running?'ストップ':'スタート'; topBtn.classList.toggle('stop',st.running);} 
+ const topBtn=$('runBtnTop'); if(topBtn){topBtn.textContent=st.running?'ストップ':'スタート'; topBtn.classList.toggle('stop',st.running);} const pr=$('pedalRpm'); if(pr){pr.textContent=Math.round(st.rpm);} 
  $('bars').innerHTML=zones.map((a,i)=>'<div class="zone-seg '+(i===z?'active':'')+'" style="background:'+a.c+'"></div>').join('');
  const zoneName=zones[z].n; let tip=''; let fire='';
  if(z===0){tip='少し上げると脂肪燃焼に入りやすいです';}
@@ -160,23 +290,22 @@ function updateStreetUX(){
  st.activeStreet=cur;
  if(cur){
    notice.classList.add('show');
-   main.textContent='ここはMapillary表示できます：'+cur.name;
-   btn.textContent=st.streetMode?'航空写真':'SV表示';
+   main.textContent='ここは現地ビューで走れます：'+cur.name;
+   btn.textContent=st.streetMode?'航空写真':'現地ビュー';
  }else if(nextZ && (nextZ.start-st.km)<=5){
    notice.classList.add('show');
-   main.textContent='Mapillary表示可能区間まで あと '+(nextZ.start-st.km).toFixed(1)+'km：'+nextZ.name;
+   main.textContent='現地ビュー区間まで あと '+(nextZ.start-st.km).toFixed(1)+'km：'+nextZ.name;
    btn.textContent='予告';
  }else{
    notice.classList.remove('show');
  }
  const sbtn=$('streetToggle');
- if(sbtn){sbtn.textContent=st.streetMode?'SV ON':'SV OFF'; sbtn.classList.toggle('off',!st.streetMode);}
- const panel=$('streetViewPanel');
- if(panel){panel.classList.toggle('open',!!(st.streetMode&&cur));}
+ if(sbtn){sbtn.textContent=st.streetMode?'SV ON':'現地 OFF'; sbtn.classList.toggle('off',!st.streetMode);}
+ const full=$('streetFull');
+ if(full){full.classList.toggle('open',!!(st.streetMode&&cur));}
  if(st.streetMode&&cur){
-   const title=$('streetViewTitle'), cap=$('streetCaption');
-   if(title) title.textContent=cur.name;
-   if(cap) cap.textContent='実装時はここにMapillaryJS/画像シーケンスを表示：'+cur.name;
+   const cap=$('streetCaption');
+   if(cap) cap.textContent='現地ビューで走行中：'+cur.name+' / 航空写真に戻すには「航空写真」または右の現地ボタン';
  }
 }
 function toggleStreetMode(){
@@ -186,7 +315,7 @@ function toggleStreetMode(){
    const nz=nextStreetZone();
    st.streetMode=false;
    const notice=$('streetNotice'), main=$('streetNoticeMain');
-   if(notice&&main&&nz){notice.classList.add('show'); main.textContent='まだSV区間外です。表示可能区間まで あと '+(nz.start-st.km).toFixed(1)+'km';}
+   if(notice&&main&&nz){notice.classList.add('show'); main.textContent='まだ現地ビュー区間外です。表示可能区間まで あと '+(nz.start-st.km).toFixed(1)+'km';}
  } 
  updateStreetUX();
 }
@@ -205,10 +334,15 @@ function addStreetZoneMarkers(){
    st.streetMarkers.push(m);
  });
 }
+function adjustPedal(delta){
+ st.rpm=Math.max(25,Math.min(110,st.rpm+delta));
+ const p=$('pedalRpm'); if(p) p.textContent=Math.round(st.rpm);
+ renderUI();
+}
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D37 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D38 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -477,7 +611,7 @@ function updateCamera(p, heading){
 function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  updateStreetUX(); renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const streetBtn=e.target.closest('#streetToggle,#streetQuickBtn'); if(streetBtn){toggleStreetMode(); return;} const streetClose=e.target.closest('#streetClose'); if(streetClose){closeStreetPanel(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
+document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const streetBtn=e.target.closest('#streetToggle,#streetQuickBtn'); if(streetBtn){toggleStreetMode(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
 setupDots();renderUI();initMap();requestAnimationFrame(tick);
 </script>
 </body>
