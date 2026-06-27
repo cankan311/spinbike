@@ -71,34 +71,33 @@
 .mly-token-panel{
   position:absolute;
   z-index:9;
-  left:18px;
-  right:18px;
-  top:50%;
-  transform:translateY(-50%);
-  border-radius:22px;
-  background:rgba(255,255,255,.96);
+  left:14px;
+  right:14px;
+  bottom:calc(env(safe-area-inset-bottom) + 148px);
+  border-radius:18px;
+  background:rgba(255,255,255,.97);
   border:1px solid rgba(255,255,255,.85);
-  box-shadow:0 18px 42px rgba(0,0,0,.32);
-  padding:16px;
+  box-shadow:0 12px 28px rgba(0,0,0,.24);
+  padding:12px;
   display:none;
   pointer-events:auto;
 }
 .street-full.need-token .mly-token-panel{display:block}
-.mly-token-title{font-size:18px;font-weight:900;color:#111827}
-.mly-token-sub{font-size:11px;font-weight:800;color:#6b7280;margin:4px 0 10px}
+.mly-token-title{font-size:15px;font-weight:900;color:#111827}
+.mly-token-sub{font-size:10.5px;font-weight:800;color:#6b7280;margin:3px 0 8px;line-height:1.35}
 .mly-token-input{
   width:100%;
   border:1px solid #d7dce6;
-  border-radius:14px;
+  border-radius:12px;
   background:#f8fafc;
-  padding:12px;
-  font-size:13px;
+  padding:10px 11px;
+  font-size:12px;
   font-weight:800;
   color:#111827;
 }
-.mly-token-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+.mly-token-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
 .mly-token-save,.mly-token-cancel{
-  border:0;border-radius:999px;font-size:12px;font-weight:900;padding:10px 12px;
+  border:0;border-radius:999px;font-size:11px;font-weight:900;padding:9px 11px;
 }
 .mly-token-save{background:#2f6bff;color:white}
 .mly-token-cancel{background:#eef2f7;color:#17202c}
@@ -164,6 +163,26 @@
   .street-full-caption{bottom:calc(env(safe-area-inset-bottom) + 118px)}
 }
 
+
+.view-toast{
+  position:absolute;
+  z-index:30;
+  left:18px;
+  right:18px;
+  top:calc(env(safe-area-inset-top) + 118px);
+  border-radius:999px;
+  background:rgba(17,24,39,.84);
+  color:#fff;
+  padding:10px 14px;
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+  opacity:0;
+  transform:translateY(-8px);
+  pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;
+}
+.view-toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
@@ -192,15 +211,15 @@
     <div class="street-photo-vignette"></div>
     <div class="view-badge" id="streetCaption">View ON</div>
     <div class="mly-token-panel" id="mlyTokenPanel">
-      <div class="mly-token-title">Mapillary Token</div>
-      <div class="mly-token-sub">初回だけMapillary Client Tokenを入れてください</div>
-      <input id="mlyTokenInput" class="mly-token-input" placeholder="MLY|..." autocomplete="off" />
+      <div class="mly-token-title">View設定</div>
+      <div class="mly-token-sub">MapillaryのClient Tokenを入れると、実写Viewを表示します。</div>
+      <input id="mlyTokenInput" class="mly-token-input" placeholder="Mapillary Client Token" autocomplete="off" />
       <div class="mly-token-actions">
-        <button id="mlyTokenSave" class="mly-token-save">保存して接続</button>
-        <button id="mlyTokenCancel" class="mly-token-cancel">Mapへ戻る</button>
+        <button id="mlyTokenSave" class="mly-token-save">接続する</button>
+        <button id="mlyTokenCancel" class="mly-token-cancel">閉じる</button>
       </div>
     </div>
-    <div class="view-debug-panel" id="viewDebugPanel">
+    <div class="view-debug-panel hide" id="viewDebugPanel">
       <div class="view-debug-title">View接続確認</div>
       <div class="view-debug-text" id="viewDebugText">待機中</div>
       <div class="view-debug-actions">
@@ -211,6 +230,7 @@
       </div>
     </div>
   </div>
+  <div class="view-toast" id="viewToast">ViewにはMapillary Tokenが必要です</div>
   <div class="ui">
     <div class="top">
       <div class="hero">
@@ -219,14 +239,14 @@
           <div class="hero-icon">🏯</div>
           <div style="flex:1;min-width:0">
             <div class="eyebrow">次の名所</div>
-            <div class="landmark">名古屋城</div>
-            <div class="remain" id="remain">あと 186.8 km</div>
+            <div class="landmark">明治神宮</div>
+            <div class="remain" id="remain">あと 3.6 km</div>
           </div>
         </div>
         <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
-        <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
+        <div class="subgoals"><span id="smallGoal">通過地点 0.6km</span><span id="mediumGoal">中継地 表参道 1km</span></div>
       </div>
-      <div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle warn" id="labelToggle">OFM読込中</button></div>
+      <div class="top-chips"><div class="place" id="place">📍 東京都 渋谷区</div><button class="label-toggle warn" id="labelToggle">OFM読込中</button></div>
     </div>
     <div class="bottom">
       <div class="mini-dock">
@@ -264,21 +284,16 @@
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/mapillary-js@4.1.2/dist/mapillary.js"></script>
 <script>
-const LEG=195;
-const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
+const LEG=3.6;
+const CP=[{km:0,t:'large',n:'渋谷駅'},{km:0.6,t:'small'},{km:1.2,t:'medium',n:'表参道'},{km:1.8,t:'small'},{km:2.5,t:'medium',n:'原宿'},{km:3.6,t:'large',n:'明治神宮'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
 const VIEW_ZONES=[
-  {start:8.3,end:11.8,name:'焼津駅周辺'},
-  {start:18.4,end:21.0,name:'静岡市街地'},
-  {start:63.0,end:66.5,name:'浜松市街地'},
-  {start:120.0,end:124.0,name:'豊橋市街地'},
-  {start:166.0,end:170.0,name:'岡崎市街地'},
-  {start:190.0,end:195.0,name:'名古屋市街地'}
+  {start:0.0,end:3.6,name:'渋谷〜表参道テストルート'}
 ];
 const VIEW_SEQUENCE=[]; // D43: real MapillaryJS viewer; no embedded fake frames
 
 
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, streetMode:false, streetMarkers:[], activeStreet:null, viewFrameIndex:-1, mlyViewer:null, mlyImages:[], mlyCurrentId:null, mlyCurrentIndex:-1, mlyLoading:false, mlyLastFetchKm:-999, mlyToken:localStorage.getItem('mly_token')||''};
+let st={km:0.05,sess:0.05,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, streetMode:false, streetMarkers:[], activeStreet:null, viewFrameIndex:-1, mlyViewer:null, mlyImages:[], mlyCurrentId:null, mlyCurrentIndex:-1, mlyLoading:false, mlyLastFetchKm:-999, mlyToken:localStorage.getItem('mly_token')||''};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -311,10 +326,10 @@ let map,marker;
 function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms;}
 const VIEW_TEST_POINTS=[
  {name:'渋谷スクランブル周辺',lng:139.7006,lat:35.6595},
+ {name:'表参道周辺',lng:139.7127,lat:35.6677},
+ {name:'原宿駅周辺',lng:139.7022,lat:35.6740},
  {name:'東京駅丸の内周辺',lng:139.7649,lat:35.6812},
- {name:'名古屋駅周辺',lng:136.8845,lat:35.1709},
- {name:'静岡駅周辺',lng:138.3890,lat:34.9717},
- {name:'焼津駅周辺',lng:138.3185,lat:34.8720}
+ {name:'名古屋駅周辺',lng:136.8845,lat:35.1709}
 ];
 function getMlyToken(){return (st.mlyToken||localStorage.getItem('mly_token')||'').trim();}
 function setMlyStatus(text){
@@ -325,12 +340,25 @@ function setViewDebugVisible(v){
  const p=$('viewDebugPanel');
  if(p) p.classList.toggle('hide',!v);
 }
-function needMlyToken(){
+function showViewToast(msg){
+ const t=$('viewToast');
+ if(!t) return;
+ t.textContent=msg;
+ t.classList.add('show');
+ clearTimeout(st.viewToastTimer);
+ st.viewToastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function openViewTokenPanel(){
+ st.streetMode=true;
  const full=$('streetFull');
- if(full){full.classList.add('need-token'); full.classList.remove('ready');}
- setViewDebugVisible(true);
- setMlyStatus('Mapillary Tokenが必要です。\nTokenを入れるまで本物のViewは表示できません。');
+ if(full){full.classList.add('open','need-token'); full.classList.remove('ready');}
  const input=$('mlyTokenInput'); if(input&&getMlyToken()) input.value=getMlyToken();
+ setViewDebugVisible(false);
+}
+function needMlyToken(){
+ showViewToast('ViewにはMapillary Tokenが必要です');
+ openViewTokenPanel();
+ setMlyStatus('View設定');
 }
 function saveMlyToken(){
  const input=$('mlyTokenInput');
@@ -500,9 +528,9 @@ function updateStreetUX(){
    notice.classList.remove('show');
  }
  const sbtn=$('streetToggle');
- if(sbtn){sbtn.textContent=st.streetMode?'SV ON':'View OFF'; sbtn.classList.toggle('off',!st.streetMode);}
+ if(sbtn){sbtn.textContent=st.streetMode?'View ON':'View OFF'; sbtn.classList.toggle('off',!st.streetMode);}
  const full=$('streetFull');
- if(full){full.classList.toggle('open',!!(st.streetMode&&cur));}
+ if(full){full.classList.toggle('open',!!(st.streetMode&&(cur||full.classList.contains('need-token'))));}
  if(st.streetMode&&cur){
    ensureMlyViewer();
    updateViewFrame();
@@ -510,6 +538,12 @@ function updateStreetUX(){
 }
 function toggleStreetMode(){
  const cur=currentStreetZone();
+ if(!st.streetMode && !getMlyToken()){
+   openViewTokenPanel();
+   showViewToast('先にView設定をしてください');
+   updateStreetUX();
+   return;
+ }
  st.streetMode=!st.streetMode;
  if(st.streetMode){st.viewFrameIndex=-1; st.mlyLastFetchKm=-999;}
  if(st.streetMode && !cur){
@@ -536,6 +570,7 @@ function addStreetZoneMarkers(){
  });
 }
 function jumpToViewTest(){
+ if(!getMlyToken()){openViewTokenPanel(); showViewToast('View確認にはTokenが必要です'); return;}
  const z=VIEW_ZONES[0];
  if(!z) return;
  st.km=Math.max(0,z.start+0.05);
@@ -565,15 +600,15 @@ function adjustPedal(delta){
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D44 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、Mapを最初のsymbol直下へ差し込む。
+ // D46 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、Mapを最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
    style:'https://tiles.openfreemap.org/styles/liberty',
-   center:[138.309,34.835],
+   center:[139.7041,35.6618],
    zoom:15.8,
    pitch:58,
-   bearing:50,
+   bearing:32,
    antialias:true,
    dragRotate:true,
    touchZoomRotate:true,
@@ -630,9 +665,9 @@ function initMap(){
 
    hideAllBuilding3DOnLoad(); setTimeout(()=>{if(!st.buildingsOn) hideAllBuilding3DOnLoad();},800);
 
-   let el=document.createElement('div');el.style.width='24px';el.style.height='24px';el.style.borderRadius='50%';el.style.background='#2f6bff';el.style.border='4px solid white';el.style.boxShadow='0 2px 10px rgba(0,0,0,.35)'; marker=new maplibregl.Marker({element:el}).setLngLat([138.309,34.835]).addTo(map);
+   let el=document.createElement('div');el.style.width='24px';el.style.height='24px';el.style.borderRadius='50%';el.style.background='#2f6bff';el.style.border='4px solid white';el.style.boxShadow='0 2px 10px rgba(0,0,0,.35)'; marker=new maplibregl.Marker({element:el}).setLngLat([139.7006,35.6595]).addTo(map);
 
-   let coords=[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250],[138.3425,34.8215],[138.3565,34.8188]];
+   let coords=[[139.7006,35.6595],[139.7036,35.6618],[139.7087,35.6651],[139.7127,35.6677],[139.7045,35.6702],[139.7022,35.6740]];
    try{
      const url='https://router.project-osrm.org/route/v1/driving/'+coords.map(c=>c.join(',')).join(';')+'?overview=full&geometries=geojson';
      const res=await fetch(url); const json=await res.json();
@@ -834,7 +869,7 @@ function updateCamera(p, heading){
 function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  updateStreetUX(); renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const jumpView=e.target.closest('#viewTestJump'); if(jumpView){jumpToViewTest(); return;} const tokenSave=e.target.closest('#mlyTokenSave'); if(tokenSave){saveMlyToken(); return;} const tokenCancel=e.target.closest('#mlyTokenCancel'); if(tokenCancel){st.streetMode=false; updateStreetUX(); return;} const vPrev=e.target.closest('#viewPrev'); if(vPrev){moveMlyIndex(-1); return;} const vNext=e.target.closest('#viewNext'); if(vNext){moveMlyIndex(1); return;} const vRetry=e.target.closest('#viewRetry'); if(vRetry){st.mlyImages=[]; st.mlyLastFetchKm=-999; ensureMlyViewer(true); return;} const vHide=e.target.closest('#viewHideDebug'); if(vHide){setViewDebugVisible(false); return;} const streetBtn=e.target.closest('#streetToggle,#streetQuickBtn'); if(streetBtn){toggleStreetMode(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
+document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const jumpView=e.target.closest('#viewTestJump'); if(jumpView){jumpToViewTest(); return;} const tokenSave=e.target.closest('#mlyTokenSave'); if(tokenSave){saveMlyToken(); return;} const tokenCancel=e.target.closest('#mlyTokenCancel'); if(tokenCancel){st.streetMode=false; const full=$('streetFull'); if(full){full.classList.remove('open','need-token','ready');} updateStreetUX(); return;} const vPrev=e.target.closest('#viewPrev'); if(vPrev){moveMlyIndex(-1); return;} const vNext=e.target.closest('#viewNext'); if(vNext){moveMlyIndex(1); return;} const vRetry=e.target.closest('#viewRetry'); if(vRetry){st.mlyImages=[]; st.mlyLastFetchKm=-999; ensureMlyViewer(true); return;} const vHide=e.target.closest('#viewHideDebug'); if(vHide){setViewDebugVisible(false); return;} const streetBtn=e.target.closest('#streetToggle,#streetQuickBtn'); if(streetBtn){toggleStreetMode(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
 setTimeout(()=>{const i=$('mlyTokenInput'); if(i&&getMlyToken()) i.value=getMlyToken();},0);setupDots();renderUI();initMap();requestAnimationFrame(tick);
 </script>
 </body>

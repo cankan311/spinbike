@@ -1,11 +1,13 @@
-# Japan Ride D44 Mapillary View QA
+# Japan Ride D46 Shibuya View Demo Route
 
-D44:
-- 仮画像・動画切り出しなし
-- MapillaryJS実表示
-- ルート付近から検索し、失敗時は確認用の高密度候補地点も検索
-- Token入力、保存、再取得、前へ/次へ、接続状況表示
-- 画像枚数・検索地点・半径を表示
-- 単体HTML。GitHub Pagesは index.html だけ上書き
+D46:
+- D45ベース
+- View検証専用に、ルートを渋谷〜表参道〜原宿周辺へ変更
+- View区間はスタート直後から有効
+- View確認ボタンで0km待たずに即テスト
+- MapillaryJS実接続
+- 単体HTML。GitHub Pagesは index.html のみ上書き
 
+注意:
 Mapillary Client Access Token が必要です。
+これは日本一周本番ルートではなく、View機能確認用の高密度想定デモルートです。
