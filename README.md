@@ -1,13 +1,13 @@
-# Japan Ride D38 Street Background UX
+# Japan Ride D39 View Photo Background
 
-D38変更点:
-- D37ベース
-- ペダル速度調整ボタンを復活: ペダル− / ペダル＋
-- 現地ビュー通知が上部UIと被らないよう位置を下げた
-- UI表記からMapillaryを出さず、「現地ビュー」に変更
-- Mapillary表示可能区間に入った時、小窓ではなく背景全体を路面目線表示に切り替えるUXへ変更
-- 現地ビューONでもHUDは残る
-- 航空写真へ戻したい場合は「航空写真」または右側の現地ON/OFFで切替
-- 現段階ではAPI接続ではなくUXサンプル用の仮区間データ
+D39変更点:
+- 画面表記を「現地ビュー」から「View」に変更
+- 右側ボタンは View OFF / View ON
+- View区間通知も「View区間まで あと◯km」に変更
+- 3D風の仮道路表現を削除
+- View ON時は背景全体に実写風景写真を表示
+- 小窓表示ではなく、地図背景そのものをView表示へ切り替える
+- HUD、ペダル±、建物3D、地形3Dは維持
+- 現段階ではUX確認用。実装時はこの背景レイヤーをMapillaryJS/画像シーケンスに差し替える
 
 GitHub Pagesでは `index.html` を公開してください。
