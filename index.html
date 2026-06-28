@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-2 Real 3D Building Terrain</title>
+<title>Japan Ride D66-3 Map View</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -571,12 +571,75 @@
 .phone.maponly .map-tools-panel:not(.open){
   display:grid!important;
 }
+
+
+/* D66-3: 地図ビューだけを修正
+   - 詳細 → 簡易 → 地図ビュー → 詳細
+   - 地図ビューでは走行UI/下タブを消して地図を広く見る
+   - 地図操作パネルを地図ビュー内に常時表示
+   - SVは入れない
+*/
+.phone.maponly .ui,
+.phone.maponly .bottom-tabs,
+.phone.maponly .simple-page,
+.phone.maponly .display-float,
+.phone.maponly .map-restore{
+  display:none!important;
+}
+.phone.maponly .map-tools-panel{
+  display:grid!important;
+  position:absolute!important;
+  z-index:99998!important;
+  right:12px!important;
+  bottom:calc(env(safe-area-inset-bottom) + 12px)!important;
+  top:auto!important;
+  grid-template-columns:54px 54px!important;
+  gap:8px!important;
+  padding:8px!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.92)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.25)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+  pointer-events:auto!important;
+}
+.phone.maponly .map-tools-panel:not(.open){
+  display:grid!important;
+}
+.phone.maponly .map-tools-panel .map-tool{
+  min-width:54px!important;
+  height:44px!important;
+  padding:0!important;
+  border-radius:16px!important;
+  font-size:20px!important;
+}
+.phone.maponly .map-tools-panel .map-tool.text{
+  grid-column:1/3!important;
+  min-width:0!important;
+  height:40px!important;
+  border-radius:999px!important;
+  font-size:12px!important;
+  padding:0 10px!important;
+}
+.phone.maponly #closeMapTools{
+  display:none!important;
+}
+.phone.maponly #detailFromMapView{
+  display:block!important;
+}
+#detailFromMapView{
+  display:none;
+  grid-column:1/3!important;
+  background:#111827!important;
+  border-color:#111827!important;
+  color:#fff!important;
+}
 </style>
 </head>
 <body>
 <div class="phone">
 <div class="map" id="map"></div>
-<div class="map-tools-panel" id="mapToolsPanel">
+<div class="map-tools-panel" id="mapToolsPanel"><button class="map-tool text" id="detailFromMapView">詳細表示</button>
 <button class="map-tool" id="recenterBtn2">⌖</button>
 <button class="map-tool" id="zoomInBtn">＋</button>
 <button class="map-tool" id="zoomOutBtn">−</button>
@@ -593,10 +656,7 @@
 </button>
 <button aria-label="建物3D切替" class="building-fab off" id="buildingToggle">建物 OFF</button>
 <button aria-label="地形3D切替" class="terrain-fab off" id="terrainToggle">地形 OFF</button>
-
 </div>
-
-
 <nav aria-label="メインメニュー" class="bottom-tabs" id="bottomTabs">
 <button class="bottom-tab active" data-main-tab="ride"><span>🚴</span><b>走る</b></button>
 <button class="bottom-tab" data-main-tab="routes"><span>🗺️</span><b>ルート</b></button>
@@ -741,7 +801,7 @@ function setDisplay(mode){
  const phone=document.querySelector('.phone');
  phone.classList.toggle('compact',mode==='compact');
  phone.classList.toggle('maponly',mode==='maponly');
- if($('displayToggle'))$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図だけ':'詳細表示';
+ if($('displayToggle'))$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図ビュー':'詳細表示';
  if($('displayFloat'))$('displayFloat').textContent=mode==='compact'?'詳細表示':'UI表示';
  const panel=$('mapToolsPanel');
  if(panel) panel.classList.toggle('open', mode==='maponly');
@@ -1006,12 +1066,14 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#buildingTogglePanel')){toggleBuildings();return}
  if(e.target.closest('#terrainTogglePanel')){toggleTerrain();return}
 
+ if(e.target.closest('#detailFromMapView')){setDisplay('detail');return}
  if(e.target.closest('#mapToolsToggle')){
    const p=$('mapToolsPanel');
    if(p)p.classList.toggle('open');
    return;
  }
  if(e.target.closest('#closeMapTools')){
+   if(st.display==='maponly') return;
    const p=$('mapToolsPanel');
    if(p)p.classList.remove('open');
    return;
