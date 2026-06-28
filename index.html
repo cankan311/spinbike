@@ -4,8 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D63 Display Mode Fix</title>
-
+<title>Japan Ride D64 Tabs Restore</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -202,6 +201,131 @@
 .phone.maponly .display-float{display:block!important}
 .phone.maponly .map-restore{display:none!important}
 
+
+
+/* D64: restore bottom switching tabs and remove meaningless aerial-photo status wording */
+.place-chip{
+  background:rgba(255,255,255,.86)!important;
+  color:#111827!important;
+  pointer-events:none!important;
+}
+.bottom-tabs{
+  position:absolute;
+  z-index:9990;
+  left:16px;
+  right:16px;
+  bottom:calc(env(safe-area-inset-bottom) + 8px);
+  height:58px;
+  border-radius:26px;
+  background:rgba(255,255,255,.94);
+  border:1px solid rgba(255,255,255,.82);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  padding:5px;
+  box-shadow:0 14px 30px rgba(0,0,0,.24);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  pointer-events:auto;
+}
+.bottom-tab{
+  border:0;
+  background:transparent;
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  color:#667085;
+  font-family:inherit;
+  font-weight:900;
+}
+.bottom-tab span{font-size:20px;line-height:1}
+.bottom-tab b{font-size:10px;line-height:1}
+.bottom-tab.active{background:#e8f7f0;color:#12895b}
+.mini-dock{
+  bottom:calc(env(safe-area-inset-bottom) + 72px)!important;
+}
+.simple-page{
+  position:absolute;
+  inset:0;
+  z-index:9995;
+  display:none;
+  align-items:flex-end;
+  background:rgba(12,18,27,.38);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+  padding:calc(env(safe-area-inset-top) + 18px) 12px calc(env(safe-area-inset-bottom) + 76px);
+  pointer-events:auto;
+}
+.simple-page.open{display:flex}
+.simple-sheet{
+  width:100%;
+  max-height:74dvh;
+  overflow:hidden;
+  border-radius:26px;
+  background:#fff;
+  box-shadow:0 22px 50px rgba(0,0,0,.35);
+}
+.simple-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 16px 8px;
+}
+.simple-head small{
+  display:block;
+  color:#16B978;
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:.12em;
+}
+.simple-head strong{
+  display:block;
+  font-size:26px;
+  line-height:1;
+  color:#111827;
+}
+.simple-close{
+  border:0;
+  border-radius:999px;
+  width:42px;
+  height:42px;
+  background:#eef2f7;
+  color:#111827;
+  font-size:22px;
+  font-weight:1000;
+}
+.simple-body{padding:4px 14px 16px}
+.simple-action{
+  width:100%;
+  border:0;
+  border-radius:20px;
+  background:#16B978;
+  color:#fff;
+  font-family:inherit;
+  font-size:16px;
+  font-weight:1000;
+  padding:15px 12px;
+  margin-bottom:12px;
+}
+.simple-empty{
+  border-radius:18px;
+  background:#f3f6fb;
+  color:#667085;
+  padding:16px;
+  font-size:13px;
+  font-weight:850;
+}
+.phone.compact .bottom-tabs{display:grid!important}
+.phone.maponly .bottom-tabs{display:none!important}
+.phone.maponly .simple-page{display:none!important}
+@media(max-height:740px){
+  .bottom-tabs{height:52px}
+  .mini-dock{bottom:calc(env(safe-area-inset-bottom) + 66px)!important}
+}
 </style>
 </head>
 <body>
@@ -239,7 +363,32 @@
 </div>
 <div class="street-full-caption" id="streetCaption">現地ビュー対応区間：背景全体を路面目線表示に切替中</div>
 </div>
-</div><button class="map-restore" id="mapRestore">UI表示</button>
+</div>
+<nav aria-label="メインメニュー" class="bottom-tabs" id="bottomTabs">
+<button class="bottom-tab active" data-main-tab="ride"><span>🚴</span><b>走る</b></button>
+<button class="bottom-tab" data-main-tab="routes"><span>🗺️</span><b>ルート</b></button>
+<button class="bottom-tab" data-main-tab="records"><span>📊</span><b>記録</b></button>
+<button class="bottom-tab" data-main-tab="settings"><span>⚙️</span><b>設定</b></button>
+</nav>
+<section class="simple-page" id="routesPage">
+<div class="simple-sheet">
+<div class="simple-head"><div><small>MY ROUTE</small><strong>ルート</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
+<div class="simple-body"><button class="simple-action">＋ 新しいルートを作る</button><div class="simple-empty">ルート作成は次の安定版で戻します。今はUI復旧を優先。</div></div>
+</div>
+</section>
+<section class="simple-page" id="recordsPage">
+<div class="simple-sheet">
+<div class="simple-head"><div><small>RECORDS</small><strong>記録</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
+<div class="simple-body"><div class="simple-empty">走行記録・グラフを表示する画面。</div></div>
+</div>
+</section>
+<section class="simple-page" id="settingsPage">
+<div class="simple-sheet">
+<div class="simple-head"><div><small>SETTINGS</small><strong>設定</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
+<div class="simple-body"><div class="simple-empty">入力方式・センサー・表示設定を入れる画面。</div></div>
+</div>
+</section>
+<button class="map-restore" id="mapRestore">UI表示</button>
 <button class="display-float" id="displayFloat">詳細表示</button>
 <div class="ui">
 <div class="top">
@@ -256,7 +405,7 @@
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
-<div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle" id="labelToggle">航空写真OK</button>
+<div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle place-chip" id="placeChip">📍 静岡県 焼津市 八楠</button>
 <button class="label-toggle" id="displayToggle">簡易表示</button>
 <button class="label-toggle" id="inputModeToggle">センサー入力</button>
 </div>
@@ -293,8 +442,6 @@
 </div>
 </div>
 </div>
-
-
 <script>
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
@@ -326,6 +473,17 @@ function setInput(mode){st.input=mode;document.querySelector('.phone').classList
 function toggleInput(){setInput(st.input==='sensor'?'manual':'sensor');}
 function bindPan(){let down=false,last=null,drag=false;const el=$('map');el.addEventListener('pointerdown',e=>{down=true;last=[e.clientX,e.clientY];drag=false;el.setPointerCapture(e.pointerId)});el.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-last[0],dy=e.clientY-last[1];if(Math.abs(dx)+Math.abs(dy)>4)drag=true;last=[e.clientX,e.clientY];const c=lonLatToTile(st.center[0],st.center[1],st.zoom);st.center=tileToLonLat(c[0]-dx/256,c[1]-dy/256,st.zoom);renderMap()});el.addEventListener('pointerup',()=>{down=false});}
 document.addEventListener('click',e=>{
+
+ if(e.target.closest('[data-main-tab]')){
+   const tab=e.target.closest('[data-main-tab]').dataset.mainTab;
+   document.querySelectorAll('.bottom-tab').forEach(b=>b.classList.toggle('active',b.dataset.mainTab===tab));
+   ['routes','records','settings'].forEach(t=>{
+     const p=document.getElementById(t+'Page');
+     if(p)p.classList.toggle('open',tab===t);
+   });
+   return;
+ }
+
  if(e.target.closest('#displayToggle')){cycleDisplay();return}
  if(e.target.closest('#mapRestore')){setDisplay('detail');return}
  if(e.target.closest('#displayFloat')){setDisplay('detail');return}
