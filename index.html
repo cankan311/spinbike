@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D62 Old UI Base Restore</title>
+<title>Japan Ride D63 Display Mode Fix</title>
 
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -179,6 +179,29 @@
   .mini-dock{padding:5px!important}
   .meter-row{grid-template-columns:auto minmax(0,1fr) minmax(110px,.9fr)!important}
 }
+
+/* D63: display mode recovery fix */
+.display-float{
+  display:none;
+  position:absolute;
+  z-index:99999;
+  right:14px;
+  top:calc(env(safe-area-inset-top) + 14px);
+  border:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.94);
+  color:#111827;
+  font-size:13px;
+  font-weight:900;
+  padding:11px 15px;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+  font-family:inherit;
+  pointer-events:auto;
+}
+.phone.compact .display-float{display:block!important}
+.phone.maponly .display-float{display:block!important}
+.phone.maponly .map-restore{display:none!important}
+
 </style>
 </head>
 <body>
@@ -217,6 +240,7 @@
 <div class="street-full-caption" id="streetCaption">現地ビュー対応区間：背景全体を路面目線表示に切替中</div>
 </div>
 </div><button class="map-restore" id="mapRestore">UI表示</button>
+<button class="display-float" id="displayFloat">詳細表示</button>
 <div class="ui">
 <div class="top">
 <div class="hero">
@@ -296,7 +320,7 @@ function renderUI(){const kmh=st.rpm*2*2.1/60*3.6; const prog=Math.min(100,st.km
  $('pedalRpm').textContent=Math.round(st.rpm);
  $('zoneBpm').textContent=Math.round(st.hr); $('zoneMain').childNodes[0].nodeValue=zones[z].n; $('zoneMain').style.color=zones[z].c; $('zoneDot').style.background=zones[z].c; $('bars').innerHTML=zones.map((zz,i)=>`<div class="zone-seg ${i===z?'active':''}" style="background:${zz.c}"></div>`).join(''); $('zoneGuide').innerHTML='<span class="zone-name">今は'+zones[z].n+'ゾーンです</span><span class="zone-tip">'+(z>=3?'無理しすぎに注意':'')+'</span>';
 }
-function setDisplay(mode){st.display=mode;document.querySelector('.phone').classList.toggle('compact',mode==='compact');document.querySelector('.phone').classList.toggle('maponly',mode==='maponly');$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図だけ':'詳細表示';}
+function setDisplay(mode){st.display=mode;document.querySelector('.phone').classList.toggle('compact',mode==='compact');document.querySelector('.phone').classList.toggle('maponly',mode==='maponly');$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図だけ':'詳細表示'; if($('displayFloat')) $('displayFloat').textContent=mode==='compact'?'詳細表示':'UI表示';}
 function cycleDisplay(){setDisplay(st.display==='detail'?'compact':st.display==='compact'?'maponly':'detail');}
 function setInput(mode){st.input=mode;document.querySelector('.phone').classList.toggle('manual',mode==='manual');$('inputModeToggle').textContent=mode==='manual'?'手動入力':'センサー入力';}
 function toggleInput(){setInput(st.input==='sensor'?'manual':'sensor');}
@@ -304,6 +328,7 @@ function bindPan(){let down=false,last=null,drag=false;const el=$('map');el.addE
 document.addEventListener('click',e=>{
  if(e.target.closest('#displayToggle')){cycleDisplay();return}
  if(e.target.closest('#mapRestore')){setDisplay('detail');return}
+ if(e.target.closest('#displayFloat')){setDisplay('detail');return}
  if(e.target.closest('#inputModeToggle')){toggleInput();return}
  if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}
  if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}
