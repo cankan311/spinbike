@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Japan Ride D71 Repair UI Regressions</title>
+<title>Japan Ride D72 Remove SV Restore Map View</title>
 <style>
 :root{
   --ink:#111827;
@@ -196,26 +196,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-f
 .metric small{font-size:10px!important}
 .metric b{font-size:16px!important}
 
-.always-detail{
-  position:absolute;
-  z-index:80;
-  right:12px;
-  top:calc(env(safe-area-inset-top) + 12px);
-  border:0;
-  border-radius:999px;
-  background:#111827;
-  color:white;
-  font-family:inherit;
-  font-size:12px;
-  font-weight:1000;
-  padding:10px 13px;
-  box-shadow:0 10px 24px rgba(0,0,0,.28);
-  pointer-events:auto;
-}
-.phone:not(.compact):not(.mapview) .always-detail{opacity:.55}
-.phone.mapview .always-detail{display:none!important}
-
-.map-overlay{
+.phone:not(.compact):not(.mapview) .phone.mapview .map-overlay{
   position:absolute;
   inset:0;
   z-index:1;
@@ -238,23 +219,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-f
   background-size:34px 34px;
   opacity:.45;
 }
-.phone.sv-on .map:after{
-  content:'SV ON';
-  position:absolute;
-  z-index:4;
-  left:12px;
-  bottom:12px;
-  border-radius:999px;
-  padding:8px 12px;
-  background:rgba(17,24,39,.82);
-  color:white;
-  font-weight:1000;
-  font-size:12px;
-}
-
 .phone.compact .zone-gauge{display:none!important}
-.phone.compact .always-detail{opacity:1}
-.phone.compact .hero{min-height:72px!important}
+.phone.compact .phone.compact .hero{min-height:72px!important}
 .phone.compact .dock{bottom:calc(env(safe-area-inset-bottom) + 72px)!important}
 .phone.compact .card{min-height:50px!important}
 .phone.compact .zone-card{min-height:48px!important}
@@ -271,6 +237,30 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-f
   .metric-grid{display:grid!important}
   .metric{padding:6px 9px!important}
   .metric b{font-size:14px!important}
+}
+
+
+/* D72: no SV, no redundant detail button, strict 3-stage cycle */
+#displayToggle{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+}
+.phone.mapview #displayToggle{
+  display:none!important;
+}
+.phone.mapview .map-view-controls{
+  display:grid!important;
+}
+.map-view-controls{
+  grid-template-columns:54px 54px!important;
+}
+.map-view-controls #detailBtn{
+  grid-column:1/3!important;
+}
+.map-view-controls #buildingBtn,
+.map-view-controls #terrainBtn{
+  grid-column:1/3!important;
 }
 
 </style>
@@ -341,24 +331,21 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-f
   <section class="page" id="routesPage"><div class="sheet"><div class="sheet-head"><strong>ルート</strong><button data-tab="ride">×</button></div><div class="sheet-body">マイルート作成はUI安定後に戻します。</div></div></section>
   <section class="page" id="recordsPage"><div class="sheet"><div class="sheet-head"><strong>記録</strong><button data-tab="ride">×</button></div><div class="sheet-body">記録画面はUI安定後に戻します。</div></div></section>
   <section class="page" id="settingsPage"><div class="sheet"><div class="sheet-head"><strong>設定</strong><button data-tab="ride">×</button></div><div class="sheet-body">センサー設定はUI安定後に戻します。</div></div></section>
-
-  <button class="always-detail" id="alwaysDetailBtn">詳細表示</button>
-  <div class="map-view-controls">
+<div class="map-view-controls">
     <button class="wide dark" id="detailBtn">詳細表示</button>
     <button id="recenterBtn">⌖</button>
     <button id="zoomInBtn">＋</button>
     <button id="zoomOutBtn">−</button>
     <button class="wide" id="buildingBtn">建物 OFF</button>
     <button class="wide" id="terrainBtn">地形 OFF</button>
-    <button class="wide" id="svBtn">SV OFF</button>
-  </div>
+</div>
 </div>
 <script>
 const $=id=>document.getElementById(id);
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:35,t:'medium',n:'大井川'},{km:70,t:'medium',n:'掛川城'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:168,t:'medium',n:'岡崎城'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-let st={mode:'detail',input:'sensor',zoom:15,center:[138.3102,34.8362],km:8.2,sess:0,t:720,cal:96,hr:123,rpm:58,mx:28.4,buildings:false,terrain:false,sv:false,route:[[138.3082,34.8377],[138.3088,34.8370],[138.3096,34.8365],[138.3105,34.8360],[138.3114,34.8356],[138.3121,34.8350]]};
+let st={mode:'detail',input:'sensor',zoom:15,center:[138.3102,34.8362],km:8.2,sess:0,t:720,cal:96,hr:123,rpm:58,mx:28.4,buildings:false,terrain:false,route:[[138.3082,34.8377],[138.3088,34.8370],[138.3096,34.8365],[138.3105,34.8360],[138.3114,34.8356],[138.3121,34.8350]]};
 function lonLatToTile(lon,lat,z){const n=2**z;return[(lon+180)/360*n,(1-Math.log(Math.tan(lat*Math.PI/180)+1/Math.cos(lat*Math.PI/180))/Math.PI)/2*n]}
 function tileToLonLat(x,y,z){const n=2**z;return[x/n*360-180,Math.atan(Math.sinh(Math.PI*(1-2*y/n)))*180/Math.PI]}
 function project(lon,lat,c,z,w,h){const a=lonLatToTile(c[0],c[1],z),b=lonLatToTile(lon,lat,z);return[(b[0]-a[0])*256+w/2,(b[1]-a[1])*256+h/2]}
@@ -418,7 +405,7 @@ function bindPan(){
  m.addEventListener('pointerup',end);
  m.addEventListener('pointercancel',end);
 }
-document.addEventListener('click',e=>{const tab=e.target.closest('[data-tab]');if(tab){setTab(tab.dataset.tab);return}if(e.target.closest('#alwaysDetailBtn')){setMode('detail');return}if(e.target.closest('#displayToggle')){setMode(st.mode==='detail'?'compact':st.mode==='compact'?'mapview':'detail');return}if(e.target.closest('#detailBtn')){setMode('detail');return}if(e.target.closest('#inputToggle')){setInput(st.input==='sensor'?'manual':'sensor');return}if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}if(e.target.closest('#zoomInBtn')){st.zoom=Math.min(18,st.zoom+1);renderMap();return}if(e.target.closest('#zoomOutBtn')){st.zoom=Math.max(5,st.zoom-1);renderMap();return}if(e.target.closest('#recenterBtn')){st.center=[138.3102,34.8362];renderMap();return}if(e.target.closest('#buildingBtn')){st.buildings=!st.buildings;$('app').classList.toggle('buildings-on',st.buildings);$('buildingBtn').textContent=st.buildings?'建物 ON':'建物 OFF';$('buildingBtn').classList.toggle('on',st.buildings);return}if(e.target.closest('#terrainBtn')){st.terrain=!st.terrain;$('app').classList.toggle('terrain-on',st.terrain);$('terrainBtn').textContent=st.terrain?'地形 ON':'地形 OFF';$('terrainBtn').classList.toggle('on',st.terrain);return}if(e.target.closest('#svBtn')){st.sv=!st.sv;$('app').classList.toggle('sv-on',st.sv);$('svBtn').textContent=st.sv?'SV ON':'SV OFF';$('svBtn').classList.toggle('on',st.sv);return}});
+document.addEventListener('click',e=>{const tab=e.target.closest('[data-tab]');if(tab){setTab(tab.dataset.tab);return}if(e.target.closest('#displayToggle')){setMode(st.mode==='detail'?'compact':st.mode==='compact'?'mapview':'detail');return}if(e.target.closest('#detailBtn')){setMode('detail');return}if(e.target.closest('#inputToggle')){setInput(st.input==='sensor'?'manual':'sensor');return}if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}if(e.target.closest('#zoomInBtn')){st.zoom=Math.min(18,st.zoom+1);renderMap();return}if(e.target.closest('#zoomOutBtn')){st.zoom=Math.max(5,st.zoom-1);renderMap();return}if(e.target.closest('#recenterBtn')){st.center=[138.3102,34.8362];renderMap();return}if(e.target.closest('#buildingBtn')){st.buildings=!st.buildings;$('app').classList.toggle('buildings-on',st.buildings);$('buildingBtn').textContent=st.buildings?'建物 ON':'建物 OFF';$('buildingBtn').classList.toggle('on',st.buildings);return}if(e.target.closest('#terrainBtn')){st.terrain=!st.terrain;$('app').classList.toggle('terrain-on',st.terrain);$('terrainBtn').textContent=st.terrain?'地形 ON':'地形 OFF';$('terrainBtn').classList.toggle('on',st.terrain);return}});
 window.addEventListener('resize',renderMap);
 bindPan();setMode('detail');setInput('sensor');renderMap();renderUI();
 </script>
