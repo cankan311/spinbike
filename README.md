@@ -1,6 +1,5 @@
-D49 TV Mirror Mode
-- D48ベース
-- TV表示ボタン追加
-- スマホ画面ミラーリング時に横長テレビ向けUIへ切替
-- 通常表示で戻る
-- GitHub Pagesはindex.html上書き
+D50 TV Map First Mode
+- D49のTV表示が黒いダッシュボード化していたため、地図主役に修正
+- HUDを小型/半透明化
+- TVモード押下時に全画面/横向きをリクエスト
+- map.resizeを実行して横画面切替時の描画崩れを軽減
