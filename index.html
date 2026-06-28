@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-16 Simplify Route Buttons</title>
+<title>Japan Ride D66-19 Active Route Ride Mode</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1441,6 +1441,33 @@
     grid-template-columns:1fr 1fr!important;
   }
 }
+
+
+/* D66-17: 右上×でたたむので、別の「たたむ」ボタンは削除 */
+#toggleRouteEditorBtn{
+  display:none!important;
+}
+.phone.route-editor-collapsed .route-editor-card{
+  cursor:pointer;
+}
+.phone.route-editor-collapsed #exitRouteEditBtn{
+  display:none!important;
+}
+
+
+/* D66-18: 保存済みルートの再編集 */
+.route-edit{
+  background:#eef4ff!important;
+  color:#2454c7!important;
+}
+.route-item-actions{
+  flex-wrap:wrap!important;
+}
+
+
+/* D66-19: 保存済みルートを「走る」モードへ反映 */
+.phone.my-route-active .hero-icon{background:#e8f7f0!important}
+.phone.my-route-active .eyebrow{color:#16B978!important}
 </style>
 </head>
 <body>
@@ -1459,7 +1486,7 @@
 <small>ROUTE EDIT</small>
 <strong>マイルート作成</strong>
 </div>
-<button class="route-collapse-btn" id="toggleRouteEditorBtn">たたむ</button><button id="exitRouteEditBtn" title="カードをたたむ">×</button>
+<button id="exitRouteEditBtn" title="カードをたたむ">×</button>
 </div>
 <div class="route-editor-mini" id="routeEditorMiniSummary">
 <span id="routeMiniPoints">0点</span>
@@ -1521,8 +1548,8 @@
 <div class="hero-main">
 <div class="hero-icon">🏯</div>
 <div style="flex:1;min-width:0">
-<div class="eyebrow">次の名所</div>
-<div class="landmark">名古屋城</div>
+<div class="eyebrow" id="heroEyebrow">次の名所</div>
+<div class="landmark" id="landmarkTitle">名古屋城</div>
 <div class="remain" id="remain">あと 186.8 km</div>
 </div>
 </div>
@@ -1595,9 +1622,94 @@ function fmtTime(sec){return String(Math.floor(sec/60)).padStart(2,'0')+':'+Stri
 function hav(a,b){const R=6371e3,toRad=x=>x*Math.PI/180; const dLat=toRad(b[1]-a[1]),dLon=toRad(b[0]-a[0]); const lat1=toRad(a[1]),lat2=toRad(b[1]); const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(h));}
 function routeLength(coords){let d=0;for(let i=1;i<coords.length;i++)d+=hav(coords[i-1],coords[i]);return d;}
 
+
+/* D66-19 active saved route ride mode */
+function routePointAtDistance(coords, distanceKm){
+ if(!coords || !coords.length) return null;
+ let remain=distanceKm*1000;
+ for(let i=1;i<coords.length;i++){
+   const a=coords[i-1], b=coords[i];
+   const seg=hav(a,b);
+   if(remain<=seg){
+     const t=seg ? remain/seg : 0;
+     return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t];
+   }
+   remain-=seg;
+ }
+ return coords[coords.length-1];
+}
+function routeSliceToDistance(coords, distanceKm){
+ if(!coords || !coords.length) return [];
+ const out=[coords[0]];
+ let remain=distanceKm*1000;
+ for(let i=1;i<coords.length;i++){
+   const a=coords[i-1], b=coords[i];
+   const seg=hav(a,b);
+   if(remain>=seg){
+     out.push(b);
+     remain-=seg;
+   }else{
+     const t=seg ? Math.max(0,remain)/seg : 0;
+     out.push([a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t]);
+     break;
+   }
+ }
+ return out;
+}
+function ensureRouteProgressLayer(){
+ if(!map || !map.isStyleLoaded()) return;
+ if(!map.getSource('route-progress')){
+   map.addSource('route-progress',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:[]}}});
+ }
+ if(!map.getLayer('route-progress')){
+   const firstSymbol=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
+   const beforeId=firstSymbol ? firstSymbol.id : undefined;
+   map.addLayer({
+     id:'route-progress',
+     type:'line',
+     source:'route-progress',
+     paint:{'line-color':'#16B978','line-width':7,'line-opacity':0.98}
+   }, beforeId);
+ }
+}
+function updateRouteProgressOnMap(){
+ if(!map || !map.isStyleLoaded() || !st.route || !st.route.length) return;
+ ensureRouteProgressLayer();
+ const active=!!st.activeRouteId;
+ const traveled=active ? Math.min(st.sess, st.activeRouteDistanceKm||0) : 0;
+ const coords=active ? routeSliceToDistance(st.route,traveled) : [];
+ const src=map.getSource('route-progress');
+ if(src) src.setData({type:'Feature',geometry:{type:'LineString',coordinates:coords}});
+ if(marker){
+   const p=active ? routePointAtDistance(st.route,traveled) : st.route[0];
+   if(p) marker.setLngLat(p);
+ }
+}
+function setActiveRoute(route){
+ st.activeRouteId=route.id;
+ st.activeRouteName=route.name || 'マイルート';
+ st.activeRouteDistanceKm=Number(route.distanceKm || routeDistanceKm(route.points||[]));
+ st.sess=0;
+ st.t=0;
+ document.querySelector('.phone').classList.add('my-route-active');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート';
+ if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
+ renderUI();
+ updateRouteProgressOnMap();
+}
+function addDemoRideDistance(km){
+ st.sess+=km;
+ st.t+=30;
+ st.cal+=Math.max(1,km*28);
+ renderUI();
+}
+
 function renderUI(){
  const kmh=st.rpm*2*2.1/60*3.6;
- const prog=Math.min(100,st.km/LEG*100);
+ const active=!!st.activeRouteId;
+ const routeTotal=active ? Math.max(0.01, Number(st.activeRouteDistanceKm||0)) : 0;
+ const routeRemain=active ? Math.max(0, routeTotal-st.sess) : 0;
+ const prog=active ? Math.min(100,(st.sess/routeTotal)*100) : Math.min(100,st.km/LEG*100);
  const z=zoneOf(st.hr);
  const nS=next('small'),nM=next('medium'),nL=next('large');
  if($('speed'))$('speed').textContent=kmh.toFixed(1);
@@ -1609,13 +1721,30 @@ function renderUI(){
    $('cadenceRing').setAttribute('stroke-dasharray', C.toFixed(1));
    $('cadenceRing').setAttribute('stroke-dashoffset', (C*(1-rpmRatio)).toFixed(1));
  }
- if($('mode'))$('mode').textContent=st.running?'追従 ON':'追従 OFF';
- if($('remain'))$('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km';
+ if($('mode'))$('mode').textContent=active?'マイルート走行中':(st.running?'追従 ON':'追従 OFF');
+ if(active){
+   if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート';
+   if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName||'マイルート';
+   if($('remain'))$('remain').textContent='あと '+routeRemain.toFixed(2)+' km';
+   if($('smallGoal'))$('smallGoal').textContent='ルート距離 '+routeTotal.toFixed(2)+'km';
+   if($('mediumGoal'))$('mediumGoal').textContent='走行中 '+Math.min(st.sess,routeTotal).toFixed(2)+'km';
+ }else{
+   if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
+   if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
+   if($('remain'))$('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km';
+   if($('smallGoal'))$('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —';
+   if($('mediumGoal'))$('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
+ }
  if($('fill'))$('fill').style.width=prog+'%';
  if($('bike'))$('bike').style.left=prog+'%';
- if($('smallGoal'))$('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —';
- if($('mediumGoal'))$('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
- const stats=[['距離',st.sess.toFixed(2),'km'],['時間',fmtTime(st.t),''],['消費',Math.round(st.cal),'kcal'],['最高',st.mx.toFixed(1),'km/h'],['XP',Math.round(st.cal*0.9),''],['累計',st.km.toFixed(1),'km']];
+ const stats=[
+   ['距離',st.sess.toFixed(2),'km'],
+   ['時間',fmtTime(st.t),''],
+   ['消費',Math.round(st.cal),'kcal'],
+   ['最高',st.mx.toFixed(1),'km/h'],
+   ['XP',Math.round(st.cal*0.9),''],
+   [active?'残り':'累計',active?routeRemain.toFixed(2):st.km.toFixed(1),'km']
+ ];
  if($('metrics'))$('metrics').innerHTML=stats.map(a=>`<div class="dock-card"><div class="label">${a[0]}</div><div class="value">${a[1]}<span class="unit">${a[2]}</span></div></div>`).join('');
  if($('metrics2'))$('metrics2').innerHTML='';
  if($('pedalRpm'))$('pedalRpm').textContent=Math.round(st.rpm);
@@ -1630,6 +1759,7 @@ function renderUI(){
  if($('mapHudSpeed'))$('mapHudSpeed').textContent=kmh.toFixed(1);
  if($('mapHudTime'))$('mapHudTime').textContent=fmtTime(st.t);
  if($('mapHudDist'))$('mapHudDist').textContent=st.sess.toFixed(2);
+ updateRouteProgressOnMap();
 }
 
 function setDisplay(mode){
@@ -1918,6 +2048,7 @@ function renderMyRoutes(){
     </div>
     <div class="route-item-actions">
       <button class="route-use" data-use-route="${r.id}">このルートを走る</button>
+      <button class="route-edit" data-edit-route="${r.id}">編集</button>
       <button class="route-delete" data-delete-route="${r.id}">削除</button>
     </div>
   </div>`).join('');
@@ -2006,18 +2137,34 @@ function clearDraftRoute(){
  setRouteTip('地図をタップしてルート点を追加');
 }
 function saveDraftRoute(){
- const pts=st.draftRoute||[];
- if(pts.length<2){
+ const pts=getDraftWaypoints();
+ const route=st.draftRoute||pts;
+ if(pts.length<2 || route.length<2){
    alert('2地点以上タップしてから保存してください');
    return;
  }
  const nameInput=$('routeNameInput');
  const name=(nameInput && nameInput.value.trim()) || 'マイルート '+new Date().toLocaleDateString('ja-JP');
  const routes=loadMyRoutes();
- const route={id:'r'+Date.now(), name, points:pts, distanceKm:routeDistanceKm(pts), createdAt:new Date().toISOString()};
- routes.unshift(route);
- saveMyRoutes(routes);
- useMyRoute(route.id, false);
+ const distanceKm=routeDistanceKm(route);
+ if(st.editingRouteId){
+   const idx=routes.findIndex(r=>r.id===st.editingRouteId);
+   if(idx>=0){
+     routes[idx]={...routes[idx], name, points:route, waypoints:pts, distanceKm, updatedAt:new Date().toISOString()};
+     saveMyRoutes(routes);
+     useMyRoute(st.editingRouteId, false);
+   }else{
+     const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+     routes.unshift(routeObj);
+     saveMyRoutes(routes);
+     useMyRoute(routeObj.id, false);
+   }
+ }else{
+   const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+   routes.unshift(routeObj);
+   saveMyRoutes(routes);
+   useMyRoute(routeObj.id, false);
+ }
  exitRouteEdit();
  setTabTo('routes');
  renderMyRoutes();
@@ -2035,14 +2182,16 @@ function updateMainRouteOnMap(){
  if(src){
    src.setData({type:'Feature',geometry:{type:'LineString',coordinates:st.route}});
  }
- if(marker && st.route && st.route[0]) marker.setLngLat(st.route[0]);
  st.routeDist=routeLength(st.route);
+ updateRouteProgressOnMap();
 }
 function useMyRoute(id, closePage=true){
  const routes=loadMyRoutes();
  const route=routes.find(r=>r.id===id);
  if(!route) return;
  st.route=route.points;
+ st.routeDist=routeLength(st.route);
+ setActiveRoute(route);
  updateMainRouteOnMap();
  if(map && route.points.length){
    const b=route.points.reduce((bb,p)=>{
@@ -2219,6 +2368,8 @@ function updateDraftStats(){
 function startRouteEdit(){
  if(!map || !map.isStyleLoaded()) return;
  st.routeEdit=true;
+ st.editingRouteId=null;
+ setRouteEditorTitle('マイルート作成');
  st.draftWaypoints=[];
  st.draftRoute=[];
  st.routeSnapped=false;
@@ -2463,7 +2614,6 @@ function startRouteEdit(){
  st.selectedDraftIndex=-1;
  document.querySelector('.phone').classList.add('route-editing');
  document.querySelector('.phone').classList.remove('route-editor-collapsed');
- if($('toggleRouteEditorBtn')) $('toggleRouteEditorBtn').textContent='たたむ';
  setDisplay('maponly');
  if($('routeNameInput')) $('routeNameInput').value='';
  setRouteTip('地図タップで点追加。点タップで選択、点ドラッグで移動。');
@@ -2746,10 +2896,11 @@ function startRouteEdit(){
  st.selectedDraftIndex=-1;
  st.draggingDraftIndex=-1;
  st.ignoreNextMapTap=false;
+ st.editingRouteId=null;
+ setRouteEditorTitle('マイルート作成');
  clearRouteHistory();
  document.querySelector('.phone').classList.add('route-editing');
  document.querySelector('.phone').classList.remove('route-editor-collapsed');
- if($('toggleRouteEditorBtn')) $('toggleRouteEditorBtn').textContent='たたむ';
  setDisplay('maponly');
  setMainRideRouteVisible(false);
  if($('routeNameInput')) $('routeNameInput').value='';
@@ -2923,8 +3074,6 @@ function safeCollapseRouteEditor(){
  const phone=document.querySelector('.phone');
  if(!phone || !st.routeEdit) return;
  phone.classList.add('route-editor-collapsed');
- const btn=$('toggleRouteEditorBtn');
- if(btn) btn.textContent='開く';
  setTimeout(()=>{if(map)map.resize()},80);
 }
 function confirmCancelRouteEdit(){
@@ -2937,7 +3086,65 @@ function confirmCancelRouteEdit(){
  exitRouteEdit();
 }
 
+
+/* D66-17 collapse behavior: X collapses, compact card tap opens */
+function collapseRouteEditorCard(){
+ const phone=document.querySelector('.phone');
+ if(!phone || !st.routeEdit) return;
+ phone.classList.add('route-editor-collapsed');
+ setTimeout(()=>{if(map)map.resize()},80);
+}
+function openRouteEditorCard(){
+ const phone=document.querySelector('.phone');
+ if(!phone || !st.routeEdit) return;
+ phone.classList.remove('route-editor-collapsed');
+ setTimeout(()=>{if(map)map.resize()},80);
+}
+
+
+/* D66-18 edit saved routes */
+function setRouteEditorTitle(text){
+ const head=document.querySelector('.route-editor-head strong');
+ if(head) head.textContent=text;
+}
+function startRouteEditWithData(route){
+ if(!map || !map.isStyleLoaded() || !route) return;
+ st.routeEdit=true;
+ st.editingRouteId=route.id || null;
+ st.draftWaypoints=cloneCoords(route.waypoints && route.waypoints.length ? route.waypoints : route.points || []);
+ st.draftRoute=cloneCoords(route.points || st.draftWaypoints || []);
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ st.draggingDraftIndex=-1;
+ st.ignoreNextMapTap=false;
+ clearRouteHistory();
+ const phone=document.querySelector('.phone');
+ phone.classList.add('route-editing');
+ phone.classList.remove('route-editor-collapsed');
+ setRouteEditorTitle('マイルート編集');
+ setDisplay('maponly');
+ setMainRideRouteVisible(false);
+ if($('routeNameInput')) $('routeNameInput').value=route.name || '';
+ setRouteTip('保存済みルートを編集中。地図タップで点追加、点ドラッグで移動。');
+ ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
+ renderDraftRoute();
+ if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
+ setTimeout(()=>map.resize(),80);
+}
+function editMyRoute(id){
+ const route=loadMyRoutes().find(r=>r.id===id);
+ if(!route) return;
+ setTabTo('ride');
+ startRouteEditWithData(route);
+}
+
 document.addEventListener('click',e=>{
+ if(document.querySelector('.phone').classList.contains('route-editor-collapsed') && e.target.closest('#routeEditor')){
+   openRouteEditorCard();
+   return;
+ }
+
  const mainTab=e.target.closest('[data-main-tab]');
  if(mainTab){
    const tab=mainTab.dataset.mainTab;
@@ -2947,15 +3154,19 @@ document.addEventListener('click',e=>{
  }
 
 
- if(e.target.closest('#toggleRouteEditorBtn')){toggleRouteEditorCollapsed();return}
+ 
  if(e.target.closest('#startRouteEditBtn')){startRouteEdit();return}
- if(e.target.closest('#exitRouteEditBtn')){safeCollapseRouteEditor();return}
+ if(e.target.closest('#exitRouteEditBtn')){collapseRouteEditorCard();return}
  if(e.target.closest('#undoRoutePointBtn')){undoDraftPoint();return}
  if(e.target.closest('#clearRouteBtn')){clearDraftRoute();return}
  if(e.target.closest('#cancelRouteEditBtn')){confirmCancelRouteEdit();return}
  if(e.target.closest('#saveRouteBtn')){saveDraftRoute();return}
  const useBtn=e.target.closest('[data-use-route]');
  if(useBtn){useMyRoute(useBtn.dataset.useRoute);return}
+
+ const editBtn=e.target.closest('[data-edit-route]');
+ if(editBtn){editMyRoute(editBtn.dataset.editRoute);return}
+
  const delBtn=e.target.closest('[data-delete-route]');
  if(delBtn){deleteMyRoute(delBtn.dataset.deleteRoute);return}
 
@@ -2982,7 +3193,7 @@ document.addEventListener('click',e=>{
  
  if(e.target.closest('#displayFloat')){if(st.display==='compact')setDisplay('maponly');else setDisplay('detail');return}
  if(e.target.closest('#inputModeToggle')){toggleInput();return}
- if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}
+ if(e.target.closest('#pedalUp')){st.rpm+=2;addDemoRideDistance(0.02);return}
  if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}
  if(e.target.closest('#runBtnTop')){st.running=!st.running;$('runBtnTop').textContent=st.running?'ストップ':'再開';renderUI();return}
 });
