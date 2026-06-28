@@ -1,7 +1,7 @@
-D52 GSI Direct TV Mode
-- D48安定版ベース
-- OpenFreeMap style依存を廃止
-- 初期styleに国土地理院 航空写真タイルを直接指定
-- これによりOFMの読込失敗で地図が黒くなる問題を回避
-- TV表示モードを追加
-- GitHub Pagesは index.html 上書き
+D53 Stable Rollback
+
+- D48の安定版へロールバック
+- TVモード関連を削除
+- 地図表示を壊したD49-D52系の変更を戻す
+- 旅ログ、UI折り畳み、ペダル±、建物/地形ボタンは維持
+- GitHub Pagesは index.html を上書き
