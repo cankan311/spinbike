@@ -1,746 +1,181 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D55 Bottom Tabs + Compact UI</title>
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@500;700;800;900&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Japan Ride D56 Safe Map Core</title>
 <style>
-:root{--display-font:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','Kosugi Maru','M PLUS Rounded 1c','Hiragino Maru Gothic ProN',ui-rounded,sans-serif;--ink:#17202c;--sub:#6f7785;--blue:#2f6bff;--green:#12b77a;--coral:#ff5872;--gold:#d59b2b;--line:#e4e8f0;}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab,.terrain-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off),.terrain-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err,.terrain-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
-/* D案：Cの整理感 + Bの景色面積。上下とも薄く浮かせる */
-.top{pointer-events:none}.hero{position:relative;border-radius:25px;padding:10px 12px 9px;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(250,252,255,.84));border:1px solid rgba(255,255,255,.88);box-shadow:0 10px 24px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.hero-main{display:flex;align-items:center;gap:10px}.hero-icon{width:42px;height:42px;border-radius:17px;background:linear-gradient(180deg,#fff7d7,#ffe5a0);display:flex;align-items:center;justify-content:center;font-size:23px;border:1px solid #ffdda1;box-shadow:0 6px 14px rgba(213,155,43,.18),inset 0 1px 0 #fff}.eyebrow{font-size:10.5px;color:var(--gold);font-weight:900;letter-spacing:.14em}.landmark{font-family:var(--display-font);font-size:30px;line-height:1.02;font-weight:900;letter-spacing:.045em;color:#111827;-webkit-text-stroke:.35px #111827;text-shadow:0 1.4px 0 rgba(255,255,255,.95),0 4px 11px rgba(20,30,45,.15)}.remain{font-size:13.5px;color:#4a5363;font-weight:900;font-variant-numeric:tabular-nums}.mode{position:absolute;right:10px;top:10px;background:rgba(27,31,39,.68);color:#fff;border-radius:999px;padding:5px 8px;font-size:9.5px;font-weight:900;letter-spacing:.03em;pointer-events:auto;cursor:pointer}.progress{position:relative;height:12px;margin-top:8px}.base,.fill{position:absolute;top:5px;height:4px;border-radius:999px}.base{left:0;right:0;background:#e1e6ef}.fill{left:0;width:0;background:linear-gradient(90deg,#86adff,var(--blue))}.dot{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:#c7ceda}.dot.small{width:5px;height:5px}.dot.medium{width:9px;height:9px;background:var(--blue);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.dot.large{width:10px;height:10px;background:var(--gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.18)}.bike{position:absolute;top:-5px;transform:translateX(-50%);font-size:14px}.subgoals{display:flex;justify-content:space-between;gap:10px;margin-top:5px;color:var(--sub);font-size:10.5px;font-weight:900}.subgoals span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 上部の速度・現在地 */
-.top-chips{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin-top:7px}.meter-row{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(104px,.86fr);gap:6px;margin-bottom:4px}.speed-chip{display:flex;align-items:center;justify-content:center;background:rgba(20,24,32,.92);color:#fff;border-radius:18px;padding:6px 12px;min-width:140px;box-shadow:0 8px 18px rgba(0,0,0,.22);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.speed-num{font-family:var(--display-font);font-size:30px;line-height:1;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.speed-unit{font-size:11px;font-weight:900;opacity:.88;margin-left:6px}.place{max-width:62%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.86);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle{pointer-events:auto;cursor:pointer;border:0;background:rgba(20,24,32,.72);color:#fff;border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;box-shadow:0 6px 14px rgba(0,0,0,.13);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.label-toggle.off{background:rgba(255,255,255,.78);color:#111827}.label-toggle.warn{background:#b45309;color:#fff}.ring-card{min-width:0;border-radius:18px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:4px 8px;display:flex;align-items:center;justify-content:center}.ring-wrap{display:flex;align-items:center;gap:8px;width:100%}.ring-svg{width:44px;height:44px;flex:0 0 44px}.ring-track{stroke:#d9deea;stroke-width:7;fill:none}.ring-progress{stroke:#16B978;stroke-width:7;fill:none;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%}.ring-value{font-size:16px;font-weight:900;fill:#111827}.ring-labels{min-width:0;display:flex;flex-direction:column;line-height:1}.ring-main{font-size:15px;font-weight:900;color:#111827;font-variant-numeric:tabular-nums}.ring-sub{font-size:8.5px;font-weight:900;color:#6b7280;margin-top:2px}.action-card{padding:0!important;overflow:hidden}.action-btn{width:100%;height:100%;min-height:56px;border:0;border-radius:16px;background:#ff5d6c;color:#fff;font-size:15px;font-weight:900;letter-spacing:.02em;padding:0 8px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}.action-btn.stop{background:#ef4444}
-.bottom{pointer-events:none;display:flex;flex-direction:column;gap:3px}.mini-dock{position:relative;pointer-events:auto;border-radius:20px;background:linear-gradient(180deg,rgba(247,249,253,.92),rgba(232,236,245,.88));border:1px solid rgba(255,255,255,.78);box-shadow:0 -5px 18px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:5px 5px 4px}.zone-card{border-radius:17px;background:linear-gradient(180deg,#fff,#f7f9fd);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 5px 10px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:6px 8px 5px}.zone-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.zone-left{display:flex;align-items:center;gap:8px;min-width:0}.zone-dot{width:14px;height:14px;border-radius:50%;background:#16B978;box-shadow:0 0 0 2px rgba(22,185,120,.12)}.zone-kicker{font-size:9px;font-weight:900;color:var(--sub);letter-spacing:.02em}.zone-main{font-family:var(--display-font);font-size:18px;line-height:1.0;font-weight:900;color:#14b46f;letter-spacing:.02em;white-space:nowrap}.zone-fire{font-size:20px;margin-left:5px}.zone-bpm{display:flex;align-items:flex-end;gap:4px;white-space:nowrap}.zone-bpm .num{font-size:22px;line-height:1;font-weight:900;color:var(--coral);font-variant-numeric:tabular-nums}.zone-bpm .u{font-size:10px;font-weight:900;color:var(--sub);padding-bottom:4px}.zone-line{height:7px;display:flex;gap:5px;margin-top:6px}.zone-seg{flex:1;border-radius:999px;opacity:.22}.zone-seg.active{opacity:1;box-shadow:0 0 0 1px rgba(255,255,255,.8) inset, 0 1px 4px rgba(0,0,0,.08)}.zone-guide{margin-top:4px;font-size:8.8px;line-height:1.2;font-weight:900;color:#596273}.zone-guide .zone-name{display:inline-block;margin-right:6px;color:#111827}.zone-guide .zone-tip{color:#667085}.dock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:4px}.dock-card{min-width:0;border-radius:15px;background:linear-gradient(180deg,#fff,#f6f8fc);border:1px solid #e3e7ef;box-shadow:0 1px 2px rgba(20,30,60,.04),0 4px 8px rgba(20,30,60,.04),inset 0 1px 0 rgba(255,255,255,.92);padding:5px 6px 4px;cursor:pointer}.dock-card.tap{position:relative}.dock-card.tap:after{content:'+';position:absolute;right:8px;top:6px;font-size:12px;font-weight:900;color:#a4abbb}.dock-card.tap.open:after{content:'–'}.label{font-size:8.5px;font-weight:900;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.value{font-size:15px;line-height:1.0;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em;margin-top:1px}.unit{font-size:8px;color:var(--sub);font-weight:900;margin-left:1px}.hr .value{color:var(--coral)}.secondary-wrap{overflow:hidden;max-height:0;opacity:0;transform:translateY(-6px);transition:max-height .24s ease, opacity .2s ease, transform .24s ease}.secondary-wrap.open{max-height:92px;opacity:1;transform:translateY(0)}.mini-note{display:none}.control-row{display:flex;align-items:center;gap:8px;margin-top:4px}.control-row input{width:100%;accent-color:var(--blue);height:18px}.pill{border:0;border-radius:999px;background:#171b23;color:#fff;font-size:8.5px;font-weight:900;padding:5px 8px;white-space:nowrap}.maplibregl-ctrl-bottom-left{display:none!important}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important;right:10px!important;opacity:.78}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}.maplibregl-ctrl-group{border-radius:14px!important;overflow:hidden!important}
-@media(max-height:740px){.right-map-tools{right:10px;bottom:calc(env(safe-area-inset-bottom) + 250px);gap:5px}.recenter-btn{width:42px;height:42px}.recenter-svg{width:42px;height:42px}.building-fab,.terrain-fab{font-size:9px;padding:6px 8px;min-width:58px}.hero{padding:8px 10px}.hero-icon{width:38px;height:38px;border-radius:15px;font-size:21px}.landmark{font-size:26px}.remain{font-size:12px}.subgoals{font-size:9.5px}.top-chips{margin-top:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(98px,.84fr);gap:5px}.speed-chip{min-width:132px;padding:6px 10px}.speed-num{font-size:28px}.speed-unit{font-size:10px}.ring-svg{width:40px;height:40px}.ring-main{font-size:14px}.action-btn{min-height:52px;font-size:14px}.mini-dock{padding:4px}.zone-main{font-size:17px}.zone-bpm .num{font-size:21px}.dock-grid{gap:4px}.dock-card{padding:4px}.value{font-size:14px}.zone-guide{font-size:8.6px}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 12px)!important}}@media(max-width:370px){.right-map-tools{right:9px;bottom:calc(env(safe-area-inset-bottom) + 236px);gap:5px}.recenter-btn{width:40px;height:40px}.recenter-svg{width:40px;height:40px}.building-fab,.terrain-fab{font-size:9px;padding:6px 7px;min-width:56px}.landmark{font-size:25px}.top-chips{gap:6px}.meter-row{grid-template-columns:auto minmax(0,1fr) minmax(92px,.82fr);gap:4px}.speed-chip{min-width:118px;padding:5px 8px}.speed-num{font-size:25px}.speed-unit{font-size:9px}.ring-svg{width:38px;height:38px}.ring-main{font-size:13px}.action-btn{min-height:48px;font-size:13px}.dock-grid{grid-template-columns:repeat(3,1fr);gap:4px}.value{font-size:14px}.label{font-size:8px}.place{display:none}.mode{display:none}.maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 10px)!important;right:8px!important}}
-
-.travel-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.travel-toast{position:absolute;z-index:28;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 122px);display:flex;align-items:center;gap:9px;border-radius:18px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.82);box-shadow:0 12px 26px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:9px 11px;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .22s ease,transform .22s ease}.travel-toast.show{opacity:1;transform:translateY(0)}
-.travel-toast-icon{width:32px;height:32px;border-radius:13px;background:#eef4ff;display:grid;place-items:center;font-size:17px;flex:0 0 auto}.travel-toast-body{min-width:0;flex:1}.travel-toast-title{font-size:13px;font-weight:900;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.travel-toast-sub{font-size:10.5px;font-weight:800;color:#667085;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-.travel-log-panel{position:absolute;inset:0;z-index:40;display:none;background:rgba(7,12,18,.36);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);padding:calc(env(safe-area-inset-top) + 18px) 12px calc(env(safe-area-inset-bottom) + 18px);pointer-events:auto}.travel-log-panel.open{display:flex;align-items:flex-end}
-.travel-log-card{width:100%;max-height:78dvh;overflow:hidden;border-radius:24px;background:linear-gradient(180deg,#fff,#f6f8fc);border:1px solid rgba(255,255,255,.88);box-shadow:0 20px 48px rgba(0,0,0,.35);display:flex;flex-direction:column}.travel-log-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 16px 10px}.travel-log-kicker{font-size:10px;font-weight:900;color:#6b7280;letter-spacing:.06em}.travel-log-title{font-size:22px;font-weight:900;color:#111827;line-height:1.05}.travel-log-close{width:34px;height:34px;border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:20px;font-weight:900}
-.travel-log-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 12px 10px}.travel-log-stat{border-radius:16px;background:#fff;border:1px solid #e5e9f1;padding:9px 7px;text-align:center}.travel-log-stat .n{font-size:17px;font-weight:900;color:#111827}.travel-log-stat .l{font-size:9px;font-weight:900;color:#6b7280;margin-top:1px}
-.travel-log-list{overflow:auto;padding:0 12px 16px;display:flex;flex-direction:column;gap:8px}.travel-log-item{display:grid;grid-template-columns:40px 1fr;gap:9px;border-radius:18px;background:#fff;border:1px solid #e4e8f0;padding:10px;box-shadow:0 2px 8px rgba(20,30,60,.04)}.travel-log-ico{width:36px;height:36px;border-radius:14px;background:#eef4ff;display:grid;place-items:center;font-size:18px}.travel-log-name{font-size:14px;font-weight:900;color:#111827}.travel-log-meta{font-size:10px;font-weight:800;color:#6b7280;margin:2px 0 5px}.travel-log-note{font-size:11.5px;line-height:1.45;font-weight:700;color:#374151}
-.pedal-control{display:grid;grid-template-columns:1fr auto 1fr;gap:5px;align-items:center;margin:5px 0}.pedal-btn{border:0;border-radius:999px;background:#eef2f7;color:#17202c;font-size:11px;font-weight:900;padding:8px 6px}.pedal-btn.plus{background:#e8f0ff;color:#2155d8}.pedal-readout{min-width:62px;border-radius:999px;background:#fff;border:1px solid #e3e7ef;text-align:center;padding:6px 9px;font-size:14px;font-weight:900;color:#111827}.pedal-readout small{font-size:9px;color:#6b7280;margin-left:2px}
-@media(max-height:740px){.travel-fab{font-size:9px;padding:6px 8px;min-width:58px}.travel-toast{top:calc(env(safe-area-inset-top) + 108px);padding:8px 10px}.pedal-control{margin:4px 0}.pedal-btn{font-size:10px;padding:6px 5px}.pedal-readout{padding:5px 8px}}
-
-
-.ui-collapse-btn{position:absolute;right:10px;top:10px;border:0;border-radius:999px;background:rgba(17,24,39,.76);color:#fff;font-size:10px;font-weight:900;padding:7px 10px;box-shadow:0 5px 12px rgba(0,0,0,.18);pointer-events:auto}
-.ui-restore-chip{position:absolute;z-index:29;left:12px;top:calc(env(safe-area-inset-top) + 12px);border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:11px;font-weight:900;padding:9px 12px;box-shadow:0 8px 20px rgba(0,0,0,.20);display:none;pointer-events:auto}
-.ride-mini-chip{position:absolute;z-index:29;left:88px;right:12px;top:calc(env(safe-area-inset-top) + 12px);border-radius:999px;background:rgba(17,24,39,.72);color:#fff;font-size:11px;font-weight:900;padding:9px 12px;box-shadow:0 8px 20px rgba(0,0,0,.18);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;pointer-events:none}
-.phone.ui-collapsed .ui .top,.phone.ui-collapsed .ui .bottom{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
-.phone.ui-collapsed .ui-restore-chip,.phone.ui-collapsed .ride-mini-chip{display:block}
-.phone.ui-collapsed .travel-toast{top:calc(env(safe-area-inset-top) + 58px)}
-.phone.ui-collapsed .right-map-tools{bottom:calc(env(safe-area-inset-bottom) + 24px)}
-.phone.ui-collapsed .maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
-@media(max-height:740px){.ui-collapse-btn{font-size:9px;padding:6px 9px}.ui-restore-chip,.ride-mini-chip{top:calc(env(safe-area-inset-top) + 10px);font-size:10px;padding:8px 10px}.ride-mini-chip{left:82px}}
-
-
-/* D55: navigation / compact UI. Built from stable D53. */
-.bottom-tabs{
-  position:absolute;z-index:34;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 8px);
-  height:56px;border-radius:24px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.82);
-  display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:5px;box-shadow:0 14px 34px rgba(0,0,0,.22);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);pointer-events:auto
+:root{
+  --bg:#0d1219;--card:#fff;--ink:#111827;--muted:#667085;--blue:#2f6bff;--green:#16B978;
 }
-.bottom-tabs .tab{border:0;background:transparent;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:#667085;font-weight:900}
-.bottom-tabs .tab span{font-size:18px;line-height:1}.bottom-tabs .tab b{font-size:10px;line-height:1}
-.bottom-tabs .tab.active{background:#e8f7f0;color:#12895b}
-
-.ui .bottom{bottom:calc(env(safe-area-inset-bottom) + 72px)!important}
-.ui-collapsed .bottom-tabs{display:none!important}
-
-.app-page{
-  position:absolute;z-index:58;left:0;right:0;bottom:0;top:0;display:none;background:rgba(10,16,26,.36);
-  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);pointer-events:auto;padding:calc(env(safe-area-inset-top) + 16px) 12px calc(env(safe-area-inset-bottom) + 76px)
-}
-.app-page.open{display:flex;flex-direction:column;justify-content:flex-end}
-.page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:24px 24px 0 0;background:#fff;padding:16px 16px 8px;box-shadow:0 -8px 28px rgba(0,0,0,.18)}
-.page-kicker,.rb-kicker{font-size:9px;font-weight:1000;letter-spacing:.12em;color:#16B978}.page-title{font-size:25px;font-weight:1000;color:#111827;line-height:1}
-.page-close{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:20px;font-weight:1000;width:40px;height:40px}
-.page-body{background:#fff;border-radius:0 0 24px 24px;padding:10px 12px 16px;max-height:68dvh;overflow:auto;box-shadow:0 18px 40px rgba(0,0,0,.28)}
-.big-action{width:100%;border:0;border-radius:18px;background:#16B978;color:#fff;font-size:16px;font-weight:1000;padding:15px 12px;margin-bottom:12px}
-.route-list{display:flex;flex-direction:column;gap:9px}.empty-card{border-radius:18px;background:#f3f6fb;color:#667085;font-size:13px;font-weight:850;padding:16px}
-.route-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-radius:18px;background:#f7f9fc;border:1px solid #e5e9f1;padding:12px}
-.route-item-name{font-size:14px;font-weight:1000;color:#111827}.route-item-meta{font-size:10.5px;font-weight:850;color:#667085;margin-top:3px}
-.route-item-actions{display:flex;gap:6px}.route-item-actions button{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:10.5px;font-weight:900;padding:8px 9px}.route-item-actions .run{background:#16B978;color:white}.route-item-actions .del{background:#fff0f0;color:#d33}
-
-.route-builder-panel{position:absolute;inset:0;z-index:68;display:none;background:#101820;pointer-events:auto}.route-builder-panel.open{display:block}
-.route-builder-shell{position:absolute;inset:0;overflow:hidden;background:#101820}.route-builder-map{position:absolute;inset:0;background:#17212d}
-.route-builder-top{position:absolute;z-index:5;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 12px);display:flex;align-items:center;justify-content:space-between;gap:10px}
-.rb-back,.rb-save{border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#111827;font-size:12px;font-weight:900;padding:10px 12px;box-shadow:0 8px 18px rgba(0,0,0,.22)}.rb-save{background:#16B978;color:white}
-.rb-title-wrap{flex:1;min-width:0;border-radius:20px;background:rgba(17,24,39,.66);color:#fff;border:1px solid rgba(255,255,255,.18);padding:9px 12px;box-shadow:0 8px 18px rgba(0,0,0,.22);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.rb-title{font-size:16px;font-weight:1000;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rb-distance-card{position:absolute;z-index:5;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 82px);display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:22px;background:rgba(255,255,255,.94);padding:11px 13px;box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.rb-label{font-size:10px;font-weight:900;color:#667085}.rb-distance{font-size:32px;font-weight:1000;color:#111827;line-height:.95}.rb-distance small{font-size:13px;margin-left:3px;color:#667085}
-.rb-target{text-align:right}.rb-target select{border:0;border-radius:12px;background:#eef4ff;color:#2155d8;font-size:12px;font-weight:900;padding:7px 8px}.rb-remain{font-size:11px;font-weight:900;color:#667085;margin-top:4px}.rb-remain b{color:#111827}
-.rb-bottom-card{position:absolute;z-index:5;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);border-radius:24px;background:rgba(255,255,255,.95);box-shadow:0 16px 34px rgba(0,0,0,.28);padding:12px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.rb-name{box-sizing:border-box;width:100%;border:1px solid #e3e7ef;border-radius:16px;background:#fff;padding:12px 13px;font-size:14px;font-weight:900;color:#111827;outline:none}
-.rb-hint{font-size:11px;line-height:1.35;font-weight:800;color:#667085;margin:8px 2px 10px}.rb-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}.rb-actions button{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:11px;font-weight:900;padding:10px 6px}
-.rb-point-marker{width:22px;height:22px;border-radius:999px;background:#16B978;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.35);display:grid;place-items:center;color:#fff;font-size:10px;font-weight:1000}.rb-point-marker.start{background:#2f6bff}.rb-point-marker.goal{background:#ff8a3d}
-
-/* compact mode: UI隠すは全消しではなく、走行に必要な最小カードを残す */
-.ui-collapsed .ui .top{display:none!important}
-.ui-collapsed .ui .bottom{display:block!important;left:12px!important;right:12px!important;bottom:calc(env(safe-area-inset-bottom) + 12px)!important}
-.ui-collapsed .bottom .panel{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:8px!important;padding:8px!important;border-radius:22px!important}
-.ui-collapsed .bottom .panel > *:not(.stat):not(.hr){display:none!important}
-.ui-collapsed .bottom .panel .stat{min-height:54px!important;padding:8px!important}
-.ui-collapsed .bottom .panel .stat:nth-of-type(n+4){display:none!important}
-.ui-collapsed .bottom .panel .hr{grid-column:1/4!important;min-height:58px!important;padding:8px!important}
-.ui-collapsed .right-map-tools{right:10px!important;bottom:calc(env(safe-area-inset-bottom) + 122px)!important;gap:6px!important}
-.ui-collapsed .map-fab:not(#uiCollapseBtn),.ui-collapsed .map-fab:not(#uiCollapseBtn)+button{transform:scale(.88)}
-@media(max-height:720px){
- .bottom-tabs{height:52px}
- .ui .bottom{bottom:calc(env(safe-area-inset-bottom) + 66px)!important}
- .rb-distance-card{top:calc(env(safe-area-inset-top) + 70px);padding:9px 11px}.rb-distance{font-size:26px}
- .rb-bottom-card{padding:10px}.rb-name{padding:10px 12px}.rb-hint{margin:6px 2px 8px}.rb-actions button{padding:8px 5px}
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+.phone{position:fixed;inset:0;background:#101820;overflow:hidden}
+#safeMap{position:absolute;inset:0;overflow:hidden;background:#162333;touch-action:none;z-index:0}
+.tile-layer{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0}
+.tile{position:absolute;width:256px;height:256px;object-fit:cover;background:#223246}
+.route-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.marker{position:absolute;z-index:3;width:22px;height:22px;border-radius:999px;background:var(--green);border:3px solid white;box-shadow:0 2px 10px rgba(0,0,0,.35);display:grid;place-items:center;color:#fff;font-size:10px;font-weight:1000;transform:translate(-50%,-50%)}
+.marker.current{width:28px;height:28px;background:#2f6bff}
+.map-status{position:absolute;z-index:4;left:16px;top:calc(env(safe-area-inset-top) + 252px);border-radius:999px;background:rgba(255,255,255,.92);padding:8px 12px;font-size:12px;font-weight:900;color:#111827;box-shadow:0 7px 18px rgba(0,0,0,.18)}
+.top-card{position:absolute;z-index:10;left:16px;right:16px;top:calc(env(safe-area-inset-top) + 16px);border-radius:28px;background:linear-gradient(135deg,#fff8d9,#f8fbff 62%,#edf4ff);box-shadow:0 12px 26px rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.85);padding:18px 18px 16px;min-height:156px}
+.top-row{display:flex;align-items:flex-start;gap:14px}
+.badge{width:58px;height:58px;border-radius:20px;background:#fff6bc;display:grid;place-items:center;font-size:32px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.kicker{font-size:12px;font-weight:1000;color:#c78a13;line-height:1}
+.landmark{font-size:38px;line-height:.98;font-weight:1000;letter-spacing:-.06em;color:#111827;text-shadow:0 2px 0 #fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72vw}
+.dist{font-size:19px;font-weight:1000;color:#3c4658;margin-top:4px}
+.progress-wrap{position:absolute;left:18px;right:18px;bottom:14px}
+.progress{height:9px;background:#eef2f7;border-radius:99px;position:relative;overflow:hidden}
+.progress-fill{height:100%;width:22%;background:linear-gradient(90deg,#22c55e,#60a5fa);border-radius:99px}
+.bike{position:absolute;left:20%;top:-15px;font-size:21px;transform:translateX(-50%)}
+.progress-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:12px;font-weight:900;color:#667085}
+.ui-hide{position:absolute;right:18px;top:18px;border:0;border-radius:999px;background:#2f3542;color:#fff;font-size:12px;font-weight:1000;padding:10px 13px;box-shadow:0 8px 18px rgba(0,0,0,.22)}
+.right-tools{position:absolute;z-index:12;right:16px;bottom:calc(env(safe-area-inset-bottom) + 184px);display:flex;flex-direction:column;gap:9px;align-items:flex-end}
+.tool-btn{border:3px solid var(--blue);border-radius:999px;background:rgba(255,255,255,.94);color:#2454c7;font-size:13px;font-weight:1000;min-width:88px;padding:10px 12px;box-shadow:0 6px 15px rgba(0,0,0,.16)}
+.target-btn{width:58px;height:58px;min-width:58px;border-radius:15px;font-size:30px;padding:0;display:grid;place-items:center}
+.bottom-card{position:absolute;z-index:11;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom) + 74px);border-radius:28px;background:rgba(248,250,253,.95);border:1px solid rgba(255,255,255,.85);box-shadow:0 -10px 28px rgba(0,0,0,.24);padding:10px;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:9px}
+.stat{border-radius:20px;background:#fff;box-shadow:inset 0 0 0 1px rgba(16,24,40,.04);padding:12px;min-height:72px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.speed{background:#252b35;color:#fff}.stat b{font-size:36px;line-height:.95;font-weight:1000;letter-spacing:-.04em}.stat small{font-size:12px;font-weight:900;color:#667085}.speed small{color:#fff}
+.stop{border:0;border-radius:20px;background:#f0444e;color:white;font-size:28px;font-weight:1000}
+.pedal{border:0;border-radius:18px;background:#eef2f7;color:#111827;font-size:14px;font-weight:1000;padding:12px}
+.hr{grid-column:1/4;display:flex;align-items:center;justify-content:space-between;border-radius:20px;background:#fff;padding:14px 16px}
+.hr .zone{font-size:24px;font-weight:1000;color:var(--green)}.hr .bpm{font-size:34px;font-weight:1000;color:#f05a86}.hr small{font-size:12px;color:#667085;font-weight:900}
+.tabs{position:absolute;z-index:30;left:18px;right:18px;bottom:calc(env(safe-area-inset-bottom) + 8px);height:58px;border-radius:26px;background:rgba(255,255,255,.95);display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:5px;box-shadow:0 14px 30px rgba(0,0,0,.24)}
+.tab{border:0;background:transparent;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:1000;color:#667085;font-size:11px}
+.tab span{font-size:20px}.tab.active{background:#e8f7f0;color:#12895b}
+.compact .top-card{display:none}
+.compact .bottom-card{grid-template-columns:1fr 1fr 1fr;bottom:calc(env(safe-area-inset-bottom) + 10px);padding:8px}
+.compact .bottom-card .pedal,.compact .bottom-card .stop{display:none}
+.compact .stat{min-height:56px;padding:8px}.compact .stat b{font-size:27px}.compact .hr{grid-column:1/4;min-height:52px;padding:8px 12px}.compact .tabs{display:none}.compact .right-tools{bottom:calc(env(safe-area-inset-bottom) + 120px)}
+.page{position:absolute;z-index:50;inset:0;display:none;background:rgba(12,18,27,.45);backdrop-filter:blur(6px);padding:calc(env(safe-area-inset-top) + 18px) 12px calc(env(safe-area-inset-bottom) + 82px)}
+.page.open{display:flex;flex-direction:column;justify-content:flex-end}
+.sheet{background:#fff;border-radius:28px;box-shadow:0 22px 50px rgba(0,0,0,.35);overflow:hidden;max-height:78dvh;display:flex;flex-direction:column}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px}.sheet-title{font-size:28px;font-weight:1000}.sheet-body{padding:0 14px 16px;overflow:auto}
+.close{border:0;border-radius:999px;background:#eef2f7;width:42px;height:42px;font-size:22px;font-weight:1000}
+.big-action{width:100%;border:0;border-radius:20px;background:var(--green);color:white;font-size:17px;font-weight:1000;padding:16px;margin:8px 0 14px}
+.empty{border-radius:18px;background:#f3f6fb;padding:16px;color:#667085;font-size:13px;font-weight:850}
+.route-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-radius:18px;background:#f7f9fc;border:1px solid #e5e9f1;padding:12px;margin-bottom:9px}
+.route-name{font-size:15px;font-weight:1000}.route-meta{font-size:11px;font-weight:850;color:#667085;margin-top:3px}.route-actions{display:flex;gap:6px}.route-actions button{border:0;border-radius:999px;background:#eef2f7;font-size:11px;font-weight:900;padding:8px 9px}.route-actions .run{background:var(--green);color:white}.route-actions .del{background:#fff0f0;color:#d33}
+.builder{position:absolute;z-index:60;inset:0;background:#101820;display:none}.builder.open{display:block}
+.builder-map{position:absolute;inset:0;overflow:hidden;background:#172333;touch-action:none}
+.builder-top{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 12px);display:flex;gap:10px;align-items:center;z-index:5}
+.rb-back,.rb-save{border:0;border-radius:999px;background:#fff;color:#111827;font-size:13px;font-weight:1000;padding:12px 14px;box-shadow:0 8px 20px rgba(0,0,0,.22)}.rb-save{background:var(--green);color:white}
+.rb-mid{flex:1;border-radius:20px;background:rgba(17,24,39,.72);color:#fff;padding:10px 12px;font-weight:1000}
+.rb-card{position:absolute;z-index:5;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 82px);border-radius:22px;background:rgba(255,255,255,.94);padding:12px 14px;display:flex;justify-content:space-between;box-shadow:0 12px 28px rgba(0,0,0,.24)}
+.rb-dist{font-size:34px;font-weight:1000}.rb-dist small{font-size:13px;color:#667085}.rb-label{font-size:10px;font-weight:900;color:#667085}.rb-target{text-align:right}.rb-target select{border:0;border-radius:12px;background:#eef4ff;color:#2454c7;font-size:12px;font-weight:900;padding:8px}
+.rb-bottom{position:absolute;z-index:5;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);border-radius:24px;background:rgba(255,255,255,.96);padding:12px;box-shadow:0 16px 34px rgba(0,0,0,.30)}
+.rb-name{width:100%;border:1px solid #e3e7ef;border-radius:16px;padding:13px;font-size:14px;font-weight:900}.rb-hint{font-size:11px;font-weight:850;color:#667085;margin:8px 2px 10px}.rb-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.rb-actions button{border:0;border-radius:999px;background:#eef2f7;font-size:12px;font-weight:1000;padding:11px}
 </style>
 </head>
 <body>
-<div class="phone">
-  <div id="map" class="map"></div>
-  <button class="ui-restore-chip" id="uiRestoreChip">UI表示</button>
-  <nav class="bottom-tabs" id="bottomTabs" aria-label="メインメニュー">
-    <button class="tab active" data-tab="ride"><span>🚴</span><b>走る</b></button>
-    <button class="tab" data-tab="routes"><span>🗺️</span><b>ルート</b></button>
-    <button class="tab" data-tab="records"><span>📊</span><b>記録</b></button>
-    <button class="tab" data-tab="settings"><span>⚙️</span><b>設定</b></button>
-  </nav>
-  <div class="ride-mini-chip" id="rideMiniChip"><span id="miniSpeed">14.6</span> km/h ・ <span id="miniKm">8.2</span> km ・ <span id="miniPlace">焼津市</span></div>
-  <div class="right-map-tools">
-    <button class="recenter-btn" id="recenterBtn" aria-label="現在地へ">
-      <svg viewBox="0 0 64 64" class="recenter-svg" aria-hidden="true">
-        <rect x="6.5" y="6.5" width="51" height="51" rx="10.5" fill="rgba(255,255,255,.96)" stroke="#2f6bff" stroke-width="3.5"/>
-        <circle cx="32" cy="32" r="16.5" fill="none" stroke="#2f6bff" stroke-width="5.2"/>
-        <path d="M32 11.5v12.5M32 40v12.5M11.5 32h12.5M40 32h12.5" fill="none" stroke="#2f6bff" stroke-width="5.2" stroke-linecap="round"/>
-        <circle cx="32" cy="32" r="3.7" fill="#2f6bff"/>
-      </svg>
-    </button>
-    <button class="building-fab off" id="buildingToggle" aria-label="建物3D切替">建物 OFF</button>
-    <button class="terrain-fab off" id="terrainToggle" aria-label="地形3D切替">地形 OFF</button>
-    <button class="travel-fab" id="travelLogBtn" aria-label="旅ログ">旅ログ</button>
+<div class="phone" id="app">
+  <div id="safeMap">
+    <div class="tile-layer" id="tileLayer"></div>
+    <svg class="route-svg" id="routeSvg"></svg>
+    <div class="marker current" id="currentMarker">🚴</div>
   </div>
-  <div class="travel-toast" id="travelToast">
-    <div class="travel-toast-icon" id="travelToastIcon">📍</div>
-    <div class="travel-toast-body">
-      <div class="travel-toast-title" id="travelToastTitle">現在地</div>
-      <div class="travel-toast-sub" id="travelToastSub">旅ログに記録しました</div>
-    </div>
-  </div>
-  <div class="travel-log-panel" id="travelLogPanel">
-    <div class="travel-log-card">
-      <div class="travel-log-head">
-        <div>
-          <div class="travel-log-kicker">今日の旅ログ</div>
-          <div class="travel-log-title">走った道の記録</div>
-        </div>
-        <button class="travel-log-close" id="travelLogClose">×</button>
-      </div>
-      <div class="travel-log-summary" id="travelLogSummary"></div>
-      <div class="travel-log-list" id="travelLogList"></div>
-    </div>
-  </div>
-  <section class="app-page routes-page" id="routesPage" aria-label="ルート画面">
-    <div class="page-head">
+  <div class="map-status" id="mapStatus">地図表示OK</div>
+
+  <section class="top-card">
+    <button class="ui-hide" id="uiToggle">UI隠す</button>
+    <div class="top-row">
+      <div class="badge">🏯</div>
       <div>
-        <div class="page-kicker">MY ROUTE</div>
-        <div class="page-title">マイルート</div>
+        <div class="kicker" id="modeKicker">次の名所</div>
+        <div class="landmark" id="landmark">名古屋城</div>
+        <div class="dist" id="remainDist">あと 186.8 km</div>
       </div>
-      <button class="page-close" data-tab="ride">×</button>
     </div>
-    <div class="page-body">
-      <button class="big-action" id="openRouteBuilder">＋ 新しいルートを作る</button>
-      <div class="route-list" id="simpleRouteList"></div>
+    <div class="progress-wrap">
+      <div class="progress"><div class="progress-fill" id="progressFill"></div><div class="bike" id="bikeIcon">🚴</div></div>
+      <div class="progress-meta"><span>通過地点 3.8km</span><span>中継地 大井川 27km</span></div>
     </div>
   </section>
 
-  <section class="app-page placeholder-page" id="recordsPage">
-    <div class="page-head">
-      <div><div class="page-kicker">RECORDS</div><div class="page-title">記録</div></div>
-      <button class="page-close" data-tab="ride">×</button>
-    </div>
-    <div class="page-body"><div class="empty-card">距離・時間・体重グラフは次フェーズで追加。</div></div>
-  </section>
-
-  <section class="app-page placeholder-page" id="settingsPage">
-    <div class="page-head">
-      <div><div class="page-kicker">SETTINGS</div><div class="page-title">設定</div></div>
-      <button class="page-close" data-tab="ride">×</button>
-    </div>
-    <div class="page-body"><div class="empty-card">入力方式、センサー、表示設定は次フェーズで追加。</div></div>
-  </section>
-
-  <section class="route-builder-panel" id="routeBuilderPanel" aria-label="ルート作成">
-    <div class="route-builder-shell">
-      <div class="route-builder-map" id="routeBuilderMap"></div>
-      <div class="route-builder-top">
-        <button class="rb-back" id="rbClose">← 戻る</button>
-        <div class="rb-title-wrap">
-          <div class="rb-kicker">ROUTE BUILDER</div>
-          <div class="rb-title">地図をタップしてルート作成</div>
-        </div>
-        <button class="rb-save" id="rbSave">保存</button>
-      </div>
-      <div class="rb-distance-card">
-        <div>
-          <div class="rb-label">現在の距離</div>
-          <div class="rb-distance"><span id="rbDistance">0.0</span><small>km</small></div>
-        </div>
-        <div class="rb-target">
-          <div class="rb-label">目標</div>
-          <select id="rbTarget">
-            <option value="5">5km</option>
-            <option value="10" selected>10km</option>
-            <option value="15">15km</option>
-            <option value="20">20km</option>
-          </select>
-          <div class="rb-remain">あと <b id="rbRemain">10.0</b> km</div>
-        </div>
-      </div>
-      <div class="rb-bottom-card">
-        <input id="rbName" class="rb-name" placeholder="ルート名 例：近所10kmコース">
-        <div class="rb-hint" id="rbHint">地図をタップしてルートを作成。点を増やすと距離が伸びます。</div>
-        <div class="rb-actions">
-          <button id="rbUndo">1つ戻す</button>
-          <button id="rbClear">クリア</button>
-          <button id="rbUseDemo">サンプル</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <div class="ui">
-    <div class="top">
-      <div class="hero">
-        <div class="mode" id="mode">追従 ON</div><button class="ui-collapse-btn" id="uiCollapseBtn">UIを隠す</button>
-        <div class="hero-main">
-          <div class="hero-icon">🏯</div>
-          <div style="flex:1;min-width:0">
-            <div class="eyebrow">次の名所</div>
-            <div class="landmark">名古屋城</div>
-            <div class="remain" id="remain">あと 186.8 km</div>
-          </div>
-        </div>
-        <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
-        <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
-      </div>
-      <div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle warn" id="labelToggle">OFM読込中</button></div>
-    </div>
-    <div class="bottom">
-      <div class="mini-dock">
-        <div class="meter-row">
-          <div class="speed-chip"><span class="speed-num" id="speed">14.6</span><span class="speed-unit">km/h</span></div>
-          <div class="ring-card"><div class="ring-wrap"><svg class="ring-svg" viewBox="0 0 52 52" aria-label="cadence ring"><circle class="ring-track" cx="26" cy="26" r="18"></circle><circle class="ring-progress" id="cadenceRing" cx="26" cy="26" r="18" stroke-dasharray="113.1" stroke-dashoffset="56"></circle><text class="ring-value" id="ringValue" x="26" y="31" text-anchor="middle">58</text></svg><div class="ring-labels"><div class="ring-main" id="ringMain">58 rpm</div><div class="ring-sub">ケイデンス</div></div></div></div>
-          <div class="action-card"><button class="action-btn stop" id="runBtnTop">ストップ</button></div>
-        </div>
-        <div class="pedal-control">
-          <button class="pedal-btn" id="pedalDown">ペダル −</button>
-          <div class="pedal-readout"><span id="pedalRpm">58</span><small>rpm</small></div>
-          <button class="pedal-btn plus" id="pedalUp">ペダル ＋</button>
-        </div>
-        <div class="zone-card">
-          <div class="zone-head">
-            <div class="zone-left">
-              <div class="zone-dot" id="zoneDot"></div>
-              <div>
-                <div class="zone-kicker">心拍ゾーン</div>
-                <div class="zone-main" id="zoneMain">脂肪燃焼 <span class="zone-fire" id="zoneFire">🔥</span></div>
-              </div>
-            </div>
-            <div class="zone-bpm"><span class="num" id="zoneBpm">123</span><span class="u">bpm</span></div>
-          </div>
-          <div class="zone-line" id="bars"></div>
-          <div class="zone-guide" id="zoneGuide"></div>
-        </div>
-        <div class="dock-grid" id="metrics"></div>
-        <div class="secondary-wrap" id="secondaryWrap"><div class="dock-grid" id="metrics2"></div></div>
-                
-      </div>
-    </div>
+  <div class="right-tools">
+    <button class="tool-btn target-btn" id="centerBtn">⌖</button>
+    <button class="tool-btn" id="zoomIn">＋</button>
+    <button class="tool-btn" id="zoomOut">−</button>
+    <button class="tool-btn" id="travelBtn">旅ログ</button>
   </div>
+
+  <section class="bottom-card">
+    <div class="stat speed"><b id="speed">14.6</b><small>km/h</small></div>
+    <div class="stat"><b id="rpm">58</b><small>rpm ケイデンス</small></div>
+    <button class="stop" id="stopBtn">ストップ</button>
+    <button class="pedal" id="pedalMinus">ペダル −</button>
+    <div class="stat"><b id="rpm2">58</b><small>rpm</small></div>
+    <button class="pedal" id="pedalPlus">ペダル ＋</button>
+    <div class="hr"><div><small>心拍ゾーン</small><div class="zone">脂肪燃焼 🔥</div></div><div class="bpm"><span id="hr">123</span><small> bpm</small></div></div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="ride"><span>🚴</span>走る</button>
+    <button class="tab" data-tab="routes"><span>🗺️</span>ルート</button>
+    <button class="tab" data-tab="records"><span>📊</span>記録</button>
+    <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
+  </nav>
+
+  <section class="page" id="routesPage">
+    <div class="sheet">
+      <div class="sheet-head"><div class="sheet-title">マイルート</div><button class="close" data-tab="ride">×</button></div>
+      <div class="sheet-body">
+        <button class="big-action" id="openBuilder">＋ 新しいルートを作る</button>
+        <div id="routeList"></div>
+      </div>
+    </div>
+  </section>
+  <section class="page" id="recordsPage"><div class="sheet"><div class="sheet-head"><div class="sheet-title">記録</div><button class="close" data-tab="ride">×</button></div><div class="sheet-body"><div class="empty">距離・時間・体重グラフは次フェーズで追加。</div></div></div></section>
+  <section class="page" id="settingsPage"><div class="sheet"><div class="sheet-head"><div class="sheet-title">設定</div><button class="close" data-tab="ride">×</button></div><div class="sheet-body"><div class="empty">入力方式・表示設定は次フェーズで追加。</div></div></div></section>
+
+  <section class="builder" id="builder">
+    <div class="builder-map" id="builderMap">
+      <div class="tile-layer" id="builderTiles"></div>
+      <svg class="route-svg" id="builderSvg"></svg>
+    </div>
+    <div class="builder-top">
+      <button class="rb-back" id="builderClose">← 戻る</button>
+      <div class="rb-mid">地図をタップしてルート作成</div>
+      <button class="rb-save" id="builderSave">保存</button>
+    </div>
+    <div class="rb-card"><div><div class="rb-label">現在の距離</div><div class="rb-dist"><span id="rbDistance">0.0</span><small> km</small></div></div><div class="rb-target"><div class="rb-label">目標</div><select id="rbTarget"><option value="5">5km</option><option value="10" selected>10km</option><option value="15">15km</option><option value="20">20km</option></select><div class="rb-label">あと <b id="rbRemain">10.0</b> km</div></div></div>
+    <div class="rb-bottom"><input class="rb-name" id="rbName" placeholder="ルート名 例：近所10kmコース"><div class="rb-hint" id="rbHint">地図をタップしてスタート地点を置いてください。</div><div class="rb-actions"><button id="rbUndo">1つ戻す</button><button id="rbClear">クリア</button><button id="rbSample">サンプル</button></div></div>
+  </section>
 </div>
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+
 <script>
-const LEG=195;
-const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
-const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-const TRAVEL_EVENTS=[
- {km:8.3,icon:'📍',title:'静岡県 焼津市 八楠付近',short:'焼津ICにも近い市街地北側を走行中。',note:'八楠周辺は東名高速や幹線道路に近く、住宅地・商業施設・物流系施設が混ざるエリアです。航空写真では建物が続いて見えますが、焼津市街の北側を西へ進んでいます。'},
- {km:9.0,icon:'🚉',title:'焼津駅周辺',short:'港町・焼津の玄関口に近づいています。',note:'焼津駅は東海道本線の駅で、焼津港や中心市街地への玄関口です。焼津はカツオ・マグロなどの水産業で知られる港町として発展してきました。'},
- {km:10.8,icon:'🌉',title:'瀬戸川流域',short:'焼津市街を流れる川の近くです。',note:'瀬戸川は焼津市街地を流れ、駿河湾へ向かう川です。市街地の航空写真では川筋が町の区切りとして見え、走行中の位置感をつかむ目印になります。'},
- {km:12.0,icon:'🏘️',title:'藤枝市方面へ',short:'焼津から藤枝方面へ西へ進みます。',note:'藤枝市は旧東海道の宿場町としても知られる地域です。焼津・藤枝・島田方面へ進むと、港町から内陸寄りの街道・茶産地の雰囲気へ少しずつ変わります。'},
- {km:35.0,icon:'🌉',title:'大井川',short:'東海道の難所として知られた大河川です。',note:'大井川は江戸時代、東海道の難所として知られました。かつては橋を架けることが制限され、川越人足による渡河が行われた歴史があります。'},
- {km:70.0,icon:'🏯',title:'掛川城周辺',short:'東海道沿いの城下町エリアです。',note:'掛川城は東海道沿いの城下町・掛川を象徴する城です。ルート上では市街地のまとまりと鉄道・幹線道路が見え、旅の中継地として分かりやすい場所です。'},
- {km:115.0,icon:'🌊',title:'浜名湖・弁天島',short:'湖と海が近づく開放的な区間です。',note:'浜名湖は汽水湖で、うなぎ養殖や観光地として知られます。弁天島周辺では湖・橋・鉄道・海岸線が重なり、航空写真でも変化を感じやすい区間です。'},
- {km:168.0,icon:'🏯',title:'岡崎城周辺',short:'徳川家康ゆかりの城下町です。',note:'岡崎城は徳川家康生誕の地として知られます。三河地域の歴史を感じられる中継地で、日本一周の道中でも記憶に残りやすいスポットです。'},
- {km:195.0,icon:'🏯',title:'名古屋城',short:'尾張名古屋を代表する名所に到着。',note:'名古屋城は金の鯱で知られる名古屋の象徴的な城です。ここまでのログは、静岡沿岸から愛知の都市圏へ入る旅の変化として振り返れます。'}
-];
-const PLACE_SEGMENTS=[
- {start:0,end:8.8,label:'静岡県 焼津市 八楠付近'},
- {start:8.8,end:12.5,label:'静岡県 焼津市 焼津駅周辺'},
- {start:12.5,end:18.4,label:'静岡県 藤枝市方面'},
- {start:18.4,end:35,label:'静岡県 静岡市方面'},
- {start:35,end:70,label:'静岡県 島田市・菊川方面'},
- {start:70,end:115,label:'静岡県 掛川市・袋井方面'},
- {start:115,end:168,label:'静岡県 浜松市・浜名湖方面'},
- {start:168,end:195,label:'愛知県 岡崎市〜名古屋方面'}
-];
-
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, travelLog:[], travelSeen:{}, lastTravelKm:-999, uiCollapsed:false, activeTab:'ride', rbMap:null, rbPoints:[], rbMarkers:[], rbLineAdded:false, savedRoutes:[], activeCustomRoute:null};
+(()=>{'use strict';
 const $=id=>document.getElementById(id);
-function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
-function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
-function next(t){return CP.find(c=>c.t===t&&c.km>st.km+.01)}
-function fmtTime(sec){return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(Math.floor(sec%60)).padStart(2,'0')}
-function renderUI(){const kmh=st.rpm*2*2.1/60*3.6; const prog=Math.min(100,st.km/LEG*100); const z=zoneOf(st.hr); const nS=next('small'),nM=next('medium'),nL=next('large');
- $('speed').textContent=kmh.toFixed(1); const rpmRatio=Math.max(0,Math.min(1,st.rpm/120)); $('ringValue').textContent=Math.round(st.rpm); $('ringMain').textContent=Math.round(st.rpm)+' rpm'; const C=2*Math.PI*18; $('cadenceRing').setAttribute('stroke-dasharray', C.toFixed(1)); $('cadenceRing').setAttribute('stroke-dashoffset', (C*(1-rpmRatio)).toFixed(1)); $('mode').textContent=st.follow?'追従 ON':'追従 OFF'; $('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km'; $('fill').style.width=prog+'%'; $('bike').style.left=prog+'%';
- $('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —'; $('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
- const stats=[['距離',st.sess.toFixed(2),'km'],['時間',fmtTime(st.t),''],['消費',Math.round(st.cal),'kcal'],['最高',st.mx.toFixed(1),'km/h'],['XP',Math.round(st.cal*0.9),''],['累計',st.km.toFixed(1),'km']];
- $('metrics').innerHTML=stats.map(m=>'<div class="dock-card"><div class="label">'+m[0]+'</div><div class="value">'+m[1]+'<span class="unit">'+m[2]+'</span></div></div>').join('');
- const topBtn=$('runBtnTop'); if(topBtn){topBtn.textContent=st.running?'ストップ':'スタート'; topBtn.classList.toggle('stop',st.running);} const pr=$('pedalRpm'); if(pr)pr.textContent=Math.round(st.rpm); 
- $('bars').innerHTML=zones.map((a,i)=>'<div class="zone-seg '+(i===z?'active':'')+'" style="background:'+a.c+'"></div>').join('');
- const zoneName=zones[z].n; let tip=''; let fire='';
- if(z===0){tip='少し上げると脂肪燃焼に入りやすいです';}
- else if(z===1){tip='今は脂肪燃焼ゾーンです'; fire='🔥';}
- else if(z===2){tip='有酸素トレーニング中です';}
- else if(z===3){tip='かなり高め。少し落とすと続けやすいです';}
- else {tip='最大強度に近いです。無理しすぎに注意';}
- $('zoneDot').style.background=zones[z].c; $('zoneDot').style.boxShadow='0 0 0 3px color-mix(in srgb, '+zones[z].c+' 18%, white)';
- $('zoneMain').innerHTML=zoneName + (fire ? ' <span class="zone-fire">'+fire+'</span>' : ''); $('zoneBpm').textContent=Math.round(st.hr); $('zoneGuide').innerHTML='<span class="zone-tip">'+tip+'</span>';
-}
-function hav(a,b){const R=6371e3,toRad=x=>x*Math.PI/180; const dLat=toRad(b[1]-a[1]),dLon=toRad(b[0]-a[0]); const lat1=toRad(a[1]),lat2=toRad(b[1]); const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(h));}
-function routeLength(coords){let d=0;for(let i=1;i<coords.length;i++)d+=hav(coords[i-1],coords[i]);return d;}
-function pointAt(coords, meters){if(!coords||coords.length<2)return [138.306,34.831]; let remain=meters; for(let i=1;i<coords.length;i++){let seg=hav(coords[i-1],coords[i]); if(remain<=seg){let t=seg?remain/seg:0; return [coords[i-1][0]+(coords[i][0]-coords[i-1][0])*t,coords[i-1][1]+(coords[i][1]-coords[i-1][1])*t];} remain-=seg;} return coords[coords.length-1];}
-function bearing(a,b){const toRad=x=>x*Math.PI/180,toDeg=x=>x*180/Math.PI; const lon1=toRad(a[0]),lon2=toRad(b[0]),lat1=toRad(a[1]),lat2=toRad(b[1]); const y=Math.sin(lon2-lon1)*Math.cos(lat2); const x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1); return (toDeg(Math.atan2(y,x))+360)%360;}
-function lerp(a,b,t){return a+(b-a)*t;}
-function angleLerp(a,b,t){let d=((b-a+540)%360)-180; return (a+d*t+360)%360;}
-function nowMs(){return Date.now();}
-let map,marker;
-function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms;}
-
-function setUICollapsed(v){
- st.uiCollapsed=!!v;
- const phone=document.querySelector('.phone');
- if(phone) phone.classList.toggle('ui-collapsed',st.uiCollapsed);
- const b=$('uiCollapseBtn'); if(b) b.textContent=st.uiCollapsed?'UIを表示':'UIを隠す';
- updateMiniChip();
-}
-function updateMiniChip(){
- const kmh=st.rpm*2*2.1/60*3.6;
- const ms=$('miniSpeed'), mk=$('miniKm'), mp=$('miniPlace');
- if(ms) ms.textContent=kmh.toFixed(1);
- if(mk) mk.textContent=st.km.toFixed(1);
- if(mp) mp.textContent=currentPlaceLabel().replace(/^静岡県 |^愛知県 /,'');
-}
-
-
-const MY_ROUTES_KEY='japanRide.myRoutes.v2';
-function haversine(a,b){
- const R=6371000, toRad=d=>d*Math.PI/180;
- const dLat=toRad(b[1]-a[1]), dLon=toRad(b[0]-a[0]);
- const lat1=toRad(a[1]), lat2=toRad(b[1]);
- const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
- return 2*R*Math.asin(Math.sqrt(h));
-}
-function lineDistanceKm(points){
- if(!points||points.length<2) return 0;
- let m=0; for(let i=1;i<points.length;i++) m+=haversine(points[i-1],points[i]);
- return m/1000;
-}
-function loadSavedRoutes(){try{st.savedRoutes=JSON.parse(localStorage.getItem(MY_ROUTES_KEY)||'[]')||[];}catch(e){st.savedRoutes=[];}}
-function saveSavedRoutes(){localStorage.setItem(MY_ROUTES_KEY,JSON.stringify(st.savedRoutes||[]));}
-function setTab(tab){
- st.activeTab=tab||'ride';
- document.querySelectorAll('.bottom-tabs .tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===st.activeTab));
- ['routes','records','settings'].forEach(t=>{
-   const p=$(t+'Page'); if(p) p.classList.toggle('open',st.activeTab===t);
- });
- if(st.activeTab==='routes') renderSimpleRouteList();
-}
-function openRouteBuilder(){
- const p=$('routeBuilderPanel'); if(p) p.classList.add('open');
- setTimeout(()=>initRouteBuilderMap(),80);
-}
-function closeRouteBuilder(){
- const p=$('routeBuilderPanel'); if(p) p.classList.remove('open');
-}
-function initRouteBuilderMap(){
- if(st.rbMap){setTimeout(()=>st.rbMap.resize(),80); return;}
- st.rbMap=new maplibregl.Map({
-   container:'routeBuilderMap',
-   style:'https://tiles.openfreemap.org/styles/liberty',
-   center:[138.309,34.835],
-   zoom:13.4,
-   pitch:0,
-   bearing:0,
-   antialias:true,
-   dragRotate:true,
-   touchZoomRotate:true,
-   cooperativeGestures:false
- });
- st.rbMap.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
- st.rbMap.on('load',()=>{
-   st.rbMap.addSource('rb-line',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:[]}}});
-   st.rbMap.addLayer({id:'rb-line-layer',type:'line',source:'rb-line',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#16B978','line-width':5,'line-opacity':.94}});
-   st.rbLineAdded=true;
-   setTimeout(()=>st.rbMap.resize(),120);
-   renderRouteBuilder();
- });
- st.rbMap.on('click',e=>{st.rbPoints.push([e.lngLat.lng,e.lngLat.lat]); renderRouteBuilder();});
-}
-function renderRouteBuilder(){
- const km=lineDistanceKm(st.rbPoints);
- const target=parseFloat(($('rbTarget')&&$('rbTarget').value)||10);
- if($('rbDistance')) $('rbDistance').textContent=km.toFixed(1);
- if($('rbRemain')) $('rbRemain').textContent=Math.max(0,target-km).toFixed(1);
- if($('rbHint')){
-   $('rbHint').textContent=st.rbPoints.length===0?'地図をタップしてスタート地点を置いてください。':st.rbPoints.length===1?'次の地点をタップすると距離が出ます。':'点を追加して目標距離まで伸ばせます。';
- }
- if(st.rbMap&&st.rbLineAdded){
-   const src=st.rbMap.getSource('rb-line');
-   if(src) src.setData({type:'Feature',geometry:{type:'LineString',coordinates:st.rbPoints}});
- }
- (st.rbMarkers||[]).forEach(m=>m.remove()); st.rbMarkers=[];
- if(st.rbMap){
-   st.rbPoints.forEach((p,i)=>{
-     const el=document.createElement('div'); el.className='rb-point-marker '+(i===0?'start':i===st.rbPoints.length-1?'goal':''); el.textContent=i+1;
-     st.rbMarkers.push(new maplibregl.Marker({element:el}).setLngLat(p).addTo(st.rbMap));
-   });
- }
-}
-function rbUndo(){st.rbPoints.pop();renderRouteBuilder();}
-function rbClear(){st.rbPoints=[];renderRouteBuilder();}
-function rbUseSample(){
- st.rbPoints=[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250]];
- if(st.rbMap) st.rbMap.fitBounds(st.rbPoints.reduce((b,p)=>b.extend(p),new maplibregl.LngLatBounds(st.rbPoints[0],st.rbPoints[0])),{padding:80,duration:500});
- renderRouteBuilder();
-}
-function saveCurrentRoute(){
- if(st.rbPoints.length<2){alert('2点以上タップしてルートを作ってください');return;}
- const name=($('rbName')&&$('rbName').value.trim())||'マイルート '+new Date().toLocaleDateString('ja-JP');
- const route={id:'r'+Date.now(),name,points:st.rbPoints.slice(),distanceKm:lineDistanceKm(st.rbPoints),createdAt:new Date().toISOString(),visibility:'private'};
- loadSavedRoutes(); st.savedRoutes.unshift(route); saveSavedRoutes();
- if($('rbName')) $('rbName').value='';
- closeRouteBuilder(); setTab('routes'); renderSimpleRouteList();
-}
-function renderSimpleRouteList(){
- const body=$('simpleRouteList'); if(!body) return;
- loadSavedRoutes();
- if(!st.savedRoutes.length){body.innerHTML='<div class="empty-card">保存済みルートはありません。まず「新しいルートを作る」から作成してください。</div>';return;}
- body.innerHTML=st.savedRoutes.map(r=>'<div class="route-item"><div><div class="route-item-name">'+escapeHtml(r.name)+'</div><div class="route-item-meta">'+Number(r.distanceKm||0).toFixed(1)+'km ・ 非公開 ・ '+new Date(r.createdAt).toLocaleDateString('ja-JP')+'</div></div><div class="route-item-actions"><button class="run" data-run-route="'+r.id+'">走る</button><button class="del" data-del-route="'+r.id+'">削除</button></div></div>').join('');
-}
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function deleteRoute(id){loadSavedRoutes();st.savedRoutes=st.savedRoutes.filter(r=>r.id!==id);saveSavedRoutes();renderSimpleRouteList();}
-function runSavedRoute(id){
- loadSavedRoutes(); const r=st.savedRoutes.find(x=>x.id===id); if(!r) return;
- st.activeCustomRoute=r; st.route=r.points.slice(); st.routeDist=lineDistanceKm(r.points)*1000; st.sess=0; st.km=0;
- setTab('ride');
- if(map){
-   const src=map.getSource('route'); if(src) src.setData({type:'Feature',geometry:{type:'LineString',coordinates:st.route}});
-   map.fitBounds(st.route.reduce((b,p)=>b.extend(p),new maplibregl.LngLatBounds(st.route[0],st.route[0])),{padding:80,duration:700});
- }
- const lm=document.querySelector('.landmark'); if(lm) lm.textContent=r.name;
- if($('place')) $('place').textContent='📍 マイルート走行中';
- renderUI();
-}
-
-function adjustPedal(delta){st.rpm=Math.max(25,Math.min(110,st.rpm+delta)); const p=$('pedalRpm'); if(p)p.textContent=Math.round(st.rpm); renderUI();}
-function currentPlaceLabel(){const seg=PLACE_SEGMENTS.find(s=>st.km>=s.start&&st.km<s.end);return seg?seg.label:PLACE_SEGMENTS[PLACE_SEGMENTS.length-1].label;}
-function showTravelToast(ev){const t=$('travelToast'); if(!t)return; $('travelToastIcon').textContent=ev.icon||'📍'; $('travelToastTitle').textContent=ev.title; $('travelToastSub').textContent=ev.short||'旅ログに記録しました'; t.classList.add('show'); clearTimeout(st.travelToastTimer); st.travelToastTimer=setTimeout(()=>t.classList.remove('show'),4200);}
-function addTravelLog(ev){if(st.travelSeen[ev.title])return; st.travelSeen[ev.title]=true; const item={...ev,atKm:st.km,time:st.t}; st.travelLog.push(item); showTravelToast(ev);}
-function checkTravelEvents(){if(Math.abs(st.km-st.lastTravelKm)<0.02)return; st.lastTravelKm=st.km; TRAVEL_EVENTS.forEach(ev=>{if(!st.travelSeen[ev.title]&&st.km>=ev.km)addTravelLog(ev);}); const place=$('place'); if(place)place.textContent='📍 '+currentPlaceLabel();}
-function renderTravelLog(){const list=$('travelLogList'),sum=$('travelLogSummary'); if(!list||!sum)return; const areas=[...new Set(st.travelLog.map(e=>e.title.replace(/周辺|付近|方面へ|流域/g,'')).slice(0,4))]; sum.innerHTML=[['距離',st.sess.toFixed(1)+'km'],['記録',st.travelLog.length+'件'],['エリア',areas.length?areas.join('→'):'—']].map(x=>'<div class="travel-log-stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join(''); if(!st.travelLog.length){list.innerHTML='<div class="travel-log-item"><div class="travel-log-ico">🚴</div><div><div class="travel-log-name">まだ旅ログはありません</div><div class="travel-log-note">走行すると、通過した川・駅・市町村・名所などがここに残ります。</div></div></div>';return;} list.innerHTML=st.travelLog.map(e=>'<div class="travel-log-item"><div class="travel-log-ico">'+(e.icon||'📍')+'</div><div><div class="travel-log-name">'+e.title+'</div><div class="travel-log-meta">'+e.atKm.toFixed(1)+'km / '+Math.floor(e.time/60)+'分</div><div class="travel-log-note">'+e.note+'</div></div></div>').join('');}
-function openTravelLog(){renderTravelLog(); const p=$('travelLogPanel'); if(p)p.classList.add('open');}
-function closeTravelLog(){const p=$('travelLogPanel'); if(p)p.classList.remove('open');}
-function initMap(){
- if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
-
- // D55 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
- // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
- map=new maplibregl.Map({
-   container:'map',
-   style:'https://tiles.openfreemap.org/styles/liberty',
-   center:[138.309,34.835],
-   zoom:15.8,
-   pitch:58,
-   bearing:50,
-   antialias:true,
-   dragRotate:true,
-   touchZoomRotate:true,
-   cooperativeGestures:false
- });
-
- map.addControl(new maplibregl.NavigationControl({visualizePitch:true,showCompass:true}),'bottom-right');
- map.touchZoomRotate.enable(); map.touchZoomRotate.enableRotation(); map.dragRotate.enable(); map.scrollZoom.enable(); map.doubleClickZoom.enable(); map.keyboard.enable();
-
- const canvas=map.getCanvas();
- ['touchstart','pointerdown','wheel'].forEach(ev=>canvas.addEventListener(ev,()=>userInteracting(3000),{passive:true}));
- ['dragstart','rotatestart','pitchstart','zoomstart'].forEach(ev=>map.on(ev,()=>userInteracting(3200)));
- ['dragend','rotateend','pitchend','zoomend'].forEach(ev=>map.on(ev,()=>{st.manualUntil=nowMs()+2600;}));
-
- map.on('error',e=>{
-   const b=$('labelToggle');
-   if(b){b.textContent='OFMエラー'; b.classList.add('warn');}
-   console.warn('map error', e && e.error ? e.error : e);
- });
-
- map.on('load',async()=>{
-   const layers=map.getStyle().layers||[];
-   const firstSym=layers.find(l=>l.type==='symbol');
-   const beforeId=firstSym ? firstSym.id : undefined;
-
-   try{
-     map.addSource('gsi-photo',{
-       type:'raster',
-       tiles:['https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'],
-       tileSize:256,
-       attribution:'地理院タイル'
-     });
-     map.addLayer({id:'gsi-photo',type:'raster',source:'gsi-photo',paint:{'raster-opacity':1}}, beforeId);
-   }catch(e){
-     const b=$('labelToggle');
-     if(b){b.textContent='航空写真エラー'; b.classList.add('warn');}
-   }
-
-   st.symbolLayerIds=(map.getStyle().layers||[]).filter(l=>l.type==='symbol').map(l=>l.id);
-   st.symbolLayerIds.forEach(id=>{
-     try{
-       map.setPaintProperty(id,'text-halo-color','rgba(255,255,255,.95)');
-       map.setPaintProperty(id,'text-halo-width',2.1);
-       map.setPaintProperty(id,'text-halo-blur',0.25);
-     }catch(e){}
-   });
-
-   const b=$('labelToggle');
-   if(b){
-     b.textContent=st.symbolLayerIds.length?'OFMラベル ON':'OFMラベルなし';
-     b.classList.toggle('warn',false);
-     b.classList.toggle('off',!st.symbolLayerIds.length);
-   }
-
-   hideAllBuilding3DOnLoad(); setTimeout(()=>{if(!st.buildingsOn) hideAllBuilding3DOnLoad();},800);
-
-   let el=document.createElement('div');el.style.width='24px';el.style.height='24px';el.style.borderRadius='50%';el.style.background='#2f6bff';el.style.border='4px solid white';el.style.boxShadow='0 2px 10px rgba(0,0,0,.35)'; marker=new maplibregl.Marker({element:el}).setLngLat([138.309,34.835]).addTo(map);
-
-   let coords=[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250],[138.3425,34.8215],[138.3565,34.8188]];
-   try{
-     const url='https://router.project-osrm.org/route/v1/driving/'+coords.map(c=>c.join(',')).join(';')+'?overview=full&geometries=geojson';
-     const res=await fetch(url); const json=await res.json();
-     if(json.routes&&json.routes[0]&&json.routes[0].geometry){coords=json.routes[0].geometry.coordinates; $('mode').textContent='追従 ON';}
-   }catch(e){$('mode').textContent='追従 ON';}
-
-   st.route=coords; st.routeDist=routeLength(coords); st.lastPoint=coords[0];
-   map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:coords}}});
-
-   const firstSymbolNow=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
-   const routeBefore=firstSymbolNow ? firstSymbolNow.id : undefined;
-   try{map.addLayer({id:'route-glow',type:'line',source:'route',paint:{'line-color':'#ffffff','line-width':9,'line-opacity':0.82}}, routeBefore);}catch(e){}
-   try{map.addLayer({id:'route',type:'line',source:'route',paint:{'line-color':'#2f6bff','line-width':5,'line-opacity':0.96}}, routeBefore);}catch(e){}
- });
-}
-
-function toggleOfmLabels(){
- if(!st.symbolLayerIds.length) return;
- st.labelsOn=!st.labelsOn;
- const b=$('labelToggle');
- if(b){b.textContent=st.labelsOn?'OFMラベル ON':'OFMラベル OFF'; b.classList.toggle('off',!st.labelsOn);}
- st.symbolLayerIds.forEach(id=>{try{map.setLayoutProperty(id,'visibility',st.labelsOn?'visible':'none');}catch(e){}});
-}
-
-function collectExistingBuildingLayers(){
- if(!map) return [];
- const ids=[];
- (map.getStyle().layers||[]).forEach(l=>{
-   if(l.type==='fill-extrusion'){
-     ids.push(l.id);
-   }
- });
- return ids;
-}
-
-function hideAllBuilding3DOnLoad(){
- // OpenFreeMap側の既存3D建物レイヤーが最初から表示されるケースがあるため、
- // 起動直後にfill-extrusionを全部OFFにする。
- st.buildingLayerIds=collectExistingBuildingLayers();
- st.buildingLayerIds.forEach(id=>{
-   try{map.setLayoutProperty(id,'visibility','none');}catch(e){}
- });
- const btn=document.getElementById('buildingToggle');
- if(btn){
-   btn.textContent='建物 OFF';
-   btn.classList.add('off');
-   btn.classList.remove('err');
- }
-}
-
-function findVectorSourceForBuildings(){
- const sources=(map.getStyle()&&map.getStyle().sources)||{};
- for(const id of Object.keys(sources)){
-   const src=sources[id]||{};
-   const s=JSON.stringify(src).toLowerCase();
-   if(src.type==='vector' && (s.includes('openfreemap') || s.includes('openmaptiles') || s.includes('tiles.openfreemap'))){
-     return id;
-   }
- }
- const vectorIds=Object.keys(sources).filter(id=>sources[id]&&sources[id].type==='vector');
- return vectorIds.length ? vectorIds[0] : null;
-}
-
-function ensureBuildingLayer(){
- if(!map) return false;
-
- // まずOpenFreeMap styleにもともと存在するfill-extrusionを使う
- const existing=collectExistingBuildingLayers();
- if(existing.length){
-   st.buildingLayerIds=existing;
-   return true;
- }
-
- // 既存が無い場合だけ、押した時に自前のfill-extrusionを作る
- const sourceId=findVectorSourceForBuildings();
- if(!sourceId) return false;
-
- const firstSymbol=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
- const beforeId=firstSymbol?firstSymbol.id:undefined;
-
- const candidates=['building','buildings'];
- for(const sourceLayer of candidates){
-   const id='ofm-building-3d-'+sourceLayer;
-   try{
-     if(!map.getLayer(id)){
-       map.addLayer({
-         id,
-         type:'fill-extrusion',
-         source:sourceId,
-         'source-layer':sourceLayer,
-         minzoom:14,
-         layout:{visibility:'none'},
-         paint:{
-           'fill-extrusion-color':'rgba(80,92,110,.46)',
-           'fill-extrusion-height':['case',['has','render_height'],['get','render_height'],['has','height'],['get','height'],12],
-           'fill-extrusion-base':['case',['has','render_min_height'],['get','render_min_height'],0],
-           'fill-extrusion-opacity':0.34
-         }
-       }, beforeId);
-     }
-     st.buildingLayerId=id;
-     st.buildingLayerIds=[id];
-     return true;
-   }catch(e){}
- }
- return false;
-}
-
-function toggleBuildings(){
- const btn=document.getElementById('buildingToggle');
- if(!ensureBuildingLayer()){
-   if(btn){btn.textContent='建物不可'; btn.classList.add('err');}
-   return;
- }
- st.buildingsOn=!st.buildingsOn;
- st.buildingLayerIds.forEach(id=>{
-   try{map.setLayoutProperty(id,'visibility',st.buildingsOn?'visible':'none');}catch(e){}
- });
- if(btn){
-   btn.textContent=st.buildingsOn?'建物 ON':'建物 OFF';
-   btn.classList.toggle('off',!st.buildingsOn);
-   btn.classList.remove('err');
- }
-}
-
-function ensureTerrainSource(){
- if(!map) return false;
- try{
-   if(!map.getSource('terrain-dem')){
-     // D31: MapLibreが直接読める Mapzen Terrarium DEM を使用。
-     // D30の地理院dem_png + encoding:gsi はMapLibre標準のraster-demでは解釈されず、地形が平らになる。
-     map.addSource('terrain-dem',{
-       type:'raster-dem',
-       tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
-       tileSize:256,
-       maxzoom:15,
-       encoding:'terrarium',
-       attribution:'Terrain tiles by Mapzen'
-     });
-   }
-   st.terrainReady=true;
-   return true;
- }catch(e){
-   console.warn('terrain source failed', e);
-   return false;
- }
-}
-
-function toggleTerrain(){
- const btn=document.getElementById('terrainToggle');
- if(!map) return;
- if(!st.terrainOn){
-   if(!ensureTerrainSource()){
-     if(btn){btn.textContent='地形不可'; btn.classList.add('err');}
-     return;
-   }
-   try{
-     // 富士山や箱根などでも変化が見えやすいよう自然寄りに誇張。
-     map.setTerrain({source:'terrain-dem', exaggeration:1.5});
-     st.terrainOn=true;
-     if(btn){btn.textContent='地形 ON'; btn.classList.remove('off','err');}
-   }catch(e){
-     console.warn('setTerrain failed', e);
-     if(btn){btn.textContent='地形不可'; btn.classList.add('err');}
-   }
- }else{
-   try{ map.setTerrain(null); }catch(e){}
-   st.terrainOn=false;
-   if(btn){btn.textContent='地形 OFF'; btn.classList.add('off'); btn.classList.remove('err');}
- }
-}
-
-function recenterToBike(){
- if(!map) return;
- const p=st.lastPoint || (marker ? marker.getLngLat().toArray() : map.getCenter().toArray());
- const hd=st.lastHeading || map.getBearing();
- st.follow=true;
- st.manualUntil=0;
- st.interacting=false;
- st.camCenter=[p[0],p[1]];
- st.camBearing=hd;
- map.easeTo({center:p,bearing:hd,zoom:map.getZoom(),pitch:map.getPitch(),duration:420});
- renderUI();
-}
-
-function updateCamera(p, heading){
- if(!map || !st.follow) return;
- const t=nowMs();
- if(t<st.manualUntil){st.interacting=true;return;} else {st.interacting=false;}
- st.camCenter=[p[0],p[1]];
- if(st.camBearing==null) st.camBearing=heading;
- let diff=((heading-st.camBearing+540)%360)-180;
- if(Math.abs(diff)>5) st.camBearing=heading;
- map.jumpTo({center:st.camCenter,bearing:st.camBearing,zoom:map.getZoom(),pitch:map.getPitch()});
-}
-
-
-function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
- if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
- checkTravelEvents(); updateMiniChip(); renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('change',e=>{if(e.target&&e.target.id==='rbTarget')renderRouteBuilder();});
-
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const tabBtn=e.target.closest('[data-tab]'); if(tabBtn){setTab(tabBtn.dataset.tab); return;}
- const openRb=e.target.closest('#openRouteBuilder'); if(openRb){openRouteBuilder(); return;}
- const rbClose=e.target.closest('#rbClose'); if(rbClose){closeRouteBuilder(); return;}
- const rbSave=e.target.closest('#rbSave'); if(rbSave){saveCurrentRoute(); return;}
- const rbUndoBtn=e.target.closest('#rbUndo'); if(rbUndoBtn){rbUndo(); return;}
- const rbClearBtn=e.target.closest('#rbClear'); if(rbClearBtn){rbClear(); return;}
- const rbSampleBtn=e.target.closest('#rbUseDemo'); if(rbSampleBtn){rbUseSample(); return;}
- const runBtn=e.target.closest('[data-run-route]'); if(runBtn){runSavedRoute(runBtn.dataset.runRoute); return;}
- const delBtn=e.target.closest('[data-del-route]'); if(delBtn){deleteRoute(delBtn.dataset.delRoute); return;}
- const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-loadSavedRoutes();setupDots();renderUI();updateMiniChip();initMap();requestAnimationFrame(tick);
+const KEY='japanRide.safeRoutes.v1';
+const st={zoom:15,center:[138.309,34.835],rpm:58,km:8.2,sess:0,hr:123,route:[[138.299,34.846],[138.304,34.841],[138.309,34.835],[138.318,34.830],[138.330,34.825]],routes:[],rbPoints:[],activeRoute:null,builderCenter:[138.309,34.835],builderZoom:14};
+function lonLatToTile(lon,lat,z){const n=2**z;const x=(lon+180)/360*n;const y=(1-Math.log(Math.tan(lat*Math.PI/180)+1/Math.cos(lat*Math.PI/180))/Math.PI)/2*n;return[x,y]}
+function tileToLonLat(x,y,z){const n=2**z;const lon=x/n*360-180;const lat=Math.atan(Math.sinh(Math.PI*(1-2*y/n)))*180/Math.PI;return[lon,lat]}
+function project(lon,lat,center,z,w,h){const c=lonLatToTile(center[0],center[1],z), p=lonLatToTile(lon,lat,z);return[(p[0]-c[0])*256+w/2,(p[1]-c[1])*256+h/2]}
+function unproject(px,py,center,z,w,h){const c=lonLatToTile(center[0],center[1],z);return tileToLonLat(c[0]+(px-w/2)/256,c[1]+(py-h/2)/256,z)}
+function renderTiles(containerId,center,z){const el=$(containerId), box=el.parentElement, w=box.clientWidth, h=box.clientHeight; if(!w||!h)return; const c=lonLatToTile(center[0],center[1],z); const minX=Math.floor(c[0]-w/512)-1,maxX=Math.floor(c[0]+w/512)+1,minY=Math.floor(c[1]-h/512)-1,maxY=Math.floor(c[1]+h/512)+1; let html=''; for(let x=minX;x<=maxX;x++){for(let y=minY;y<=maxY;y++){const left=(x-c[0])*256+w/2,top=(y-c[1])*256+h/2; html+=`<img class="tile" draggable="false" src="https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${x}/${y}.jpg" style="left:${left}px;top:${top}px" onerror="this.src='https://cyberjapandata.gsi.go.jp/xyz/std/${z}/${x}/${y}.png'">`;}} el.innerHTML=html}
+function renderMainMap(){renderTiles('tileLayer',st.center,st.zoom); renderRoute('routeSvg',st.route,st.center,st.zoom); const box=$('safeMap'), p=project(st.route[0][0],st.route[0][1],st.center,st.zoom,box.clientWidth,box.clientHeight); $('currentMarker').style.left=p[0]+'px'; $('currentMarker').style.top=p[1]+'px'}
+function renderRoute(svgId,points,center,z){const svg=$(svgId), box=svg.parentElement, w=box.clientWidth,h=box.clientHeight; svg.setAttribute('viewBox',`0 0 ${w} ${h}`); let d=''; points.forEach((p,i)=>{const q=project(p[0],p[1],center,z,w,h); d+=(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)+' '}); svg.innerHTML=`<path d="${d}" fill="none" stroke="#16B978" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/><path d="${d}" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>`}
+function initPan(el,centerKey,zoomKey,render){let down=false,last=null; el.addEventListener('pointerdown',e=>{down=true;last=[e.clientX,e.clientY];el.setPointerCapture(e.pointerId)}); el.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-last[0],dy=e.clientY-last[1];last=[e.clientX,e.clientY];const c=st[centerKey],z=st[zoomKey],tc=lonLatToTile(c[0],c[1],z);st[centerKey]=tileToLonLat(tc[0]-dx/256,tc[1]-dy/256,z);render()}); el.addEventListener('pointerup',()=>down=false); el.addEventListener('pointercancel',()=>down=false)}
+function hav(a,b){const R=6371000,rad=d=>d*Math.PI/180,dLat=rad(b[1]-a[1]),dLon=rad(b[0]-a[0]),la1=rad(a[1]),la2=rad(b[1]);const h=Math.sin(dLat/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function distKm(ps){let m=0;for(let i=1;i<ps.length;i++)m+=hav(ps[i-1],ps[i]);return m/1000}
+function setTab(tab){document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));['routes','records','settings'].forEach(t=>$(t+'Page').classList.toggle('open',tab===t));if(tab==='routes')renderRouteList()}
+function loadRoutes(){try{st.routes=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){st.routes=[]}}
+function saveRoutes(){localStorage.setItem(KEY,JSON.stringify(st.routes))}
+function renderRouteList(){loadRoutes();const el=$('routeList'); if(!st.routes.length){el.innerHTML='<div class="empty">保存済みルートはありません。まず「新しいルートを作る」から作成してください。</div>';return} el.innerHTML=st.routes.map(r=>`<div class="route-item"><div><div class="route-name">${esc(r.name)}</div><div class="route-meta">${Number(r.km).toFixed(1)}km ・ 非公開</div></div><div class="route-actions"><button class="run" data-run="${r.id}">走る</button><button class="del" data-del="${r.id}">削除</button></div></div>`).join('')}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function openBuilder(){st.rbPoints=[];$('builder').classList.add('open');setTimeout(renderBuilder,50)}
+function closeBuilder(){$('builder').classList.remove('open')}
+function renderBuilder(){renderTiles('builderTiles',st.builderCenter,st.builderZoom);renderRoute('builderSvg',st.rbPoints,st.builderCenter,st.builderZoom);document.querySelectorAll('.builder .marker').forEach(e=>e.remove());const box=$('builderMap');st.rbPoints.forEach((p,i)=>{const q=project(p[0],p[1],st.builderCenter,st.builderZoom,box.clientWidth,box.clientHeight);const m=document.createElement('div');m.className='marker';m.textContent=i+1;m.style.left=q[0]+'px';m.style.top=q[1]+'px';box.appendChild(m)});const km=distKm(st.rbPoints), target=+$('rbTarget').value;$('rbDistance').textContent=km.toFixed(1);$('rbRemain').textContent=Math.max(0,target-km).toFixed(1);$('rbHint').textContent=st.rbPoints.length<1?'地図をタップしてスタート地点を置いてください。':st.rbPoints.length<2?'次の地点をタップすると距離が出ます。':'点を追加して目標距離まで伸ばせます。'}
+function saveBuilder(){if(st.rbPoints.length<2){alert('2点以上タップしてルートを作ってください');return}loadRoutes();const name=$('rbName').value.trim()||'マイルート '+new Date().toLocaleDateString('ja-JP');st.routes.unshift({id:'r'+Date.now(),name,points:st.rbPoints.slice(),km:distKm(st.rbPoints)});saveRoutes();$('rbName').value='';closeBuilder();setTab('routes')}
+function runRoute(id){loadRoutes();const r=st.routes.find(x=>x.id===id);if(!r)return;st.activeRoute=r;st.route=r.points.slice();st.center=r.points[0];$('modeKicker').textContent='マイルート';$('landmark').textContent=r.name;$('remainDist').textContent='あと '+Number(r.km).toFixed(1)+' km';setTab('ride');renderMainMap()}
+function ui(){const kmh=st.rpm*2*2.1/60*3.6;$('speed').textContent=kmh.toFixed(1);$('rpm').textContent=Math.round(st.rpm);$('rpm2').textContent=Math.round(st.rpm);$('hr').textContent=Math.round(st.hr)}
+document.addEventListener('click',e=>{const tab=e.target.closest('[data-tab]');if(tab){setTab(tab.dataset.tab);return} if(e.target.closest('#uiToggle')){$('app').classList.toggle('compact');$('uiToggle').textContent=$('app').classList.contains('compact')?'UI表示':'UI隠す';return} if(e.target.closest('#zoomIn')){st.zoom=Math.min(18,st.zoom+1);renderMainMap();return} if(e.target.closest('#zoomOut')){st.zoom=Math.max(5,st.zoom-1);renderMainMap();return} if(e.target.closest('#centerBtn')){st.center=st.route[0]||[138.309,34.835];renderMainMap();return} if(e.target.closest('#pedalPlus')){st.rpm+=2;ui();return} if(e.target.closest('#pedalMinus')){st.rpm=Math.max(0,st.rpm-2);ui();return} if(e.target.closest('#openBuilder')){openBuilder();return} if(e.target.closest('#builderClose')){closeBuilder();return} if(e.target.closest('#builderSave')){saveBuilder();return} if(e.target.closest('#rbUndo')){st.rbPoints.pop();renderBuilder();return} if(e.target.closest('#rbClear')){st.rbPoints=[];renderBuilder();return} if(e.target.closest('#rbSample')){st.rbPoints=[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250]];renderBuilder();return} const run=e.target.closest('[data-run]');if(run){runRoute(run.dataset.run);return} const del=e.target.closest('[data-del]');if(del){loadRoutes();st.routes=st.routes.filter(r=>r.id!==del.dataset.del);saveRoutes();renderRouteList();return}});
+$('builderMap').addEventListener('click',e=>{if(e.target.closest('button'))return;const r=$('builderMap').getBoundingClientRect();st.rbPoints.push(unproject(e.clientX-r.left,e.clientY-r.top,st.builderCenter,st.builderZoom,r.width,r.height));renderBuilder()});
+$('rbTarget').addEventListener('change',renderBuilder);
+initPan($('safeMap'),'center','zoom',renderMainMap);initPan($('builderMap'),'builderCenter','builderZoom',renderBuilder);
+window.addEventListener('resize',()=>{renderMainMap();if($('builder').classList.contains('open'))renderBuilder()});
+loadRoutes();renderMainMap();ui();
+})()
 </script>
 </body>
 </html>
