@@ -3,11 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="theme-color" content="#101418" />
-<link rel="manifest" href="manifest.webmanifest" />
-<title>Japan Ride D51 Map Restore Fix</title>
+<title>Japan Ride D52 GSI Direct Map</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,69 +40,41 @@
 @media(max-height:740px){.ui-collapse-btn{font-size:9px;padding:6px 9px}.ui-restore-chip,.ride-mini-chip{top:calc(env(safe-area-inset-top) + 10px);font-size:10px;padding:8px 10px}.ride-mini-chip{left:82px}}
 
 
-.tv-fab{display:block;border:2px solid #111827;border-radius:999px;background:rgba(17,24,39,.88);color:#fff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.tv-exit-chip{position:absolute;z-index:34;right:14px;top:calc(env(safe-area-inset-top) + 12px);border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#111827;font-size:12px;font-weight:900;padding:10px 13px;box-shadow:0 8px 20px rgba(0,0,0,.22);display:none;pointer-events:auto}.tv-hud{display:none}
-.phone.tv-mode .tv-hud{display:block;position:absolute;inset:0;z-index:27;pointer-events:none;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55)}.phone.tv-mode .ui .top,.phone.tv-mode .ui .bottom,.phone.tv-mode .right-map-tools,.phone.tv-mode .ui-restore-chip,.phone.tv-mode .ride-mini-chip{display:none!important}.phone.tv-mode .tv-exit-chip{display:block}.phone.tv-mode .maplibregl-ctrl-bottom-right{display:none!important}
-.phone.tv-mode .travel-toast{top:auto;left:50%;right:auto;bottom:calc(env(safe-area-inset-bottom) + 94px);width:min(560px,80vw);transform:translate(-50%,10px);background:rgba(17,24,39,.78);color:#fff;border-color:rgba(255,255,255,.20)}.phone.tv-mode .travel-toast.show{transform:translate(-50%,0)}.phone.tv-mode .travel-toast-title,.phone.tv-mode .travel-toast-sub{color:#fff}.phone.tv-mode .travel-toast-icon{background:rgba(255,255,255,.18)}
-.tv-topline{position:absolute;left:24px;right:24px;top:calc(env(safe-area-inset-top) + 22px);display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.tv-place,.tv-next{border-radius:22px;background:rgba(8,13,22,.62);border:1px solid rgba(255,255,255,.18);box-shadow:0 16px 34px rgba(0,0,0,.30);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:14px 16px}.tv-place{min-width:42vw}.tv-next{min-width:210px;text-align:right}.tv-kicker{font-size:11px;font-weight:900;letter-spacing:.11em;color:rgba(255,255,255,.72);margin-bottom:4px}.tv-title{font-size:clamp(20px,4vw,42px);font-weight:1000;line-height:1.04}.tv-next-title{font-size:18px;font-weight:1000;line-height:1.1}.tv-next-dist{font-size:clamp(24px,4vw,46px);font-weight:1000;line-height:1;margin-top:3px;color:#dbeafe}
-.tv-bottomline{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 20px);transform:translateX(-50%);display:flex;gap:10px;border-radius:28px;background:rgba(8,13,22,.68);border:1px solid rgba(255,255,255,.18);box-shadow:0 16px 38px rgba(0,0,0,.33);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:10px}.tv-metric{min-width:118px;text-align:center;border-radius:20px;background:rgba(255,255,255,.11);padding:10px 12px}.tv-metric b{display:block;font-size:clamp(26px,5vw,52px);line-height:.95;font-weight:1000}.tv-metric span{display:block;font-size:12px;font-weight:900;color:rgba(255,255,255,.72);margin-top:4px}.tv-log-flash{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 124px);transform:translateX(-50%);max-width:min(720px,78vw);border-radius:999px;background:rgba(47,107,255,.78);border:1px solid rgba(255,255,255,.24);padding:12px 20px;font-size:clamp(16px,2.6vw,28px);font-weight:1000;text-align:center;box-shadow:0 12px 28px rgba(0,0,0,.25);opacity:0;transition:opacity .22s ease}.tv-log-flash.show{opacity:1}
-@media(orientation:portrait){.phone.tv-mode::after{content:'テレビ表示は横向き推奨です。スマホを横にすると大きく映ります。';position:absolute;z-index:35;left:16px;right:16px;top:50%;transform:translateY(-50%);border-radius:22px;background:rgba(17,24,39,.86);color:#fff;font-size:16px;font-weight:900;line-height:1.45;text-align:center;padding:18px;box-shadow:0 18px 40px rgba(0,0,0,.34)}.phone.tv-mode .tv-hud{filter:blur(1.4px);opacity:.45}}
-
-
-/* D50: TV mode is map-first. Keep the aerial photo visible and make HUD small. */
-.phone.tv-mode .map{z-index:1!important;filter:saturate(1.08) contrast(1.04) brightness(1.02)}
-.phone.tv-mode .tv-hud{z-index:27!important;text-shadow:0 2px 10px rgba(0,0,0,.62)}
-.phone.tv-mode .tv-exit-chip{right:12px;top:calc(env(safe-area-inset-top) + 10px);font-size:11px;padding:8px 11px;background:rgba(255,255,255,.88)}
-.phone.tv-mode .tv-topline{left:12px;right:12px;top:calc(env(safe-area-inset-top) + 10px);align-items:flex-start;gap:10px}
-.phone.tv-mode .tv-place,.phone.tv-mode .tv-next{background:rgba(8,13,22,.34);border:1px solid rgba(255,255,255,.14);box-shadow:0 8px 20px rgba(0,0,0,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:16px;padding:9px 11px}
-.phone.tv-mode .tv-place{min-width:0;max-width:55vw}.phone.tv-mode .tv-next{min-width:150px;max-width:28vw;margin-right:72px}
-.phone.tv-mode .tv-kicker{font-size:8px;letter-spacing:.08em;margin-bottom:2px;color:rgba(255,255,255,.66)}
-.phone.tv-mode .tv-title{font-size:clamp(16px,2.4vw,30px);line-height:1.08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.phone.tv-mode .tv-next-title{font-size:clamp(11px,1.7vw,18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.phone.tv-mode .tv-next-dist{font-size:clamp(18px,2.8vw,32px);margin-top:1px;color:#e9f1ff}
-.phone.tv-mode .tv-bottomline{left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 10px);transform:none;justify-content:center;gap:7px;background:rgba(8,13,22,.42);border-radius:18px;padding:7px;box-shadow:0 8px 20px rgba(0,0,0,.20);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
-.phone.tv-mode .tv-metric{min-width:0;flex:1;border-radius:14px;background:rgba(255,255,255,.10);padding:7px 8px}.phone.tv-mode .tv-metric b{font-size:clamp(20px,3.7vw,38px)}.phone.tv-mode .tv-metric span{font-size:9px;margin-top:2px}
-.phone.tv-mode .tv-log-flash{bottom:calc(env(safe-area-inset-bottom) + 76px);font-size:clamp(13px,2vw,22px);padding:9px 15px;background:rgba(47,107,255,.70)}
-.phone.tv-mode .travel-toast{bottom:calc(env(safe-area-inset-bottom) + 74px);width:min(520px,74vw);padding:8px 10px;background:rgba(8,13,22,.62)}
-@media(orientation:portrait){.phone.tv-mode::after{font-size:14px;left:18px;right:18px;padding:15px;content:'横向きにするとテレビで大きく表示できます';}.phone.tv-mode .tv-hud{filter:none;opacity:1}.phone.tv-mode .tv-topline{opacity:.35}.phone.tv-mode .tv-bottomline{opacity:.55}}
-
-
-/* D51: map restore hardening */
-#map{
+/* D52: Direct GSI map base. No OpenFreeMap dependency for first render. */
+#map,.map{
   position:absolute!important;
   inset:0!important;
   width:100%!important;
   height:100%!important;
   z-index:0!important;
-  background:#1b2430!important;
   display:block!important;
   visibility:visible!important;
   opacity:1!important;
+  background:#1a2633!important;
 }
 .maplibregl-map,.maplibregl-canvas-container,.maplibregl-canvas{
   width:100%!important;
   height:100%!important;
 }
-.map-boot-status{
-  position:absolute;
-  z-index:6;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  background:rgba(17,24,39,.72);
-  color:#fff;
-  font-size:13px;
-  font-weight:900;
-  padding:10px 14px;
-  box-shadow:0 10px 24px rgba(0,0,0,.24);
-  pointer-events:none;
-  transition:opacity .25s ease;
+.tv-fab{display:block;border:2px solid #111827;border-radius:999px;background:rgba(17,24,39,.88);color:#fff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.tv-exit-chip{position:absolute;z-index:34;right:14px;top:calc(env(safe-area-inset-top) + 12px);border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#111827;font-size:12px;font-weight:900;padding:10px 13px;box-shadow:0 8px 20px rgba(0,0,0,.22);display:none;pointer-events:auto}
+.tv-hud{display:none}
+.phone.tv-mode .ui .top,.phone.tv-mode .ui .bottom,.phone.tv-mode .right-map-tools,.phone.tv-mode .ui-restore-chip,.phone.tv-mode .ride-mini-chip{display:none!important}
+.phone.tv-mode .tv-exit-chip{display:block}
+.phone.tv-mode .tv-hud{display:block;position:absolute;inset:0;z-index:26;pointer-events:none;color:#fff;text-shadow:0 2px 9px rgba(0,0,0,.55)}
+.phone.tv-mode .maplibregl-ctrl-bottom-right{display:none!important}
+.tv-compact-top{position:absolute;left:18px;right:18px;top:calc(env(safe-area-inset-top) + 14px);display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.tv-place-main,.tv-next-main{border-radius:18px;background:rgba(10,16,26,.48);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 22px rgba(0,0,0,.24);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:10px 14px;font-weight:1000}
+.tv-place-main{font-size:clamp(20px,3.2vw,34px);max-width:62vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tv-next-main{text-align:right;font-size:clamp(15px,2.2vw,24px);white-space:nowrap}.tv-next-main b{display:block;font-size:clamp(22px,3.6vw,42px);line-height:1;color:#dbeafe}
+.tv-compact-bottom{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 14px);transform:translateX(-50%);display:flex;gap:8px;border-radius:22px;background:rgba(10,16,26,.54);border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 24px rgba(0,0,0,.26);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:8px}
+.tv-compact-bottom div{min-width:96px;text-align:center;border-radius:16px;background:rgba(255,255,255,.10);padding:8px 10px}
+.tv-compact-bottom b{display:block;font-size:clamp(24px,4.2vw,46px);line-height:.95;font-weight:1000}.tv-compact-bottom span{display:block;font-size:11px;font-weight:900;color:rgba(255,255,255,.75);margin-top:4px}
+.tv-log-flash{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 100px);transform:translateX(-50%);max-width:min(680px,82vw);border-radius:999px;background:rgba(47,107,255,.72);border:1px solid rgba(255,255,255,.22);padding:10px 18px;font-size:clamp(15px,2.4vw,26px);font-weight:1000;text-align:center;box-shadow:0 10px 24px rgba(0,0,0,.22);opacity:0;transition:opacity .22s ease}
+.tv-log-flash.show{opacity:1}
+@media(orientation:portrait){
+ .phone.tv-mode::after{content:'TV表示は横向き推奨です。スマホを横にしてください。';position:absolute;z-index:35;left:16px;right:16px;top:50%;transform:translateY(-50%);border-radius:20px;background:rgba(17,24,39,.86);color:#fff;font-size:16px;font-weight:900;line-height:1.45;text-align:center;padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.34)}
 }
-.map-boot-status.hide{opacity:0}
-.phone.tv-mode #map{z-index:0!important}
-.phone.tv-mode .tv-hud{z-index:27!important}
-.phone.tv-mode .map-boot-status{z-index:7}
 
 </style>
 </head>
@@ -114,7 +82,7 @@
 <div class="phone">
   <div id="map" class="map"></div>
   <button class="ui-restore-chip" id="uiRestoreChip">UI表示</button>
-  <button class="tv-exit-chip" id="tvExitChip">戻る</button>
+  <button class="tv-exit-chip" id="tvExitChip">通常表示</button>
   <div class="ride-mini-chip" id="rideMiniChip"><span id="miniSpeed">14.6</span> km/h ・ <span id="miniKm">8.2</span> km ・ <span id="miniPlace">焼津市</span></div>
   <div class="right-map-tools">
     <button class="recenter-btn" id="recenterBtn" aria-label="現在地へ">
@@ -128,7 +96,7 @@
     <button class="building-fab off" id="buildingToggle" aria-label="建物3D切替">建物 OFF</button>
     <button class="terrain-fab off" id="terrainToggle" aria-label="地形3D切替">地形 OFF</button>
     <button class="travel-fab" id="travelLogBtn" aria-label="旅ログ">旅ログ</button>
-    <button class="tv-fab" id="tvModeBtn" aria-label="テレビ表示">TVモード</button>
+    <button class="tv-fab" id="tvModeBtn" aria-label="TV表示">TV表示</button>
   </div>
   <div class="travel-toast" id="travelToast">
     <div class="travel-toast-icon" id="travelToastIcon">📍</div>
@@ -151,17 +119,17 @@
     </div>
   </div>
   <div class="tv-hud" id="tvHud">
-    <div class="tv-topline">
-      <div class="tv-place"><div class="tv-kicker">JAPAN RIDE / TV MODE</div><div class="tv-title" id="tvPlaceTitle">静岡県 焼津市 八楠付近</div></div>
-      <div class="tv-next"><div class="tv-kicker">NEXT</div><div class="tv-next-title" id="tvNextTitle">名古屋城まで</div><div class="tv-next-dist" id="tvNextDist">186.8 km</div></div>
+    <div class="tv-compact-top">
+      <div class="tv-place-main" id="tvPlaceTitle">静岡県 焼津市 八楠付近</div>
+      <div class="tv-next-main"><span id="tvNextTitle">名古屋城</span> <b id="tvNextDist">186.8 km</b></div>
     </div>
-    <div class="tv-bottomline">
-      <div class="tv-metric"><b id="tvSpeed">14.6</b><span>km/h</span></div>
-      <div class="tv-metric"><b id="tvKm">8.2</b><span>km</span></div>
-      <div class="tv-metric"><b id="tvRpm">58</b><span>rpm</span></div>
-      <div class="tv-metric"><b id="tvHr">123</b><span>bpm</span></div>
+    <div class="tv-compact-bottom">
+      <div><b id="tvSpeed">14.6</b><span>km/h</span></div>
+      <div><b id="tvKm">8.2</b><span>km</span></div>
+      <div><b id="tvRpm">58</b><span>rpm</span></div>
+      <div><b id="tvHr">123</b><span>bpm</span></div>
     </div>
-    <div class="tv-log-flash" id="tvLogFlash">旅ログがここに表示されます</div>
+    <div class="tv-log-flash" id="tvLogFlash">旅ログ</div>
   </div>
   <div class="ui">
     <div class="top">
@@ -178,7 +146,7 @@
         <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
         <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
       </div>
-      <div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle warn" id="labelToggle">OFM読込中</button></div>
+      <div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle warn" id="labelToggle">航空写真読込中</button></div>
     </div>
     <div class="bottom">
       <div class="mini-dock">
@@ -272,6 +240,7 @@ function nowMs(){return Date.now();}
 let map,marker;
 function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms;}
 
+
 function setTVMode(v){
  st.tvMode=!!v;
  const phone=document.querySelector('.phone');
@@ -279,23 +248,34 @@ function setTVMode(v){
  if(st.tvMode){
    st.uiCollapsed=false;
    if(phone) phone.classList.remove('ui-collapsed');
-   try{ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(()=>{}); }catch(e){}
-   try{ screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(()=>{}); }catch(e){}
+   const docEl=document.documentElement;
+   if(docEl.requestFullscreen){docEl.requestFullscreen().catch(()=>{});}
+   if(screen.orientation&&screen.orientation.lock){screen.orientation.lock('landscape').catch(()=>{});}
+ }else{
+   if(document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(()=>{});}
  }
  updateTVHud();
- setTimeout(()=>{try{map&&map.resize(); if(st.lastPoint) updateCamera(st.lastPoint,st.lastHeading||45);}catch(e){}},80);
- setTimeout(()=>{try{map&&map.resize(); if(st.lastPoint) updateCamera(st.lastPoint,st.lastHeading||45);}catch(e){}},500);
+ if(map){setTimeout(()=>map.resize(),80);setTimeout(()=>map.resize(),450);}
 }
 function updateTVHud(){
  const kmh=st.rpm*2*2.1/60*3.6;
  const n=nextCP();
- const set=(id,val)=>{const el=$(id); if(el) el.textContent=val;};
+ const set=(id,v)=>{const el=$(id); if(el) el.textContent=v;};
  set('tvPlaceTitle',currentPlaceLabel());
- set('tvNextTitle',(n&&n.n?n.n:'次の地点')+'まで');
+ set('tvNextTitle',n&&n.n?n.n:'次の地点');
  set('tvNextDist',(n?Math.max(0,n.km-st.km):0).toFixed(1)+' km');
- set('tvSpeed',kmh.toFixed(1)); set('tvKm',st.km.toFixed(1)); set('tvRpm',Math.round(st.rpm)); set('tvHr',Math.round(st.hr));
+ set('tvSpeed',kmh.toFixed(1));
+ set('tvKm',st.km.toFixed(1));
+ set('tvRpm',Math.round(st.rpm));
+ set('tvHr',Math.round(st.hr));
 }
-function flashTVLog(text){const el=$('tvLogFlash'); if(!el)return; el.textContent=text; el.classList.add('show'); clearTimeout(st.tvLogTimer); st.tvLogTimer=setTimeout(()=>el.classList.remove('show'),3600);}
+function flashTVLog(text){
+ const el=$('tvLogFlash'); if(!el) return;
+ el.textContent=text;
+ el.classList.add('show');
+ clearTimeout(st.tvLogTimer);
+ st.tvLogTimer=setTimeout(()=>el.classList.remove('show'),3600);
+}
 
 function setUICollapsed(v){
  st.uiCollapsed=!!v;
@@ -320,25 +300,27 @@ function checkTravelEvents(){if(Math.abs(st.km-st.lastTravelKm)<0.02)return; st.
 function renderTravelLog(){const list=$('travelLogList'),sum=$('travelLogSummary'); if(!list||!sum)return; const areas=[...new Set(st.travelLog.map(e=>e.title.replace(/周辺|付近|方面へ|流域/g,'')).slice(0,4))]; sum.innerHTML=[['距離',st.sess.toFixed(1)+'km'],['記録',st.travelLog.length+'件'],['エリア',areas.length?areas.join('→'):'—']].map(x=>'<div class="travel-log-stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join(''); if(!st.travelLog.length){list.innerHTML='<div class="travel-log-item"><div class="travel-log-ico">🚴</div><div><div class="travel-log-name">まだ旅ログはありません</div><div class="travel-log-note">走行すると、通過した川・駅・市町村・名所などがここに残ります。</div></div></div>';return;} list.innerHTML=st.travelLog.map(e=>'<div class="travel-log-item"><div class="travel-log-ico">'+(e.icon||'📍')+'</div><div><div class="travel-log-name">'+e.title+'</div><div class="travel-log-meta">'+e.atKm.toFixed(1)+'km / '+Math.floor(e.time/60)+'分</div><div class="travel-log-note">'+e.note+'</div></div></div>').join('');}
 function openTravelLog(){renderTravelLog(); const p=$('travelLogPanel'); if(p)p.classList.add('open');}
 function closeTravelLog(){const p=$('travelLogPanel'); if(p)p.classList.remove('open');}
-
-function markMapLoaded(msg){
- const s=$('mapBootStatus');
- if(s){s.textContent=msg||'地図表示OK'; setTimeout(()=>s.classList.add('hide'),650);}
- if(map){setTimeout(()=>map.resize(),80); setTimeout(()=>map.resize(),420);}
-}
-function markMapError(msg){
- const s=$('mapBootStatus');
- if(s){s.textContent=msg||'地図の読み込みに失敗しました'; s.classList.remove('hide');}
-}
-
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D51 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D52 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
-   style:'https://tiles.openfreemap.org/styles/liberty',
+   style:{
+     version:8,
+     sources:{
+       'gsi-photo':{
+         type:'raster',
+         tiles:['https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'],
+         tileSize:256,
+         attribution:'地理院タイル'
+       }
+     },
+     layers:[
+       {id:'gsi-photo',type:'raster',source:'gsi-photo',paint:{'raster-opacity':1}}
+     ]
+   },
    center:[138.309,34.835],
    zoom:15.8,
    pitch:58,
@@ -359,7 +341,7 @@ function initMap(){
 
  map.on('error',e=>{
    const b=$('labelToggle');
-   if(b){b.textContent='OFMエラー'; b.classList.add('warn');}
+   if(b){b.textContent='地図エラー'; b.classList.add('warn');}
    console.warn('map error', e && e.error ? e.error : e);
  });
 
@@ -368,18 +350,8 @@ function initMap(){
    const firstSym=layers.find(l=>l.type==='symbol');
    const beforeId=firstSym ? firstSym.id : undefined;
 
-   try{
-     map.addSource('gsi-photo',{
-       type:'raster',
-       tiles:['https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'],
-       tileSize:256,
-       attribution:'地理院タイル'
-     });
-     map.addLayer({id:'gsi-photo',type:'raster',source:'gsi-photo',paint:{'raster-opacity':1}}, beforeId);
-   }catch(e){
-     const b=$('labelToggle');
-     if(b){b.textContent='航空写真エラー'; b.classList.add('warn');}
-   }
+   // D52: GSI航空写真は初期styleで直接表示。OFMに依存しない。
+
 
    st.symbolLayerIds=(map.getStyle().layers||[]).filter(l=>l.type==='symbol').map(l=>l.id);
    st.symbolLayerIds.forEach(id=>{
@@ -603,7 +575,7 @@ function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  checkTravelEvents(); updateMiniChip(); updateTVHud(); renderUI(); requestAnimationFrame(tick);}
 document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const tvBtn=e.target.closest('#tvModeBtn'); if(tvBtn){setTVMode(true); return;} const tvExit=e.target.closest('#tvExitChip'); if(tvExit){setTVMode(false); return;} const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-window.addEventListener('resize',()=>{if(map){setTimeout(()=>map.resize(),80);}}); window.addEventListener('orientationchange',()=>{if(map){setTimeout(()=>map.resize(),250);setTimeout(()=>map.resize(),900);}}); setupDots();renderUI();updateMiniChip();updateTVHud();initMap();requestAnimationFrame(tick);
+window.addEventListener('resize',()=>{if(map)setTimeout(()=>map.resize(),80);}); window.addEventListener('orientationchange',()=>{if(map){setTimeout(()=>map.resize(),250);setTimeout(()=>map.resize(),900);}}); setupDots();renderUI();updateMiniChip();updateTVHud();initMap();requestAnimationFrame(tick);
 </script>
 </body>
 </html>
