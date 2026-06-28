@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D65 No Overlap Layout</title>
+<title>Japan Ride D66 Map Controls + Single Place</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -419,6 +419,80 @@
   }
   .bottom-tabs{height:52px!important}
 }
+
+
+/* D66: map controls are not deleted. They are behind a safe "地図操作" panel. */
+.place-chip{
+  max-width:none!important;
+  min-width:0!important;
+}
+.top-chips .label-toggle{
+  flex:0 0 auto!important;
+}
+.map-tools-toggle{
+  background:#2f6bff!important;
+  color:#fff!important;
+  pointer-events:auto!important;
+}
+.phone:not(.maponly) .right-map-tools{
+  display:none!important;
+}
+.map-tools-panel{
+  display:none;
+  position:absolute;
+  z-index:9997;
+  right:14px;
+  top:calc(env(safe-area-inset-top) + 252px);
+  grid-template-columns:54px 54px;
+  gap:8px;
+  padding:8px;
+  border-radius:22px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 14px 34px rgba(0,0,0,.25);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  pointer-events:auto;
+}
+.map-tools-panel.open{
+  display:grid!important;
+}
+.map-tool{
+  height:48px;
+  border:2px solid #2f6bff;
+  border-radius:16px;
+  background:white;
+  color:#2454c7;
+  font-family:inherit;
+  font-size:22px;
+  font-weight:1000;
+}
+.map-tool.text{
+  grid-column:1/3;
+  height:38px;
+  border-radius:999px;
+  font-size:12px;
+}
+.phone.compact .map-tools-panel{
+  top:calc(env(safe-area-inset-top) + 110px);
+}
+.phone.maponly .right-map-tools{
+  display:flex!important;
+}
+.phone.maponly .map-tools-panel{
+  display:none!important;
+}
+.top-chips{
+  display:flex!important;
+  gap:8px!important;
+  overflow-x:auto!important;
+  scrollbar-width:none!important;
+}
+.top-chips::-webkit-scrollbar{display:none!important}
+#placeChip{
+  pointer-events:none!important;
+  background:rgba(255,255,255,.86)!important;
+  color:#111827!important;
+}
 </style>
 </head>
 <body>
@@ -428,6 +502,13 @@
 <svg class="route-svg" id="routeSvg"></svg>
 <div class="current-marker" id="currentMarker">🚴</div>
 </div>
+<div class="map-tools-panel" id="mapToolsPanel">
+<button class="map-tool" id="recenterBtn2">⌖</button>
+<button class="map-tool" id="zoomInBtn">＋</button>
+<button class="map-tool" id="zoomOutBtn">−</button>
+<button class="map-tool text" id="closeMapTools">閉じる</button>
+</div>
+
 <div class="right-map-tools">
 <button aria-label="現在地へ" class="recenter-btn" id="recenterBtn">
 <svg aria-hidden="true" class="recenter-svg" viewbox="0 0 64 64">
@@ -498,10 +579,10 @@
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
-<div class="top-chips"><div class="place" id="place">📍 静岡県 焼津市 八楠</div><button class="label-toggle place-chip" id="placeChip">📍 静岡県 焼津市 八楠</button>
+<div class="top-chips"><button class="label-toggle place-chip" id="placeChip">📍 静岡県 焼津市 八楠</button>
 <button class="label-toggle" id="displayToggle">簡易表示</button>
 <button class="label-toggle" id="inputModeToggle">センサー入力</button>
-</div>
+<button class="label-toggle map-tools-toggle" id="mapToolsToggle">地図操作</button></div>
 </div>
 <div class="bottom">
 <div class="mini-dock">
@@ -575,6 +656,27 @@ document.addEventListener('click',e=>{
      if(p)p.classList.toggle('open',tab===t);
    });
    return;
+ }
+
+
+ if(e.target.closest('#mapToolsToggle')){
+   const p=document.getElementById('mapToolsPanel');
+   if(p)p.classList.toggle('open');
+   return;
+ }
+ if(e.target.closest('#closeMapTools')){
+   const p=document.getElementById('mapToolsPanel');
+   if(p)p.classList.remove('open');
+   return;
+ }
+ if(e.target.closest('#recenterBtn2')){
+   st.center=[138.3102,34.8362];renderMap();return;
+ }
+ if(e.target.closest('#zoomInBtn')){
+   st.zoom=Math.min(18,st.zoom+1);renderMap();return;
+ }
+ if(e.target.closest('#zoomOutBtn')){
+   st.zoom=Math.max(5,st.zoom-1);renderMap();return;
  }
 
  if(e.target.closest('#displayToggle')){cycleDisplay();return}
