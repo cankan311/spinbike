@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-19 Active Route Ride Mode</title>
+<title>Japan Ride D66-20 Edit Route Load Fix</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -2150,17 +2150,17 @@ function saveDraftRoute(){
  if(st.editingRouteId){
    const idx=routes.findIndex(r=>r.id===st.editingRouteId);
    if(idx>=0){
-     routes[idx]={...routes[idx], name, points:route, waypoints:pts, distanceKm, updatedAt:new Date().toISOString()};
+     routes[idx]={...routes[idx], name, points:cloneCoords(route), waypoints:cloneCoords(pts), distanceKm, updatedAt:new Date().toISOString()};
      saveMyRoutes(routes);
      useMyRoute(st.editingRouteId, false);
    }else{
-     const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+     const routeObj={id:'r'+Date.now(), name, points:cloneCoords(route), waypoints:cloneCoords(pts), distanceKm, createdAt:new Date().toISOString()};
      routes.unshift(routeObj);
      saveMyRoutes(routes);
      useMyRoute(routeObj.id, false);
    }
  }else{
-   const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+   const routeObj={id:'r'+Date.now(), name, points:cloneCoords(route), waypoints:cloneCoords(pts), distanceKm, createdAt:new Date().toISOString()};
    routes.unshift(routeObj);
    saveMyRoutes(routes);
    useMyRoute(routeObj.id, false);
@@ -3137,6 +3137,72 @@ function editMyRoute(id){
  if(!route) return;
  setTabTo('ride');
  startRouteEditWithData(route);
+}
+
+
+/* D66-20 edit route load fix
+   編集ボタンを押した時に新規作成状態ではなく、保存済みルートの点列を確実に読み込む。
+*/
+function editMyRoute(id){
+ const route=loadMyRoutes().find(r=>r.id===id);
+ if(!route){
+   alert('編集するルートが見つかりません');
+   return;
+ }
+ if(!map || !map.isStyleLoaded()){
+   alert('地図の読み込み後にもう一度押してください');
+   return;
+ }
+
+ // 以前の補正済みルートが混ざると編集点が分かりにくいので、
+ // 編集時は waypoints があればそれを優先し、なければ points をそのまま編集点にする。
+ const editPts=cloneCoords((route.waypoints && route.waypoints.length) ? route.waypoints : (route.points || []));
+ if(editPts.length<1){
+   alert('このルートには編集できる点がありません');
+   return;
+ }
+
+ st.routeEdit=true;
+ st.editingRouteId=route.id;
+ st.draftWaypoints=editPts;
+ st.draftRoute=cloneCoords(editPts);
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ st.draggingDraftIndex=-1;
+ st.ignoreNextMapTap=false;
+ clearRouteHistory();
+
+ const phone=document.querySelector('.phone');
+ phone.classList.add('route-editing');
+ phone.classList.remove('route-editor-collapsed');
+
+ setTabTo('ride');
+ setRouteEditorTitle('マイルート編集');
+ setDisplay('maponly');
+ setMainRideRouteVisible(false);
+
+ if($('routeNameInput')) $('routeNameInput').value=route.name || '';
+ setRouteTip('保存済みルートを編集中。点を追加・移動して保存できます。');
+
+ ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
+ renderDraftRoute();
+ if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
+
+ if(map && editPts.length){
+   const b=editPts.reduce((bb,p)=>{
+     bb[0]=Math.min(bb[0],p[0]);bb[1]=Math.min(bb[1],p[1]);bb[2]=Math.max(bb[2],p[0]);bb[3]=Math.max(bb[3],p[1]);
+     return bb;
+   },[Infinity,Infinity,-Infinity,-Infinity]);
+   try{
+     if(Number.isFinite(b[0]) && b[0]!==b[2] && b[1]!==b[3]){
+       map.fitBounds([[b[0],b[1]],[b[2],b[3]]],{padding:90,duration:450,pitch:58,bearing:50});
+     }else{
+       map.easeTo({center:editPts[0],zoom:16,pitch:58,bearing:50,duration:450});
+     }
+   }catch(e){}
+ }
+ setTimeout(()=>{if(map)map.resize();renderDraftRoute();},120);
 }
 
 document.addEventListener('click',e=>{
