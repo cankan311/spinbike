@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-10 Edit Route Points</title>
+<title>Japan Ride D66-11 Clean Route Edit + Collapsible Panel</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1262,6 +1262,100 @@
     grid-template-columns:1fr 1fr!important;
   }
 }
+
+
+/* D66-11: ルート編集の点と線を整理 + 作成カードをたためるようにする */
+
+/* ルート作成カードの折りたたみ */
+.route-editor-head{
+  gap:6px!important;
+}
+.route-collapse-btn{
+  width:auto!important;
+  min-width:58px!important;
+  padding:0 10px!important;
+  font-size:12px!important;
+}
+.route-editor-mini{
+  display:none;
+  gap:6px;
+  margin-top:6px;
+}
+.route-editor-mini span{
+  border-radius:999px;
+  background:#eef4ff;
+  color:#2454c7;
+  font-size:11px;
+  font-weight:1000;
+  padding:7px 9px;
+}
+.phone.route-editor-collapsed .route-editor{
+  width:auto!important;
+  max-width:calc(100vw - 24px)!important;
+}
+.phone.route-editor-collapsed .route-editor-card{
+  border-radius:999px!important;
+  padding:8px 9px!important;
+}
+.phone.route-editor-collapsed .route-editor-head{
+  margin-bottom:0!important;
+}
+.phone.route-editor-collapsed .route-editor-head small,
+.phone.route-editor-collapsed .route-name-input,
+.phone.route-editor-collapsed .route-editor-stats,
+.phone.route-editor-collapsed .route-editor-tip,
+.phone.route-editor-collapsed .route-editor-actions{
+  display:none!important;
+}
+.phone.route-editor-collapsed .route-editor-head strong{
+  font-size:14px!important;
+  white-space:nowrap;
+}
+.phone.route-editor-collapsed .route-editor-mini{
+  display:flex!important;
+}
+.phone.route-editor-collapsed #toggleRouteEditorBtn{
+  min-width:44px!important;
+}
+.phone.route-editor-collapsed #exitRouteEditBtn{
+  width:34px!important;
+  height:34px!important;
+}
+
+/* 点と線の意味を分離する */
+.draft-point-marker{
+  width:22px!important;
+  height:22px!important;
+  border-radius:50%!important;
+  background:#2f6bff!important;
+  border:3px solid white!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.38)!important;
+  cursor:grab!important;
+  position:relative!important;
+}
+.draft-point-marker::after{
+  content:attr(data-index);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  color:white;
+  font-size:9px;
+  font-weight:1000;
+  line-height:1;
+}
+.draft-point-marker.selected{
+  background:#ff5872!important;
+  box-shadow:0 0 0 4px rgba(255,88,114,.28),0 3px 10px rgba(0,0,0,.38)!important;
+}
+.route-editor-tip.snap-ok::before{
+  content:'緑の線 = 道路補正後 / 青い点 = 編集点　';
+  font-weight:1000;
+}
+.route-editor-tip.editing::before{
+  content:'青い点 = 編集点 / 赤い線 = 仮ルート　';
+  font-weight:1000;
+}
 </style>
 </head>
 <body>
@@ -1280,8 +1374,13 @@
 <small>ROUTE EDIT</small>
 <strong>マイルート作成</strong>
 </div>
-<button id="exitRouteEditBtn">×</button>
+<button class="route-collapse-btn" id="toggleRouteEditorBtn">たたむ</button><button id="exitRouteEditBtn">×</button>
 </div>
+<div class="route-editor-mini" id="routeEditorMiniSummary">
+<span id="routeMiniPoints">0点</span>
+<span id="routeMiniDistance">0.00km</span>
+</div>
+
 <input class="route-name-input" id="routeNameInput" placeholder="ルート名 例：焼津10km周回"/>
 <div class="route-editor-stats">
 <div><small>地点</small><b id="draftPointCount">0</b></div>
@@ -2146,6 +2245,198 @@ function saveDraftRoute(){
  renderMyRoutes();
 }
 
+
+/* D66-11 clean route edit + collapsible editor overrides */
+function toggleRouteEditorCollapsed(){
+ const phone=document.querySelector('.phone');
+ const collapsed=!phone.classList.contains('route-editor-collapsed');
+ phone.classList.toggle('route-editor-collapsed',collapsed);
+ const btn=$('toggleRouteEditorBtn');
+ if(btn) btn.textContent=collapsed?'開く':'たたむ';
+ setTimeout(()=>{if(map)map.resize()},80);
+}
+function updateRouteMiniSummary(){
+ const pts=(st.draftWaypoints||st.draftRoute||[]);
+ const route=(st.draftRoute&&st.draftRoute.length?st.draftRoute:pts);
+ if($('routeMiniPoints')) $('routeMiniPoints').textContent=pts.length+'点';
+ if($('routeMiniDistance')) $('routeMiniDistance').textContent=routeDistanceKm(route).toFixed(2)+'km';
+}
+function ensureDraftRouteLayer(){
+ if(!map || !map.isStyleLoaded()) return;
+ if(!map.getSource('draft-route')){
+   map.addSource('draft-route',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ }
+ if(!map.getSource('draft-guide')){
+   map.addSource('draft-guide',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ }
+ const firstSymbol=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
+ const beforeId=firstSymbol ? firstSymbol.id : undefined;
+
+ if(!map.getLayer('draft-guide-line')){
+   map.addLayer({
+     id:'draft-guide-line',
+     type:'line',
+     source:'draft-guide',
+     paint:{
+       'line-color':'#2f6bff',
+       'line-width':3,
+       'line-opacity':0.36,
+       'line-dasharray':[1,1.6]
+     }
+   }, beforeId);
+ }
+ if(!map.getLayer('draft-route-line')){
+   map.addLayer({
+     id:'draft-route-line',
+     type:'line',
+     source:'draft-route',
+     paint:{
+       'line-color':'#ff5872',
+       'line-width':6,
+       'line-opacity':0.95
+     }
+   }, beforeId);
+ }
+}
+function renderDraftRoute(){
+ if(!map || !map.isStyleLoaded()) return;
+ ensureDraftRouteLayer();
+
+ const waypoints=getDraftWaypoints();
+ const actualRoute=(st.routeSnapped && st.draftRoute && st.draftRoute.length>=2) ? st.draftRoute : waypoints;
+
+ const routeFeatures=[];
+ if(actualRoute && actualRoute.length>=2){
+   routeFeatures.push({type:'Feature',geometry:{type:'LineString',coordinates:actualRoute},properties:{}});
+ }
+ const guideFeatures=[];
+ if(st.routeSnapped && waypoints && waypoints.length>=2){
+   guideFeatures.push({type:'Feature',geometry:{type:'LineString',coordinates:waypoints},properties:{}});
+ }
+
+ const routeSrc=map.getSource('draft-route');
+ if(routeSrc) routeSrc.setData({type:'FeatureCollection',features:routeFeatures});
+ const guideSrc=map.getSource('draft-guide');
+ if(guideSrc) guideSrc.setData({type:'FeatureCollection',features:guideFeatures});
+
+ try{
+   map.setPaintProperty('draft-route-line','line-color',st.routeSnapped?'#16B978':'#ff5872');
+   map.setPaintProperty('draft-route-line','line-width',st.routeSnapped?7:6);
+   map.setPaintProperty('draft-route-line','line-opacity',st.routeSnapped?0.96:0.90);
+   map.setPaintProperty('draft-guide-line','line-opacity',st.routeSnapped?0.42:0);
+ }catch(e){}
+
+ draftMarkers.forEach(m=>m.remove());
+ draftMarkers=[];
+ waypoints.forEach((p,i)=>{
+   const el=document.createElement('div');
+   el.className='draft-point-marker'+(st.selectedDraftIndex===i?' selected':'');
+   el.dataset.index=String(i+1);
+   el.title=(i+1)+'番の編集点';
+   el.addEventListener('click',ev=>{
+     ev.stopPropagation();
+     selectDraftPoint(i);
+   });
+   const markerObj=new maplibregl.Marker({element:el,draggable:true}).setLngLat(p).addTo(map);
+   markerObj.on('dragstart',()=>{st.selectedDraftIndex=i;});
+   markerObj.on('dragend',()=>{
+     const ll=markerObj.getLngLat();
+     const ptsNow=getDraftWaypoints();
+     ptsNow[i]=[Number(ll.lng.toFixed(6)),Number(ll.lat.toFixed(6))];
+     st.selectedDraftIndex=i;
+     st.routeSnapped=false;
+     st.draftRoute=ptsNow.slice();
+     renderDraftRoute();
+     setRouteTip(`${i+1}番の点を移動しました。必要なら「道に合わせる」を押してください`,'editing');
+   });
+   draftMarkers.push(markerObj);
+ });
+ updateDraftStats();
+ updateRouteMiniSummary();
+}
+function updateDraftStats(){
+ const pts=getDraftWaypoints();
+ const route=(st.draftRoute&&st.draftRoute.length?st.draftRoute:pts);
+ if($('draftPointCount')) $('draftPointCount').textContent=pts.length;
+ if($('draftDistance')) $('draftDistance').textContent=routeDistanceKm(route).toFixed(2)+'km';
+ updateRouteMiniSummary();
+}
+function startRouteEdit(){
+ if(!map || !map.isStyleLoaded()) return;
+ st.routeEdit=true;
+ st.draftWaypoints=[];
+ st.draftRoute=[];
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ document.querySelector('.phone').classList.add('route-editing');
+ document.querySelector('.phone').classList.remove('route-editor-collapsed');
+ if($('toggleRouteEditorBtn')) $('toggleRouteEditorBtn').textContent='たたむ';
+ setDisplay('maponly');
+ if($('routeNameInput')) $('routeNameInput').value='';
+ setRouteTip('地図をタップして編集点を追加。点はあとからドラッグで移動できます。');
+ ensureDraftRouteLayer();
+ renderDraftRoute();
+ if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
+ setTimeout(()=>map.resize(),80);
+}
+function exitRouteEdit(){
+ st.routeEdit=false;
+ const phone=document.querySelector('.phone');
+ phone.classList.remove('route-editing');
+ phone.classList.remove('route-editor-collapsed');
+ st.draftWaypoints=[];
+ st.draftRoute=[];
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ renderDraftRoute();
+ setDisplay('detail');
+ renderMyRoutes();
+}
+function addDraftPoint(lngLat){
+ if(!st.routeEdit) return;
+ const pts=getDraftWaypoints();
+ pts.push([Number(lngLat.lng.toFixed(6)), Number(lngLat.lat.toFixed(6))]);
+ st.selectedDraftIndex=pts.length-1;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ setRouteTip('点を追加しました。大まかに置いた後「道に合わせる」で補正できます。','editing');
+}
+function undoDraftPoint(){
+ if(!st.routeEdit) return;
+ const pts=getDraftWaypoints();
+ pts.pop();
+ st.selectedDraftIndex=-1;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ setRouteTip('1つ戻しました。地図をタップして編集点を追加できます。','editing');
+}
+function clearDraftRoute(){
+ if(!st.routeEdit) return;
+ st.draftWaypoints=[];
+ st.draftRoute=[];
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ renderDraftRoute();
+ setRouteTip('クリアしました。地図をタップして編集点を追加できます。','editing');
+}
+function deleteSelectedDraftPoint(){
+ if(!st.routeEdit) return;
+ const pts=getDraftWaypoints();
+ const idx=Number.isInteger(st.selectedDraftIndex)?st.selectedDraftIndex:-1;
+ if(idx<0 || idx>=pts.length){
+   setRouteTip('削除したい点を地図上でタップして選択してください','snap-warn');
+   return;
+ }
+ pts.splice(idx,1);
+ st.selectedDraftIndex=-1;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ setRouteTip('選択した点を削除しました。必要なら「道に合わせる」を押してください','editing');
+}
+
 document.addEventListener('click',e=>{
  const mainTab=e.target.closest('[data-main-tab]');
  if(mainTab){
@@ -2156,6 +2447,7 @@ document.addEventListener('click',e=>{
  }
 
 
+ if(e.target.closest('#toggleRouteEditorBtn')){toggleRouteEditorCollapsed();return}
  if(e.target.closest('#startRouteEditBtn')){startRouteEdit();return}
  if(e.target.closest('#exitRouteEditBtn')){exitRouteEdit();return}
  if(e.target.closest('#undoRoutePointBtn')){undoDraftPoint();return}
