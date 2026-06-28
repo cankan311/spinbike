@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-1 Map Tools Building Terrain</title>
+<title>Japan Ride D66-2 Real 3D Building Terrain</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
-<style>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/><style>
 :root{--display-font:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','Kosugi Maru','M PLUS Rounded 1c','Hiragino Maru Gothic ProN',ui-rounded,sans-serif;--ink:#17202c;--sub:#6f7785;--blue:#2f6bff;--green:#12b77a;--coral:#ff5872;--gold:#d59b2b;--line:#e4e8f0;}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101418;font-family:'Corporate Logo Rounded','Corporate Logo Round','CorpRound','M PLUS Rounded 1c','Kosugi Maru','Hiragino Maru Gothic ProN',ui-rounded,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;touch-action:none;}button,input{font-family:inherit}.phone{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#101418}.map{position:absolute;inset:0;touch-action:none}.right-map-tools{position:absolute;z-index:9999;right:12px;bottom:calc(env(safe-area-inset-bottom) + 292px);display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:auto}.recenter-btn{width:46px;height:46px;border:0;background:transparent;padding:0;filter:drop-shadow(0 5px 10px rgba(0,0,0,.20))}.recenter-btn:active{transform:translateY(1px)}.recenter-svg{display:block;width:46px;height:46px}.building-fab,.terrain-fab,.street-fab{display:block;border:2px solid #2f6bff;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.building-fab:not(.off),.terrain-fab:not(.off),.street-fab:not(.off){background:#2f6bff;color:#fff}.building-fab.err,.terrain-fab.err,.street-fab.err{border-color:#b45309;color:#b45309;background:rgba(255,255,255,.94)}.street-notice{position:absolute;z-index:20;left:14px;right:86px;top:calc(env(safe-area-inset-top) + 116px);display:none;align-items:center;gap:8px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.82);box-shadow:0 10px 24px rgba(0,0,0,.20);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:7px 7px 7px 12px;pointer-events:auto}.street-notice.show{display:flex}.street-notice-main{flex:1;min-width:0;font-size:11px;font-weight:900;color:#17202c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.street-notice-btn{border:0;border-radius:999px;background:#2f6bff;color:#fff;font-size:10px;font-weight:900;padding:7px 10px}.street-view-panel{position:absolute;z-index:19;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 152px);display:none;border-radius:20px;background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.82);box-shadow:0 14px 34px rgba(0,0,0,.28);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:10px;pointer-events:auto}.street-view-panel.open{display:block}.street-view-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.street-kicker{font-size:9px;font-weight:900;color:#6b7280}.street-view-title{font-size:15px;font-weight:900;color:#111827}.street-close{width:30px;height:30px;border:0;border-radius:999px;background:#eef2f7;color:#111827;font-weight:900}.street-view-body{margin-top:8px;border-radius:15px;overflow:hidden;background:#111827}.street-road{position:relative;height:210px;overflow:hidden;background:linear-gradient(#91c5ef 0 42%,#425b3a 42% 56%,#24272d 56% 100%)}.street-road .sky{position:absolute;inset:0;background:radial-gradient(circle at 68% 18%,rgba(255,255,255,.9) 0 7%,transparent 8%),linear-gradient(#91c5ef 0 45%,transparent 45%)}.street-road .road{position:absolute;left:18%;right:18%;bottom:-28%;height:80%;background:linear-gradient(90deg,#17191d,#3b3f46 48%,#17191d);clip-path:polygon(38% 0,62% 0,100% 100%,0 100%)}.street-road .centerline{position:absolute;left:49%;top:8%;width:2%;height:100%;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.8) 0 18px,transparent 18px 38px);transform:perspective(160px) rotateX(32deg);transform-origin:top}.street-caption{position:absolute;left:10px;right:10px;bottom:10px;border-radius:999px;background:rgba(17,24,39,.72);color:#fff;font-size:10px;font-weight:900;padding:7px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.street-pin{width:15px;height:15px;border-radius:50%;background:#ff2f7d;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.35)}.street-pin.active{background:#2f6bff;transform:scale(1.25)}.ui{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 10px calc(env(safe-area-inset-bottom) + 10px)}
 /* D案：Cの整理感 + Bの景色面積。上下とも薄く浮かせる */
@@ -529,18 +529,53 @@
     repeating-linear-gradient(25deg, rgba(255,255,255,.12) 0 1px, transparent 1px 18px);
   opacity:.48;
 }
+
+
+/* D66-2: restore the old real 3D implementation from D30-D32.
+   Do not use fake CSS overlays. MapLibre handles fill-extrusion and real terrain. */
+.tile-layer,.route-svg,.current-marker,.panel-map-overlay{
+  display:none!important;
+}
+.map .maplibregl-canvas{
+  position:absolute!important;
+  inset:0!important;
+}
+.maplibregl-ctrl-bottom-left,
+.maplibregl-ctrl-bottom-right{
+  display:none!important;
+}
+.right-map-tools{
+  display:none!important;
+}
+.map-tools-panel .map-tool.toggle{
+  grid-column:auto!important;
+  height:40px!important;
+  border-radius:999px!important;
+  font-size:11px!important;
+}
+.map-tools-panel .map-tool.toggle.on{
+  background:#2f6bff!important;
+  color:#fff!important;
+}
+.map-tools-panel .map-tool.toggle.err{
+  background:#fff7ed!important;
+  border-color:#b45309!important;
+  color:#b45309!important;
+}
+.phone.maponly .map-tools-panel{
+  display:grid!important;
+  top:auto!important;
+  right:14px!important;
+  bottom:calc(env(safe-area-inset-bottom) + 76px)!important;
+}
+.phone.maponly .map-tools-panel:not(.open){
+  display:grid!important;
+}
 </style>
 </head>
 <body>
 <div class="phone">
-<div class="map" id="map">
-<div class="tile-layer" id="tileLayer"></div>
-<svg class="route-svg" id="routeSvg"></svg>
-<div class="current-marker" id="currentMarker">🚴</div>
-
-<div class="panel-map-overlay terrain-overlay-panel" id="terrainOverlayPanel"></div>
-<div class="panel-map-overlay building-overlay-panel" id="buildingOverlayPanel"></div>
-</div>
+<div class="map" id="map"></div>
 <div class="map-tools-panel" id="mapToolsPanel">
 <button class="map-tool" id="recenterBtn2">⌖</button>
 <button class="map-tool" id="zoomInBtn">＋</button>
@@ -558,24 +593,10 @@
 </button>
 <button aria-label="建物3D切替" class="building-fab off" id="buildingToggle">建物 OFF</button>
 <button aria-label="地形3D切替" class="terrain-fab off" id="terrainToggle">地形 OFF</button>
-<button aria-label="現地ビュー切替" class="street-fab off" id="streetToggle">SV OFF</button>
+
 </div>
-<div class="street-notice" id="streetNotice">
-<div class="street-notice-main" id="streetNoticeMain">現地ビュー区間まで —</div>
-<button class="street-notice-btn" id="streetQuickBtn">現地ビュー</button>
-</div>
-<div class="street-full" id="streetFull">
-<div class="street-full-bg">
-<div class="street-sky"></div>
-<div class="street-mountains"></div>
-<div class="street-side left"></div>
-<div class="street-side right"></div>
-<div class="street-road-full">
-<div class="street-centerline"></div>
-</div>
-<div class="street-full-caption" id="streetCaption">現地ビュー対応区間：背景全体を路面目線表示に切替中</div>
-</div>
-</div>
+
+
 <nav aria-label="メインメニュー" class="bottom-tabs" id="bottomTabs">
 <button class="bottom-tab active" data-main-tab="ride"><span>🚴</span><b>走る</b></button>
 <button class="bottom-tab" data-main-tab="routes"><span>🗺️</span><b>ルート</b></button>
@@ -654,59 +675,326 @@
 </div>
 </div>
 </div>
-<script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script>
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,display:'detail',input:'sensor',zoom:15,center:[138.3102,34.8362],route:[[138.3082,34.8377],[138.3088,34.8370],[138.3096,34.8365],[138.3105,34.8360],[138.3114,34.8356],[138.3121,34.8350]],street:false,buildings:false,terrain:false};
+let st={
+  km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,
+  display:'detail',input:'sensor',
+  route:[[138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],[138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250],[138.3425,34.8215],[138.3565,34.8188]],
+  routeDist:0,
+  buildingsOn:false, buildingLayerIds:[],
+  terrainOn:false, terrainReady:false,
+  labelsOn:true, symbolLayerIds:[]
+};
+let map=null, marker=null;
 const $=id=>document.getElementById(id);
-function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
-function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
+
+function setupDots(){
+ const dots=$('dots'); if(!dots)return;
+ dots.innerHTML='';
+ CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';dots.appendChild(d);});
+}
+function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4}
 function next(t){return CP.find(c=>c.t===t&&c.km>st.km+.01)}
 function fmtTime(sec){return String(Math.floor(sec/60)).padStart(2,'0')+':'+String(Math.floor(sec%60)).padStart(2,'0')}
-function lonLatToTile(lon,lat,z){const n=2**z;return[(lon+180)/360*n,(1-Math.log(Math.tan(lat*Math.PI/180)+1/Math.cos(lat*Math.PI/180))/Math.PI)/2*n]}
-function tileToLonLat(x,y,z){const n=2**z;return[x/n*360-180,Math.atan(Math.sinh(Math.PI*(1-2*y/n)))*180/Math.PI]}
-function project(lon,lat,center,z,w,h){const c=lonLatToTile(center[0],center[1],z),p=lonLatToTile(lon,lat,z);return[(p[0]-c[0])*256+w/2,(p[1]-c[1])*256+h/2]}
-function renderTiles(){const el=$('tileLayer'), box=$('map'), w=box.clientWidth,h=box.clientHeight,z=st.zoom,c=lonLatToTile(st.center[0],st.center[1],z);let html='';const minX=Math.floor(c[0]-w/512)-1,maxX=Math.floor(c[0]+w/512)+1,minY=Math.floor(c[1]-h/512)-1,maxY=Math.floor(c[1]+h/512)+1;for(let x=minX;x<=maxX;x++){for(let y=minY;y<=maxY;y++){const l=(x-c[0])*256+w/2,t=(y-c[1])*256+h/2;html+=`<img class="tile" draggable="false" src="https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${x}/${y}.jpg" style="left:${l}px;top:${t}px" onerror="this.src='https://cyberjapandata.gsi.go.jp/xyz/std/${z}/${x}/${y}.png'">`;}}el.innerHTML=html;}
-function renderRoute(){const svg=$('routeSvg'),box=$('map'),w=box.clientWidth,h=box.clientHeight;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);let d='';st.route.forEach((p,i)=>{const q=project(p[0],p[1],st.center,st.zoom,w,h);d+=(i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1)+' '});svg.innerHTML=`<path d="${d}" fill="none" stroke="#16B978" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/><path d="${d}" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".65"/>`;const q=project(st.route[0][0],st.route[0][1],st.center,st.zoom,w,h);$('currentMarker').style.left=q[0]+'px';$('currentMarker').style.top=q[1]+'px';}
-function renderMap(){renderTiles();renderRoute();}
-function renderUI(){const kmh=st.rpm*2*2.1/60*3.6; const prog=Math.min(100,st.km/LEG*100); const z=zoneOf(st.hr); const nS=next('small'),nM=next('medium'),nL=next('large');
- $('speed').textContent=kmh.toFixed(1); const rpmRatio=Math.max(0,Math.min(1,st.rpm/120)); $('ringValue').textContent=Math.round(st.rpm); $('ringMain').textContent=Math.round(st.rpm)+' rpm'; const C=2*Math.PI*18; $('cadenceRing').setAttribute('stroke-dasharray', C.toFixed(1)); $('cadenceRing').setAttribute('stroke-dashoffset', (C*(1-rpmRatio)).toFixed(1)); $('mode').textContent=st.running?'追従 ON':'追従 OFF'; $('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km'; $('fill').style.width=prog+'%'; $('bike').style.left=prog+'%';
- $('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —'; $('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
- const stats=[['距離',st.sess.toFixed(2),'km'],['時間',fmtTime(st.t),''],['消費',Math.round(st.cal),'kcal'],['最高',st.mx.toFixed(1),'km/h'],['XP',Math.round(st.cal*0.9),''],['累計',st.km.toFixed(1),'km']];
- $('metrics').innerHTML=stats.map(a=>`<div class="dock-card"><div class="label">${a[0]}</div><div class="value">${a[1]}<span class="unit">${a[2]}</span></div></div>`).join('');
- $('metrics2').innerHTML='';
- $('pedalRpm').textContent=Math.round(st.rpm);
- $('zoneBpm').textContent=Math.round(st.hr); $('zoneMain').childNodes[0].nodeValue=zones[z].n; $('zoneMain').style.color=zones[z].c; $('zoneDot').style.background=zones[z].c; $('bars').innerHTML=zones.map((zz,i)=>`<div class="zone-seg ${i===z?'active':''}" style="background:${zz.c}"></div>`).join(''); $('zoneGuide').innerHTML='<span class="zone-name">今は'+zones[z].n+'ゾーンです</span><span class="zone-tip">'+(z>=3?'無理しすぎに注意':'')+'</span>';
-}
-function setDisplay(mode){st.display=mode;document.querySelector('.phone').classList.toggle('compact',mode==='compact');document.querySelector('.phone').classList.toggle('maponly',mode==='maponly');$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図だけ':'詳細表示'; if($('displayFloat')) $('displayFloat').textContent=mode==='compact'?'詳細表示':'UI表示';}
-function cycleDisplay(){setDisplay(st.display==='detail'?'compact':st.display==='compact'?'maponly':'detail');}
-function setInput(mode){st.input=mode;document.querySelector('.phone').classList.toggle('manual',mode==='manual');$('inputModeToggle').textContent=mode==='manual'?'手動入力':'センサー入力';}
-function toggleInput(){setInput(st.input==='sensor'?'manual':'sensor');}
-function bindPan(){let down=false,last=null,drag=false;const el=$('map');el.addEventListener('pointerdown',e=>{down=true;last=[e.clientX,e.clientY];drag=false;el.setPointerCapture(e.pointerId)});el.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-last[0],dy=e.clientY-last[1];if(Math.abs(dx)+Math.abs(dy)>4)drag=true;last=[e.clientX,e.clientY];const c=lonLatToTile(st.center[0],st.center[1],st.zoom);st.center=tileToLonLat(c[0]-dx/256,c[1]-dy/256,st.zoom);renderMap()});el.addEventListener('pointerup',()=>{down=false});}
+function hav(a,b){const R=6371e3,toRad=x=>x*Math.PI/180; const dLat=toRad(b[1]-a[1]),dLon=toRad(b[0]-a[0]); const lat1=toRad(a[1]),lat2=toRad(b[1]); const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(h));}
+function routeLength(coords){let d=0;for(let i=1;i<coords.length;i++)d+=hav(coords[i-1],coords[i]);return d;}
 
-function syncBuildingTerrainPanel(){
- const app=document.querySelector('.phone');
- if(app){
-   app.classList.toggle('buildings-on',!!st.buildings);
-   app.classList.toggle('terrain-on',!!st.terrain);
+function renderUI(){
+ const kmh=st.rpm*2*2.1/60*3.6;
+ const prog=Math.min(100,st.km/LEG*100);
+ const z=zoneOf(st.hr);
+ const nS=next('small'),nM=next('medium'),nL=next('large');
+ if($('speed'))$('speed').textContent=kmh.toFixed(1);
+ const rpmRatio=Math.max(0,Math.min(1,st.rpm/120));
+ if($('ringValue'))$('ringValue').textContent=Math.round(st.rpm);
+ if($('ringMain'))$('ringMain').textContent=Math.round(st.rpm)+' rpm';
+ if($('cadenceRing')){
+   const C=2*Math.PI*18;
+   $('cadenceRing').setAttribute('stroke-dasharray', C.toFixed(1));
+   $('cadenceRing').setAttribute('stroke-dashoffset', (C*(1-rpmRatio)).toFixed(1));
  }
+ if($('mode'))$('mode').textContent=st.running?'追従 ON':'追従 OFF';
+ if($('remain'))$('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km';
+ if($('fill'))$('fill').style.width=prog+'%';
+ if($('bike'))$('bike').style.left=prog+'%';
+ if($('smallGoal'))$('smallGoal').textContent=nS?'通過地点 '+(nS.km-st.km).toFixed(1)+'km':'通過地点 —';
+ if($('mediumGoal'))$('mediumGoal').textContent=nM?'中継地 '+nM.n+' '+(nM.km-st.km).toFixed(0)+'km':'中継地 —';
+ const stats=[['距離',st.sess.toFixed(2),'km'],['時間',fmtTime(st.t),''],['消費',Math.round(st.cal),'kcal'],['最高',st.mx.toFixed(1),'km/h'],['XP',Math.round(st.cal*0.9),''],['累計',st.km.toFixed(1),'km']];
+ if($('metrics'))$('metrics').innerHTML=stats.map(a=>`<div class="dock-card"><div class="label">${a[0]}</div><div class="value">${a[1]}<span class="unit">${a[2]}</span></div></div>`).join('');
+ if($('metrics2'))$('metrics2').innerHTML='';
+ if($('pedalRpm'))$('pedalRpm').textContent=Math.round(st.rpm);
+ if($('zoneBpm'))$('zoneBpm').textContent=Math.round(st.hr);
+ if($('zoneMain')){
+   $('zoneMain').childNodes[0].nodeValue=zones[z].n;
+   $('zoneMain').style.color=zones[z].c;
+ }
+ if($('zoneDot'))$('zoneDot').style.background=zones[z].c;
+ if($('bars'))$('bars').innerHTML=zones.map((zz,i)=>`<div class="zone-seg ${i===z?'active':''}" style="background:${zz.c}"></div>`).join('');
+ if($('zoneGuide'))$('zoneGuide').innerHTML='<span class="zone-name">今は'+zones[z].n+'ゾーンです</span><span class="zone-tip">'+(z>=3?'無理しすぎに注意':'')+'</span>';
+}
+
+function setDisplay(mode){
+ st.display=mode;
+ const phone=document.querySelector('.phone');
+ phone.classList.toggle('compact',mode==='compact');
+ phone.classList.toggle('maponly',mode==='maponly');
+ if($('displayToggle'))$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図だけ':'詳細表示';
+ if($('displayFloat'))$('displayFloat').textContent=mode==='compact'?'詳細表示':'UI表示';
+ const panel=$('mapToolsPanel');
+ if(panel) panel.classList.toggle('open', mode==='maponly');
+ if(map) setTimeout(()=>map.resize(),80);
+}
+function cycleDisplay(){setDisplay(st.display==='detail'?'compact':st.display==='compact'?'maponly':'detail')}
+function setInput(mode){
+ st.input=mode;
+ document.querySelector('.phone').classList.toggle('manual',mode==='manual');
+ if($('inputModeToggle'))$('inputModeToggle').textContent=mode==='manual'?'手動入力':'センサー入力';
+}
+function toggleInput(){setInput(st.input==='sensor'?'manual':'sensor')}
+
+function syncBuildingTerrainButtons(){
  const b=$('buildingTogglePanel');
  if(b){
-   b.textContent=st.buildings?'建物 ON':'建物 OFF';
-   b.classList.toggle('on',!!st.buildings);
+   b.textContent=st.buildingsOn?'建物 ON':'建物 OFF';
+   b.classList.toggle('on',st.buildingsOn);
+   b.classList.remove('err');
  }
  const t=$('terrainTogglePanel');
  if(t){
-   t.textContent=st.terrain?'地形 ON':'地形 OFF';
-   t.classList.toggle('on',!!st.terrain);
+   t.textContent=st.terrainOn?'地形 ON':'地形 OFF';
+   t.classList.toggle('on',st.terrainOn);
+   t.classList.remove('err');
  }
 }
 
-document.addEventListener('click',e=>{
+function initMap(){
+ if(!window.maplibregl){
+   if($('mode'))$('mode').textContent='MapLibre読込失敗';
+   return;
+ }
+ map=new maplibregl.Map({
+   container:'map',
+   style:'https://tiles.openfreemap.org/styles/liberty',
+   center:[138.309,34.835],
+   zoom:15.8,
+   pitch:58,
+   bearing:50,
+   antialias:true,
+   dragRotate:true,
+   touchZoomRotate:true,
+   cooperativeGestures:false
+ });
+ map.touchZoomRotate.enable();
+ map.touchZoomRotate.enableRotation();
+ map.dragRotate.enable();
+ map.scrollZoom.enable();
+ map.doubleClickZoom.enable();
+ map.keyboard.enable();
 
- if(e.target.closest('[data-main-tab]')){
-   const tab=e.target.closest('[data-main-tab]').dataset.mainTab;
+ map.on('error',e=>console.warn('map error', e && e.error ? e.error : e));
+
+ map.on('load',()=>{
+   const layers=map.getStyle().layers||[];
+   const firstSym=layers.find(l=>l.type==='symbol');
+   const beforeId=firstSym ? firstSym.id : undefined;
+
+   try{
+     if(!map.getSource('gsi-photo')){
+       map.addSource('gsi-photo',{
+         type:'raster',
+         tiles:['https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg'],
+         tileSize:256,
+         attribution:'地理院タイル'
+       });
+     }
+     if(!map.getLayer('gsi-photo')){
+       map.addLayer({id:'gsi-photo',type:'raster',source:'gsi-photo',paint:{'raster-opacity':1}}, beforeId);
+     }
+   }catch(e){console.warn('gsi photo failed',e)}
+
+   st.symbolLayerIds=(map.getStyle().layers||[]).filter(l=>l.type==='symbol').map(l=>l.id);
+   st.symbolLayerIds.forEach(id=>{
+     try{
+       map.setPaintProperty(id,'text-halo-color','rgba(255,255,255,.95)');
+       map.setPaintProperty(id,'text-halo-width',2.1);
+       map.setPaintProperty(id,'text-halo-blur',0.25);
+     }catch(e){}
+   });
+
+   hideAllBuilding3DOnLoad();
+
+   const el=document.createElement('div');
+   el.style.width='24px';
+   el.style.height='24px';
+   el.style.borderRadius='50%';
+   el.style.background='#2f6bff';
+   el.style.border='4px solid white';
+   el.style.boxShadow='0 2px 10px rgba(0,0,0,.35)';
+   marker=new maplibregl.Marker({element:el}).setLngLat(st.route[0]).addTo(map);
+
+   st.routeDist=routeLength(st.route);
+   if(!map.getSource('route')){
+     map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:st.route}}});
+   }
+   const firstSymbolNow=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
+   const routeBefore=firstSymbolNow ? firstSymbolNow.id : undefined;
+   try{map.addLayer({id:'route-glow',type:'line',source:'route',paint:{'line-color':'#ffffff','line-width':9,'line-opacity':0.82}}, routeBefore);}catch(e){}
+   try{map.addLayer({id:'route',type:'line',source:'route',paint:{'line-color':'#2f6bff','line-width':5,'line-opacity':0.96}}, routeBefore);}catch(e){}
+
+   syncBuildingTerrainButtons();
+ });
+}
+
+function collectExistingBuildingLayers(){
+ if(!map) return [];
+ const ids=[];
+ (map.getStyle().layers||[]).forEach(l=>{
+   if(l.type==='fill-extrusion') ids.push(l.id);
+ });
+ return ids;
+}
+
+function hideAllBuilding3DOnLoad(){
+ st.buildingLayerIds=collectExistingBuildingLayers();
+ st.buildingLayerIds.forEach(id=>{
+   try{map.setLayoutProperty(id,'visibility','none')}catch(e){}
+ });
+ st.buildingsOn=false;
+ syncBuildingTerrainButtons();
+}
+
+function findVectorSourceForBuildings(){
+ const sources=(map.getStyle()&&map.getStyle().sources)||{};
+ for(const id of Object.keys(sources)){
+   const src=sources[id]||{};
+   const s=JSON.stringify(src).toLowerCase();
+   if(src.type==='vector' && (s.includes('openfreemap') || s.includes('openmaptiles') || s.includes('tiles.openfreemap'))) return id;
+ }
+ const vectorIds=Object.keys(sources).filter(id=>sources[id]&&sources[id].type==='vector');
+ return vectorIds.length ? vectorIds[0] : null;
+}
+
+function ensureBuildingLayer(){
+ if(!map || !map.isStyleLoaded()) return false;
+
+ const existing=collectExistingBuildingLayers();
+ if(existing.length){
+   st.buildingLayerIds=existing;
+   return true;
+ }
+
+ const sourceId=findVectorSourceForBuildings();
+ if(!sourceId) return false;
+
+ const firstSymbol=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
+ const beforeId=firstSymbol ? firstSymbol.id : undefined;
+
+ const candidates=['building','buildings'];
+ for(const sourceLayer of candidates){
+   const id='ofm-building-3d-'+sourceLayer;
+   try{
+     if(!map.getLayer(id)){
+       map.addLayer({
+         id,
+         type:'fill-extrusion',
+         source:sourceId,
+         'source-layer':sourceLayer,
+         minzoom:14,
+         layout:{visibility:'none'},
+         paint:{
+           'fill-extrusion-color':'rgba(80,92,110,.46)',
+           'fill-extrusion-height':['case',['has','render_height'],['get','render_height'],['has','height'],['get','height'],12],
+           'fill-extrusion-base':['case',['has','render_min_height'],['get','render_min_height'],0],
+           'fill-extrusion-opacity':0.34
+         }
+       }, beforeId);
+     }
+     st.buildingLayerIds=[id];
+     return true;
+   }catch(e){}
+ }
+ return false;
+}
+
+function toggleBuildings(){
+ const btn=$('buildingTogglePanel');
+ if(!map || !map.isStyleLoaded()){
+   if(btn){btn.textContent='読込中';btn.classList.add('err')}
+   return;
+ }
+ if(!ensureBuildingLayer()){
+   if(btn){btn.textContent='建物不可';btn.classList.add('err')}
+   return;
+ }
+ st.buildingsOn=!st.buildingsOn;
+ st.buildingLayerIds.forEach(id=>{
+   try{map.setLayoutProperty(id,'visibility',st.buildingsOn?'visible':'none')}catch(e){}
+ });
+ syncBuildingTerrainButtons();
+}
+
+function ensureTerrainSource(){
+ if(!map || !map.isStyleLoaded()) return false;
+ try{
+   if(!map.getSource('terrain-dem')){
+     map.addSource('terrain-dem',{
+       type:'raster-dem',
+       tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+       tileSize:256,
+       maxzoom:15,
+       encoding:'terrarium',
+       attribution:'Terrain tiles by Mapzen'
+     });
+   }
+   st.terrainReady=true;
+   return true;
+ }catch(e){
+   console.warn('terrain source failed',e);
+   return false;
+ }
+}
+
+function toggleTerrain(){
+ const btn=$('terrainTogglePanel');
+ if(!map || !map.isStyleLoaded()){
+   if(btn){btn.textContent='読込中';btn.classList.add('err')}
+   return;
+ }
+ if(!st.terrainOn){
+   if(!ensureTerrainSource()){
+     if(btn){btn.textContent='地形不可';btn.classList.add('err')}
+     return;
+   }
+   try{
+     map.setTerrain({source:'terrain-dem', exaggeration:1.5});
+     // pitchを少し起こさないと高低差が見えにくいので、D32同様に3D視点を維持
+     map.easeTo({pitch:60,duration:350});
+     st.terrainOn=true;
+   }catch(e){
+     console.warn('setTerrain failed',e);
+     if(btn){btn.textContent='地形不可';btn.classList.add('err')}
+     return;
+   }
+ }else{
+   try{map.setTerrain(null)}catch(e){}
+   st.terrainOn=false;
+ }
+ syncBuildingTerrainButtons();
+}
+
+function recenterToBike(){
+ if(!map) return;
+ const p=marker ? marker.getLngLat().toArray() : st.route[0];
+ map.easeTo({center:p,zoom:15.8,pitch:58,bearing:50,duration:420});
+}
+
+document.addEventListener('click',e=>{
+ const mainTab=e.target.closest('[data-main-tab]');
+ if(mainTab){
+   const tab=mainTab.dataset.mainTab;
    document.querySelectorAll('.bottom-tab').forEach(b=>b.classList.toggle('active',b.dataset.mainTab===tab));
    ['routes','records','settings'].forEach(t=>{
      const p=document.getElementById(t+'Page');
@@ -715,38 +1003,22 @@ document.addEventListener('click',e=>{
    return;
  }
 
-
-
- if(e.target.closest('#buildingTogglePanel')){
-   st.buildings=!st.buildings;
-   syncBuildingTerrainPanel();
-   return;
- }
- if(e.target.closest('#terrainTogglePanel')){
-   st.terrain=!st.terrain;
-   syncBuildingTerrainPanel();
-   return;
- }
+ if(e.target.closest('#buildingTogglePanel')){toggleBuildings();return}
+ if(e.target.closest('#terrainTogglePanel')){toggleTerrain();return}
 
  if(e.target.closest('#mapToolsToggle')){
-   const p=document.getElementById('mapToolsPanel');
+   const p=$('mapToolsPanel');
    if(p)p.classList.toggle('open');
    return;
  }
  if(e.target.closest('#closeMapTools')){
-   const p=document.getElementById('mapToolsPanel');
+   const p=$('mapToolsPanel');
    if(p)p.classList.remove('open');
    return;
  }
- if(e.target.closest('#recenterBtn2')){
-   st.center=[138.3102,34.8362];renderMap();return;
- }
- if(e.target.closest('#zoomInBtn')){
-   st.zoom=Math.min(18,st.zoom+1);renderMap();return;
- }
- if(e.target.closest('#zoomOutBtn')){
-   st.zoom=Math.max(5,st.zoom-1);renderMap();return;
- }
+ if(e.target.closest('#recenterBtn2')){recenterToBike();return}
+ if(e.target.closest('#zoomInBtn')){if(map)map.easeTo({zoom:Math.min(18,map.getZoom()+1),duration:220});return}
+ if(e.target.closest('#zoomOutBtn')){if(map)map.easeTo({zoom:Math.max(5,map.getZoom()-1),duration:220});return}
 
  if(e.target.closest('#displayToggle')){cycleDisplay();return}
  if(e.target.closest('#mapRestore')){setDisplay('detail');return}
@@ -755,12 +1027,13 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}
  if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}
  if(e.target.closest('#runBtnTop')){st.running=!st.running;$('runBtnTop').textContent=st.running?'ストップ':'再開';renderUI();return}
- if(e.target.closest('#recenterBtn')){st.center=[138.3102,34.8362];renderMap();return}
- if(e.target.closest('#buildingToggle')){e.target.classList.toggle('off');e.target.textContent=e.target.classList.contains('off')?'建物 OFF':'建物 ON';return}
- if(e.target.closest('#terrainToggle')){e.target.classList.toggle('off');e.target.textContent=e.target.classList.contains('off')?'地形 OFF':'地形 ON';return}
- if(e.target.closest('#streetToggle')){st.street=!st.street;$('streetFull').classList.toggle('open',st.street);e.target.classList.toggle('off',!st.street);e.target.textContent=st.street?'SV ON':'SV OFF';return}
 });
-window.addEventListener('resize',renderMap);
-setupDots();bindPan();setDisplay('detail');setInput('sensor');syncBuildingTerrainPanel();renderMap();renderUI();
+
+window.addEventListener('resize',()=>{if(map)map.resize()});
+setupDots();
+renderUI();
+setDisplay('detail');
+setInput('sensor');
+initMap();
 </script></body>
 </html>
