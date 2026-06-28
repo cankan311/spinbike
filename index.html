@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="theme-color" content="#101418" />
 <link rel="manifest" href="manifest.webmanifest" />
-<title>Japan Ride D50 TV Map First Mode</title>
+<title>Japan Ride D51 Map Restore Fix</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,6 +69,44 @@
 .phone.tv-mode .tv-log-flash{bottom:calc(env(safe-area-inset-bottom) + 76px);font-size:clamp(13px,2vw,22px);padding:9px 15px;background:rgba(47,107,255,.70)}
 .phone.tv-mode .travel-toast{bottom:calc(env(safe-area-inset-bottom) + 74px);width:min(520px,74vw);padding:8px 10px;background:rgba(8,13,22,.62)}
 @media(orientation:portrait){.phone.tv-mode::after{font-size:14px;left:18px;right:18px;padding:15px;content:'横向きにするとテレビで大きく表示できます';}.phone.tv-mode .tv-hud{filter:none;opacity:1}.phone.tv-mode .tv-topline{opacity:.35}.phone.tv-mode .tv-bottomline{opacity:.55}}
+
+
+/* D51: map restore hardening */
+#map{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  z-index:0!important;
+  background:#1b2430!important;
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+.maplibregl-map,.maplibregl-canvas-container,.maplibregl-canvas{
+  width:100%!important;
+  height:100%!important;
+}
+.map-boot-status{
+  position:absolute;
+  z-index:6;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  background:rgba(17,24,39,.72);
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  padding:10px 14px;
+  box-shadow:0 10px 24px rgba(0,0,0,.24);
+  pointer-events:none;
+  transition:opacity .25s ease;
+}
+.map-boot-status.hide{opacity:0}
+.phone.tv-mode #map{z-index:0!important}
+.phone.tv-mode .tv-hud{z-index:27!important}
+.phone.tv-mode .map-boot-status{z-index:7}
 
 </style>
 </head>
@@ -282,10 +320,21 @@ function checkTravelEvents(){if(Math.abs(st.km-st.lastTravelKm)<0.02)return; st.
 function renderTravelLog(){const list=$('travelLogList'),sum=$('travelLogSummary'); if(!list||!sum)return; const areas=[...new Set(st.travelLog.map(e=>e.title.replace(/周辺|付近|方面へ|流域/g,'')).slice(0,4))]; sum.innerHTML=[['距離',st.sess.toFixed(1)+'km'],['記録',st.travelLog.length+'件'],['エリア',areas.length?areas.join('→'):'—']].map(x=>'<div class="travel-log-stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join(''); if(!st.travelLog.length){list.innerHTML='<div class="travel-log-item"><div class="travel-log-ico">🚴</div><div><div class="travel-log-name">まだ旅ログはありません</div><div class="travel-log-note">走行すると、通過した川・駅・市町村・名所などがここに残ります。</div></div></div>';return;} list.innerHTML=st.travelLog.map(e=>'<div class="travel-log-item"><div class="travel-log-ico">'+(e.icon||'📍')+'</div><div><div class="travel-log-name">'+e.title+'</div><div class="travel-log-meta">'+e.atKm.toFixed(1)+'km / '+Math.floor(e.time/60)+'分</div><div class="travel-log-note">'+e.note+'</div></div></div>').join('');}
 function openTravelLog(){renderTravelLog(); const p=$('travelLogPanel'); if(p)p.classList.add('open');}
 function closeTravelLog(){const p=$('travelLogPanel'); if(p)p.classList.remove('open');}
+
+function markMapLoaded(msg){
+ const s=$('mapBootStatus');
+ if(s){s.textContent=msg||'地図表示OK'; setTimeout(()=>s.classList.add('hide'),650);}
+ if(map){setTimeout(()=>map.resize(),80); setTimeout(()=>map.resize(),420);}
+}
+function markMapError(msg){
+ const s=$('mapBootStatus');
+ if(s){s.textContent=msg||'地図の読み込みに失敗しました'; s.classList.remove('hide');}
+}
+
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D50 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D51 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -554,7 +603,7 @@ function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  checkTravelEvents(); updateMiniChip(); updateTVHud(); renderUI(); requestAnimationFrame(tick);}
 document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const tvBtn=e.target.closest('#tvModeBtn'); if(tvBtn){setTVMode(true); return;} const tvExit=e.target.closest('#tvExitChip'); if(tvExit){setTVMode(false); return;} const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-setupDots();renderUI();updateMiniChip();updateTVHud();initMap();requestAnimationFrame(tick);
+window.addEventListener('resize',()=>{if(map){setTimeout(()=>map.resize(),80);}}); window.addEventListener('orientationchange',()=>{if(map){setTimeout(()=>map.resize(),250);setTimeout(()=>map.resize(),900);}}); setupDots();renderUI();updateMiniChip();updateTVHud();initMap();requestAnimationFrame(tick);
 </script>
 </body>
 </html>
