@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-15 Safe Route Edit No Snap</title>
+<title>Japan Ride D66-16 Simplify Route Buttons</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1423,6 +1423,24 @@
 @media(max-width:430px){
   .route-editor-actions{grid-template-columns:1fr 1fr!important}
 }
+
+
+/* D66-16: ルート作成カードの操作ボタンを整理 */
+#undoEditBtn,
+#deleteSelectedPointBtn{
+  display:none!important;
+}
+.route-editor-actions{
+  grid-template-columns:1fr 1fr!important;
+}
+.route-editor-actions .cancel-edit{
+  grid-column:auto!important;
+}
+@media(max-width:430px){
+  .route-editor-actions{
+    grid-template-columns:1fr 1fr!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1454,9 +1472,9 @@
 </div>
 <div class="route-editor-tip">地図をタップしてルート点を追加</div>
 <div class="route-editor-actions">
-<button id="undoRoutePointBtn">1つ戻す</button><button class="delete-point" id="deleteSelectedPointBtn">選択点削除</button>
+<button id="undoRoutePointBtn">1つ戻す</button>
 <button id="clearRouteBtn">クリア</button>
-<button class="undo-edit" id="undoEditBtn">元に戻す</button><button class="save" id="saveRouteBtn">保存</button>
+<button class="save" id="saveRouteBtn">保存</button>
 <button class="cancel-edit" id="cancelRouteEditBtn">作成終了</button></div>
 </div>
 </div>
@@ -2935,8 +2953,6 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#undoRoutePointBtn')){undoDraftPoint();return}
  if(e.target.closest('#clearRouteBtn')){clearDraftRoute();return}
  if(e.target.closest('#cancelRouteEditBtn')){confirmCancelRouteEdit();return}
- if(e.target.closest('#undoEditBtn')){undoRouteEdit();return}
- if(e.target.closest('#deleteSelectedPointBtn')){deleteSelectedDraftPoint();return}
  if(e.target.closest('#saveRouteBtn')){saveDraftRoute();return}
  const useBtn=e.target.closest('[data-use-route]');
  if(useBtn){useMyRoute(useBtn.dataset.useRoute);return}
