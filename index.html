@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-3 Map View</title>
+<title>Japan Ride D66-4 Map View Entry Fix</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -634,6 +634,22 @@
   border-color:#111827!important;
   color:#fff!important;
 }
+
+
+/* D66-4: fix entry from 簡易表示 to 地図ビュー */
+.phone.compact .display-float{
+  display:block!important;
+  z-index:99999!important;
+}
+.phone.maponly .display-float,
+.phone.maponly .map-restore{
+  display:none!important;
+}
+.phone.maponly .map-tools-panel{
+  display:grid!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
 </style>
 </head>
 <body>
@@ -802,7 +818,7 @@ function setDisplay(mode){
  phone.classList.toggle('compact',mode==='compact');
  phone.classList.toggle('maponly',mode==='maponly');
  if($('displayToggle'))$('displayToggle').textContent=mode==='detail'?'簡易表示':mode==='compact'?'地図ビュー':'詳細表示';
- if($('displayFloat'))$('displayFloat').textContent=mode==='compact'?'詳細表示':'UI表示';
+ if($('displayFloat'))$('displayFloat').textContent=mode==='compact'?'地図ビュー':'UI表示';
  const panel=$('mapToolsPanel');
  if(panel) panel.classList.toggle('open', mode==='maponly');
  if(map) setTimeout(()=>map.resize(),80);
@@ -1084,7 +1100,7 @@ document.addEventListener('click',e=>{
 
  if(e.target.closest('#displayToggle')){cycleDisplay();return}
  if(e.target.closest('#mapRestore')){setDisplay('detail');return}
- if(e.target.closest('#displayFloat')){setDisplay('detail');return}
+ if(e.target.closest('#displayFloat')){if(st.display==='compact')setDisplay('maponly');else setDisplay('detail');return}
  if(e.target.closest('#inputModeToggle')){toggleInput();return}
  if(e.target.closest('#pedalUp')){st.rpm+=2;renderUI();return}
  if(e.target.closest('#pedalDown')){st.rpm=Math.max(0,st.rpm-2);renderUI();return}
