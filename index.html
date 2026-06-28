@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D47 Travel Log Layer</title>
+<title>Japan Ride D48 Collapsible UI</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,11 +28,24 @@
 .pedal-control{display:grid;grid-template-columns:1fr auto 1fr;gap:5px;align-items:center;margin:5px 0}.pedal-btn{border:0;border-radius:999px;background:#eef2f7;color:#17202c;font-size:11px;font-weight:900;padding:8px 6px}.pedal-btn.plus{background:#e8f0ff;color:#2155d8}.pedal-readout{min-width:62px;border-radius:999px;background:#fff;border:1px solid #e3e7ef;text-align:center;padding:6px 9px;font-size:14px;font-weight:900;color:#111827}.pedal-readout small{font-size:9px;color:#6b7280;margin-left:2px}
 @media(max-height:740px){.travel-fab{font-size:9px;padding:6px 8px;min-width:58px}.travel-toast{top:calc(env(safe-area-inset-top) + 108px);padding:8px 10px}.pedal-control{margin:4px 0}.pedal-btn{font-size:10px;padding:6px 5px}.pedal-readout{padding:5px 8px}}
 
+
+.ui-collapse-btn{position:absolute;right:10px;top:10px;border:0;border-radius:999px;background:rgba(17,24,39,.76);color:#fff;font-size:10px;font-weight:900;padding:7px 10px;box-shadow:0 5px 12px rgba(0,0,0,.18);pointer-events:auto}
+.ui-restore-chip{position:absolute;z-index:29;left:12px;top:calc(env(safe-area-inset-top) + 12px);border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#2f6bff;font-size:11px;font-weight:900;padding:9px 12px;box-shadow:0 8px 20px rgba(0,0,0,.20);display:none;pointer-events:auto}
+.ride-mini-chip{position:absolute;z-index:29;left:88px;right:12px;top:calc(env(safe-area-inset-top) + 12px);border-radius:999px;background:rgba(17,24,39,.72);color:#fff;font-size:11px;font-weight:900;padding:9px 12px;box-shadow:0 8px 20px rgba(0,0,0,.18);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none;pointer-events:none}
+.phone.ui-collapsed .ui .top,.phone.ui-collapsed .ui .bottom{opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.phone.ui-collapsed .ui-restore-chip,.phone.ui-collapsed .ride-mini-chip{display:block}
+.phone.ui-collapsed .travel-toast{top:calc(env(safe-area-inset-top) + 58px)}
+.phone.ui-collapsed .right-map-tools{bottom:calc(env(safe-area-inset-bottom) + 24px)}
+.phone.ui-collapsed .maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
+@media(max-height:740px){.ui-collapse-btn{font-size:9px;padding:6px 9px}.ui-restore-chip,.ride-mini-chip{top:calc(env(safe-area-inset-top) + 10px);font-size:10px;padding:8px 10px}.ride-mini-chip{left:82px}}
+
 </style>
 </head>
 <body>
 <div class="phone">
   <div id="map" class="map"></div>
+  <button class="ui-restore-chip" id="uiRestoreChip">UI表示</button>
+  <div class="ride-mini-chip" id="rideMiniChip"><span id="miniSpeed">14.6</span> km/h ・ <span id="miniKm">8.2</span> km ・ <span id="miniPlace">焼津市</span></div>
   <div class="right-map-tools">
     <button class="recenter-btn" id="recenterBtn" aria-label="現在地へ">
       <svg viewBox="0 0 64 64" class="recenter-svg" aria-hidden="true">
@@ -69,7 +82,7 @@
   <div class="ui">
     <div class="top">
       <div class="hero">
-        <div class="mode" id="mode">追従 ON</div>
+        <div class="mode" id="mode">追従 ON</div><button class="ui-collapse-btn" id="uiCollapseBtn">UIを隠す</button>
         <div class="hero-main">
           <div class="hero-icon">🏯</div>
           <div style="flex:1;min-width:0">
@@ -143,7 +156,7 @@ const PLACE_SEGMENTS=[
  {start:168,end:195,label:'愛知県 岡崎市〜名古屋方面'}
 ];
 
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, travelLog:[], travelSeen:{}, lastTravelKm:-999};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, travelLog:[], travelSeen:{}, lastTravelKm:-999, uiCollapsed:false};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -175,6 +188,21 @@ function nowMs(){return Date.now();}
 let map,marker;
 function userInteracting(ms=2800){st.interacting=true; st.manualUntil=nowMs()+ms;}
 
+function setUICollapsed(v){
+ st.uiCollapsed=!!v;
+ const phone=document.querySelector('.phone');
+ if(phone) phone.classList.toggle('ui-collapsed',st.uiCollapsed);
+ const b=$('uiCollapseBtn'); if(b) b.textContent=st.uiCollapsed?'UIを表示':'UIを隠す';
+ updateMiniChip();
+}
+function updateMiniChip(){
+ const kmh=st.rpm*2*2.1/60*3.6;
+ const ms=$('miniSpeed'), mk=$('miniKm'), mp=$('miniPlace');
+ if(ms) ms.textContent=kmh.toFixed(1);
+ if(mk) mk.textContent=st.km.toFixed(1);
+ if(mp) mp.textContent=currentPlaceLabel().replace(/^静岡県 |^愛知県 /,'');
+}
+
 function adjustPedal(delta){st.rpm=Math.max(25,Math.min(110,st.rpm+delta)); const p=$('pedalRpm'); if(p)p.textContent=Math.round(st.rpm); renderUI();}
 function currentPlaceLabel(){const seg=PLACE_SEGMENTS.find(s=>st.km>=s.start&&st.km<s.end);return seg?seg.label:PLACE_SEGMENTS[PLACE_SEGMENTS.length-1].label;}
 function showTravelToast(ev){const t=$('travelToast'); if(!t)return; $('travelToastIcon').textContent=ev.icon||'📍'; $('travelToastTitle').textContent=ev.title; $('travelToastSub').textContent=ev.short||'旅ログに記録しました'; t.classList.add('show'); clearTimeout(st.travelToastTimer); st.travelToastTimer=setTimeout(()=>t.classList.remove('show'),4200);}
@@ -186,7 +214,7 @@ function closeTravelLog(){const p=$('travelLogPanel'); if(p)p.classList.remove('
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D47 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D48 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -453,9 +481,9 @@ function updateCamera(p, heading){
 
 function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
- checkTravelEvents(); renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-setupDots();renderUI();initMap();requestAnimationFrame(tick);
+ checkTravelEvents(); updateMiniChip(); renderUI(); requestAnimationFrame(tick);}
+document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
+setupDots();renderUI();updateMiniChip();initMap();requestAnimationFrame(tick);
 </script>
 </body>
 </html>
