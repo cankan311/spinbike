@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Japan Ride D53 Stable Rollback</title>
+<title>Japan Ride D54 My Route Builder</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,6 +39,70 @@
 .phone.ui-collapsed .maplibregl-ctrl-bottom-right{bottom:calc(env(safe-area-inset-bottom) + 8px)!important}
 @media(max-height:740px){.ui-collapse-btn{font-size:9px;padding:6px 9px}.ui-restore-chip,.ride-mini-chip{top:calc(env(safe-area-inset-top) + 10px);font-size:10px;padding:8px 10px}.ride-mini-chip{left:82px}}
 
+
+.myroute-fab{
+  display:block;border:2px solid #16B978;border-radius:999px;background:rgba(255,255,255,.94);
+  color:#12895b;font-size:10px;font-weight:900;line-height:1;padding:7px 9px;min-width:66px;
+  box-shadow:0 5px 12px rgba(0,0,0,.20);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.route-builder-panel{
+  position:absolute;inset:0;z-index:60;display:none;background:#101820;pointer-events:auto
+}
+.route-builder-panel.open{display:block}
+.route-builder-shell{position:absolute;inset:0;overflow:hidden;background:#101820}
+.route-builder-map{position:absolute;inset:0;background:#17212d}
+.route-builder-top{
+  position:absolute;z-index:5;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 12px);
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.rb-back,.rb-save,.route-list-close{
+  border:0;border-radius:999px;background:rgba(255,255,255,.94);color:#111827;font-size:12px;font-weight:900;
+  padding:10px 12px;box-shadow:0 8px 18px rgba(0,0,0,.22)
+}
+.rb-save{background:#16B978;color:#fff}
+.rb-title-wrap{
+  flex:1;min-width:0;border-radius:20px;background:rgba(17,24,39,.66);color:#fff;
+  border:1px solid rgba(255,255,255,.18);padding:9px 12px;box-shadow:0 8px 18px rgba(0,0,0,.22);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)
+}
+.rb-kicker{font-size:9px;font-weight:900;color:#7dd3fc;letter-spacing:.10em}
+.rb-title{font-size:17px;font-weight:1000;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rb-distance-card{
+  position:absolute;z-index:5;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 82px);
+  display:flex;align-items:center;justify-content:space-between;gap:10px;border-radius:22px;
+  background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.8);padding:11px 13px;
+  box-shadow:0 12px 28px rgba(0,0,0,.22);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.rb-label{font-size:10px;font-weight:900;color:#667085}
+.rb-distance{font-size:32px;font-weight:1000;color:#111827;line-height:.95}.rb-distance small{font-size:13px;margin-left:3px;color:#667085}
+.rb-target{text-align:right}.rb-target select{border:0;border-radius:12px;background:#eef4ff;color:#2155d8;font-size:12px;font-weight:900;padding:7px 8px}
+.rb-remain{font-size:11px;font-weight:900;color:#667085;margin-top:4px}.rb-remain b{color:#111827}
+.rb-bottom-card{
+  position:absolute;z-index:5;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 12px);
+  border-radius:24px;background:rgba(255,255,255,.95);border:1px solid rgba(255,255,255,.82);box-shadow:0 16px 34px rgba(0,0,0,.28);
+  padding:12px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
+}
+.rb-name{box-sizing:border-box;width:100%;border:1px solid #e3e7ef;border-radius:16px;background:#fff;padding:12px 13px;font-size:14px;font-weight:900;color:#111827;outline:none}
+.rb-hint{font-size:11px;line-height:1.35;font-weight:800;color:#667085;margin:8px 2px 10px}
+.rb-actions{display:grid;grid-template-columns:1fr 1fr 1fr 1.1fr;gap:7px}
+.rb-actions button{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:11px;font-weight:900;padding:10px 6px}
+.rb-actions button.primary{background:#e8f7f0;color:#12895b}
+.route-list-panel{position:absolute;inset:0;z-index:70;display:none;background:rgba(7,12,18,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);pointer-events:auto;padding:calc(env(safe-area-inset-top) + 18px) 12px calc(env(safe-area-inset-bottom) + 18px)}
+.route-list-panel.open{display:flex;align-items:flex-end}
+.route-list-card{width:100%;max-height:80dvh;overflow:hidden;border-radius:24px;background:#f7f9fc;border:1px solid rgba(255,255,255,.86);box-shadow:0 20px 48px rgba(0,0,0,.35);display:flex;flex-direction:column}
+.route-list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 16px 10px}.route-list-title{font-size:21px;font-weight:1000;color:#111827}
+.route-list-body{overflow:auto;padding:0 12px 16px;display:flex;flex-direction:column;gap:9px}
+.route-item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-radius:18px;background:#fff;border:1px solid #e5e9f1;padding:12px;box-shadow:0 2px 8px rgba(20,30,60,.04)}
+.route-item-name{font-size:14px;font-weight:1000;color:#111827}.route-item-meta{font-size:10.5px;font-weight:850;color:#667085;margin-top:3px}
+.route-item-actions{display:flex;gap:6px}.route-item-actions button{border:0;border-radius:999px;background:#eef2f7;color:#111827;font-size:10.5px;font-weight:900;padding:8px 9px}
+.route-item-actions button.run{background:#16B978;color:#fff}.route-item-actions button.del{background:#fff0f0;color:#d33}
+.rb-point-marker{width:22px;height:22px;border-radius:999px;background:#16B978;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.35);display:grid;place-items:center;color:#fff;font-size:10px;font-weight:1000}
+.rb-point-marker.start{background:#2f6bff}.rb-point-marker.goal{background:#ff8a3d}
+@media(max-height:720px){
+ .rb-distance-card{top:calc(env(safe-area-inset-top) + 70px);padding:9px 11px}.rb-distance{font-size:26px}
+ .rb-bottom-card{padding:10px}.rb-name{padding:10px 12px}.rb-hint{margin:6px 2px 8px}.rb-actions button{padding:8px 5px}
+}
+
 </style>
 </head>
 <body>
@@ -58,6 +122,7 @@
     <button class="building-fab off" id="buildingToggle" aria-label="建物3D切替">建物 OFF</button>
     <button class="terrain-fab off" id="terrainToggle" aria-label="地形3D切替">地形 OFF</button>
     <button class="travel-fab" id="travelLogBtn" aria-label="旅ログ">旅ログ</button>
+    <button class="myroute-fab" id="myRouteBtn" aria-label="マイルート">マイルート</button>
   </div>
   <div class="travel-toast" id="travelToast">
     <div class="travel-toast-icon" id="travelToastIcon">📍</div>
@@ -77,6 +142,57 @@
       </div>
       <div class="travel-log-summary" id="travelLogSummary"></div>
       <div class="travel-log-list" id="travelLogList"></div>
+    </div>
+  </div>
+  <div class="route-builder-panel" id="routeBuilderPanel">
+    <div class="route-builder-shell">
+      <div class="route-builder-map" id="routeBuilderMap"></div>
+      <div class="route-builder-top">
+        <button class="rb-back" id="rbClose">← 戻る</button>
+        <div class="rb-title-wrap">
+          <div class="rb-kicker">MY ROUTE</div>
+          <div class="rb-title">マイルート作成</div>
+        </div>
+        <button class="rb-save" id="rbSave">保存</button>
+      </div>
+      <div class="rb-distance-card">
+        <div>
+          <div class="rb-label">現在の距離</div>
+          <div class="rb-distance"><span id="rbDistance">0.0</span><small>km</small></div>
+        </div>
+        <div class="rb-target">
+          <div class="rb-label">目標</div>
+          <select id="rbTarget">
+            <option value="5">5km</option>
+            <option value="10" selected>10km</option>
+            <option value="15">15km</option>
+            <option value="20">20km</option>
+          </select>
+          <div class="rb-remain">あと <b id="rbRemain">10.0</b> km</div>
+        </div>
+      </div>
+      <div class="rb-bottom-card">
+        <input id="rbName" class="rb-name" placeholder="ルート名 例：近所10kmコース">
+        <div class="rb-hint" id="rbHint">地図をタップしてルートを作成。点を増やすと距離が伸びます。</div>
+        <div class="rb-actions">
+          <button id="rbUndo">1つ戻す</button>
+          <button id="rbClear">クリア</button>
+          <button id="rbUseDemo">サンプル</button>
+          <button id="rbOpenList" class="primary">保存済み</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="route-list-panel" id="routeListPanel">
+    <div class="route-list-card">
+      <div class="route-list-head">
+        <div>
+          <div class="rb-kicker">SAVED ROUTES</div>
+          <div class="route-list-title">保存済みマイルート</div>
+        </div>
+        <button class="route-list-close" id="routeListClose">×</button>
+      </div>
+      <div class="route-list-body" id="routeListBody"></div>
     </div>
   </div>
   <div class="ui">
@@ -156,7 +272,7 @@ const PLACE_SEGMENTS=[
  {start:168,end:195,label:'愛知県 岡崎市〜名古屋方面'}
 ];
 
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, travelLog:[], travelSeen:{}, lastTravelKm:-999, uiCollapsed:false};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,follow:true,last:performance.now(),route:null,routeDist:0,interacting:false,manualUntil:0,lastPoint:null,lastHeading:50,camCenter:null,camBearing:null,expanded:false, labelsOn:true, symbolLayerIds:[], buildingsOn:false, buildingLayerId:null, buildingLayerIds:[], terrainOn:false, terrainReady:false, travelLog:[], travelSeen:{}, lastTravelKm:-999, uiCollapsed:false, routeBuilderOpen:false, rbMap:null, rbPoints:[], rbMarkers:[], rbLineAdded:false, savedRoutes:[], activeCustomRoute:null};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -203,6 +319,149 @@ function updateMiniChip(){
  if(mp) mp.textContent=currentPlaceLabel().replace(/^静岡県 |^愛知県 /,'');
 }
 
+
+const MY_ROUTES_KEY='japanRide.myRoutes.v1';
+function haversine(a,b){
+ const R=6371000, toRad=d=>d*Math.PI/180;
+ const dLat=toRad(b[1]-a[1]), dLon=toRad(b[0]-a[0]);
+ const lat1=toRad(a[1]), lat2=toRad(b[1]);
+ const h=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+ return 2*R*Math.asin(Math.sqrt(h));
+}
+function lineDistanceKm(points){
+ if(!points||points.length<2) return 0;
+ let m=0; for(let i=1;i<points.length;i++) m+=haversine(points[i-1],points[i]);
+ return m/1000;
+}
+function loadSavedRoutes(){
+ try{st.savedRoutes=JSON.parse(localStorage.getItem(MY_ROUTES_KEY)||'[]')||[];}catch(e){st.savedRoutes=[];}
+}
+function saveSavedRoutes(){localStorage.setItem(MY_ROUTES_KEY,JSON.stringify(st.savedRoutes||[]));}
+function openRouteBuilder(){
+ st.routeBuilderOpen=true;
+ const p=$('routeBuilderPanel'); if(p) p.classList.add('open');
+ loadSavedRoutes();
+ setTimeout(()=>initRouteBuilderMap(),80);
+}
+function closeRouteBuilder(){
+ st.routeBuilderOpen=false;
+ const p=$('routeBuilderPanel'); if(p) p.classList.remove('open');
+}
+function initRouteBuilderMap(){
+ if(st.rbMap){setTimeout(()=>st.rbMap.resize(),80); return;}
+ st.rbMap=new maplibregl.Map({
+   container:'routeBuilderMap',
+   style:'https://tiles.openfreemap.org/styles/liberty',
+   center:[138.309,34.835],
+   zoom:13.4,
+   pitch:0,
+   bearing:0,
+   antialias:true,
+   dragRotate:true,
+   touchZoomRotate:true,
+   cooperativeGestures:false
+ });
+ st.rbMap.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');
+ st.rbMap.on('load',()=>{
+   try{
+     st.rbMap.addSource('rb-line',{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:[]}}});
+     st.rbMap.addLayer({id:'rb-line-layer',type:'line',source:'rb-line',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#16B978','line-width':5,'line-opacity':.94}});
+     st.rbLineAdded=true;
+   }catch(e){}
+   setTimeout(()=>st.rbMap.resize(),120);
+   renderRouteBuilder();
+ });
+ st.rbMap.on('click',e=>{
+   st.rbPoints.push([e.lngLat.lng,e.lngLat.lat]);
+   renderRouteBuilder();
+ });
+}
+function renderRouteBuilder(){
+ const km=lineDistanceKm(st.rbPoints);
+ const target=parseFloat(($('rbTarget')&&$('rbTarget').value)||10);
+ const dist=$('rbDistance'), rem=$('rbRemain'), hint=$('rbHint');
+ if(dist) dist.textContent=km.toFixed(1);
+ if(rem) rem.textContent=Math.max(0,target-km).toFixed(1);
+ if(hint){
+   if(st.rbPoints.length===0) hint.textContent='地図をタップしてスタート地点を置いてください。';
+   else if(st.rbPoints.length===1) hint.textContent='次に行きたい場所をタップしてください。2点目から距離が出ます。';
+   else hint.textContent='点を追加してルートを伸ばせます。目標距離を見ながら調整してください。';
+ }
+ if(st.rbMap&&st.rbLineAdded){
+   const src=st.rbMap.getSource('rb-line');
+   if(src) src.setData({type:'Feature',geometry:{type:'LineString',coordinates:st.rbPoints}});
+ }
+ (st.rbMarkers||[]).forEach(m=>m.remove());
+ st.rbMarkers=[];
+ if(st.rbMap){
+   st.rbPoints.forEach((p,i)=>{
+     const el=document.createElement('div');
+     el.className='rb-point-marker '+(i===0?'start':i===st.rbPoints.length-1?'goal':'');
+     el.textContent=i+1;
+     st.rbMarkers.push(new maplibregl.Marker({element:el}).setLngLat(p).addTo(st.rbMap));
+   });
+ }
+}
+function rbUndo(){st.rbPoints.pop();renderRouteBuilder();}
+function rbClear(){st.rbPoints=[];renderRouteBuilder();}
+function rbDemo(){
+ st.rbPoints=[
+  [138.3015,34.8447],[138.3041,34.8409],[138.3090,34.8368],
+  [138.3152,34.8335],[138.3232,34.8291],[138.3330,34.8250]
+ ];
+ if(st.rbMap) st.rbMap.fitBounds(st.rbPoints.reduce((b,p)=>b.extend(p),new maplibregl.LngLatBounds(st.rbPoints[0],st.rbPoints[0])),{padding:80,duration:500});
+ renderRouteBuilder();
+}
+function saveCurrentRoute(){
+ if(st.rbPoints.length<2){alert('2点以上タップしてルートを作ってください');return;}
+ const name=($('rbName')&&$('rbName').value.trim())||'マイルート '+new Date().toLocaleDateString('ja-JP');
+ const route={id:'r'+Date.now(),name,points:st.rbPoints.slice(),distanceKm:lineDistanceKm(st.rbPoints),createdAt:new Date().toISOString(),visibility:'private'};
+ loadSavedRoutes();
+ st.savedRoutes.unshift(route);
+ saveSavedRoutes();
+ if($('rbName')) $('rbName').value='';
+ renderRouteList();
+ alert('保存しました：'+name+'（'+route.distanceKm.toFixed(1)+'km）');
+}
+function openRouteList(){loadSavedRoutes();renderRouteList();const p=$('routeListPanel');if(p)p.classList.add('open');}
+function closeRouteList(){const p=$('routeListPanel');if(p)p.classList.remove('open');}
+function renderRouteList(){
+ const body=$('routeListBody'); if(!body) return;
+ loadSavedRoutes();
+ if(!st.savedRoutes.length){
+   body.innerHTML='<div class="route-item"><div><div class="route-item-name">保存済みルートはありません</div><div class="route-item-meta">ルート作成画面で点を打って保存してください。</div></div></div>';
+   return;
+ }
+ body.innerHTML=st.savedRoutes.map(r=>'<div class="route-item"><div><div class="route-item-name">'+escapeHtml(r.name)+'</div><div class="route-item-meta">'+Number(r.distanceKm||0).toFixed(1)+'km ・ 非公開 ・ '+new Date(r.createdAt).toLocaleDateString('ja-JP')+'</div></div><div class="route-item-actions"><button class="run" data-run-route="'+r.id+'">走る</button><button class="del" data-del-route="'+r.id+'">削除</button></div></div>').join('');
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+function deleteRoute(id){
+ loadSavedRoutes();
+ st.savedRoutes=st.savedRoutes.filter(r=>r.id!==id);
+ saveSavedRoutes();
+ renderRouteList();
+}
+function runSavedRoute(id){
+ loadSavedRoutes();
+ const r=st.savedRoutes.find(x=>x.id===id);
+ if(!r) return;
+ st.activeCustomRoute=r;
+ st.route=r.points.slice();
+ st.routeDist=lineDistanceKm(r.points)*1000;
+ st.sess=0; st.km=0;
+ closeRouteList(); closeRouteBuilder();
+ if(map){
+   try{
+     const src=map.getSource('route');
+     if(src) src.setData({type:'Feature',geometry:{type:'LineString',coordinates:st.route}});
+     map.fitBounds(st.route.reduce((b,p)=>b.extend(p),new maplibregl.LngLatBounds(st.route[0],st.route[0])),{padding:80,duration:700});
+   }catch(e){}
+ }
+ const lm=document.querySelector('.landmark'); if(lm) lm.textContent=r.name;
+ const place=$('place'); if(place) place.textContent='📍 マイルート走行中';
+ renderUI();
+}
+
 function adjustPedal(delta){st.rpm=Math.max(25,Math.min(110,st.rpm+delta)); const p=$('pedalRpm'); if(p)p.textContent=Math.round(st.rpm); renderUI();}
 function currentPlaceLabel(){const seg=PLACE_SEGMENTS.find(s=>st.km>=s.start&&st.km<s.end);return seg?seg.label:PLACE_SEGMENTS[PLACE_SEGMENTS.length-1].label;}
 function showTravelToast(ev){const t=$('travelToast'); if(!t)return; $('travelToastIcon').textContent=ev.icon||'📍'; $('travelToastTitle').textContent=ev.title; $('travelToastSub').textContent=ev.short||'旅ログに記録しました'; t.classList.add('show'); clearTimeout(st.travelToastTimer); st.travelToastTimer=setTimeout(()=>t.classList.remove('show'),4200);}
@@ -214,7 +473,7 @@ function closeTravelLog(){const p=$('travelLogPanel'); if(p)p.classList.remove('
 function initMap(){
  if(!window.maplibregl){$('mode').textContent='MapLibre読込失敗';return;}
 
- // D53 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
+ // D54 GitHub/https検証版：Claude方式。OpenFreeMap styleをベースにし、航空写真を最初のsymbol直下へ差し込む。
  // ローカルHTML用の疑似/埋め込みラベルは一切使わない。
  map=new maplibregl.Map({
    container:'map',
@@ -482,8 +741,21 @@ function updateCamera(p, heading){
 function tick(now){const dt=Math.min(0.25,(now-st.last)/1000);st.last=now; if(st.running){const kmh=st.rpm*2*2.1/60*3.6, dk=(kmh/3600)*dt; st.km=Math.min(LEG,st.km+dk);st.sess+=dk;st.t+=dt;st.cal+=dk*12;st.hr+=(70+st.rpm*.92-st.hr)*Math.min(1,dt*.7);st.mx=Math.max(st.mx,kmh);} 
  if(st.route&&marker&&map){const localMeters=Math.min(st.sess*1000, Math.max(0,(st.routeDist||1)-30)); const p=pointAt(st.route,localMeters); const p2=pointAt(st.route,Math.min(localMeters+18, st.routeDist||localMeters+18)); marker.setLngLat(p); const hd=bearing(p,p2); st.lastPoint=p; st.lastHeading=hd; updateCamera(p,hd);}
  checkTravelEvents(); updateMiniChip(); renderUI(); requestAnimationFrame(tick);}
-document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
-setupDots();renderUI();updateMiniChip();initMap();requestAnimationFrame(tick);
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='rbTarget')renderRouteBuilder();});
+
+document.addEventListener('click',e=>{const recenter=e.target.closest('#recenterBtn'); if(recenter){recenterToBike(); return;} const pDown=e.target.closest('#pedalDown'); if(pDown){adjustPedal(-5); return;} const pUp=e.target.closest('#pedalUp'); if(pUp){adjustPedal(5); return;} const collapse=e.target.closest('#uiCollapseBtn'); if(collapse){setUICollapsed(true); return;} const restore=e.target.closest('#uiRestoreChip'); if(restore){setUICollapsed(false); return;} const mini=e.target.closest('#rideMiniChip'); if(mini){setUICollapsed(false); return;} const myRoute=e.target.closest('#myRouteBtn'); if(myRoute){openRouteBuilder(); return;}
+ const rbClose=e.target.closest('#rbClose'); if(rbClose){closeRouteBuilder(); return;}
+ const rbSave=e.target.closest('#rbSave'); if(rbSave){saveCurrentRoute(); return;}
+ const rbUndoBtn=e.target.closest('#rbUndo'); if(rbUndoBtn){rbUndo(); return;}
+ const rbClearBtn=e.target.closest('#rbClear'); if(rbClearBtn){rbClear(); return;}
+ const rbDemo=e.target.closest('#rbUseDemo'); if(rbDemo){rbDemo(); return;}
+ const rbList=e.target.closest('#rbOpenList'); if(rbList){openRouteList(); return;}
+ const rlClose=e.target.closest('#routeListClose'); if(rlClose){closeRouteList(); return;}
+ const rlPanel=e.target.closest('#routeListPanel'); if(rlPanel&&e.target.id==='routeListPanel'){closeRouteList(); return;}
+ const runBtn=e.target.closest('[data-run-route]'); if(runBtn){runSavedRoute(runBtn.dataset.runRoute); return;}
+ const delBtn=e.target.closest('[data-del-route]'); if(delBtn){deleteRoute(delBtn.dataset.delRoute); return;}
+ const logBtn=e.target.closest('#travelLogBtn'); if(logBtn){openTravelLog(); return;} const logClose=e.target.closest('#travelLogClose'); if(logClose){closeTravelLog(); return;} const logPanel=e.target.closest('#travelLogPanel'); if(logPanel&&e.target.id==='travelLogPanel'){closeTravelLog(); return;} const terrainBtn=e.target.closest('#terrainToggle'); if(terrainBtn){toggleTerrain(); return;} const buildingBtn=e.target.closest('#buildingToggle'); if(buildingBtn){toggleBuildings(); return;} const labelBtn=e.target.closest('#labelToggle'); if(labelBtn){toggleOfmLabels(); return;} const runBtn=e.target.closest('#runBtnTop'); if(runBtn){st.running=!st.running; renderUI(); return;} const modeBtn=e.target.closest('#mode'); if(modeBtn){st.follow=!st.follow; if(st.follow&&map){recenterToBike();} renderUI(); return;}});
+loadSavedRoutes();setupDots();renderUI();updateMiniChip();initMap();requestAnimationFrame(tick);
 </script>
 </body>
 </html>
