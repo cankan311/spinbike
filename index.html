@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-11 Clean Route Edit + Collapsible Panel</title>
+<title>Japan Ride D66-12 Aligned Route Edit Points</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1356,6 +1356,17 @@
   content:'青い点 = 編集点 / 赤い線 = 仮ルート　';
   font-weight:1000;
 }
+
+
+/* D66-12: 編集点をHTMLマーカーではなくMapLibreレイヤーで描画する。
+   これで赤線/緑線/青点が同じ座標系に揃う。 */
+.draft-point-marker{
+  display:none!important;
+}
+.route-editor-tip.layer-editing::before{
+  content:'青い点 = 編集点 / 赤い点 = 選択中　';
+  font-weight:1000;
+}
 </style>
 </head>
 <body>
@@ -1380,7 +1391,6 @@
 <span id="routeMiniPoints">0点</span>
 <span id="routeMiniDistance">0.00km</span>
 </div>
-
 <input class="route-name-input" id="routeNameInput" placeholder="ルート名 例：焼津10km周回"/>
 <div class="route-editor-stats">
 <div><small>地点</small><b id="draftPointCount">0</b></div>
@@ -1657,6 +1667,7 @@ function initMap(){
    try{map.addLayer({id:'route',type:'line',source:'route',paint:{'line-color':'#2f6bff','line-width':5,'line-opacity':0.96}}, routeBefore);}catch(e){}
 
    syncBuildingTerrainButtons();
+   bindDraftPointLayerEvents();
    map.on('click',e=>{if(st.routeEdit)addDraftPoint(e.lngLat)});
  });
 }
@@ -1889,6 +1900,7 @@ function startRouteEdit(){
  if($('routeNameInput')) $('routeNameInput').value='';
  setRouteTip('地図をタップしてルート点を追加');
  ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
  renderDraftRoute();
  if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
  setTimeout(()=>map.resize(),80);
@@ -2140,6 +2152,7 @@ function startRouteEdit(){
  if($('routeNameInput')) $('routeNameInput').value='';
  setRouteTip('地図をタップしてルート点を追加。点はあとからドラッグで移動できます。');
  ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
  renderDraftRoute();
  if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
  setTimeout(()=>map.resize(),80);
@@ -2375,6 +2388,7 @@ function startRouteEdit(){
  if($('routeNameInput')) $('routeNameInput').value='';
  setRouteTip('地図をタップして編集点を追加。点はあとからドラッグで移動できます。');
  ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
  renderDraftRoute();
  if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
  setTimeout(()=>map.resize(),80);
@@ -2435,6 +2449,193 @@ function deleteSelectedDraftPoint(){
  st.draftRoute=pts.slice();
  renderDraftRoute();
  setRouteTip('選択した点を削除しました。必要なら「道に合わせる」を押してください','editing');
+}
+
+
+/* D66-12 aligned route edit points: use MapLibre layers instead of HTML markers */
+function ensureDraftRouteLayer(){
+ if(!map || !map.isStyleLoaded()) return;
+
+ if(!map.getSource('draft-route')){
+   map.addSource('draft-route',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ }
+ if(!map.getSource('draft-guide')){
+   map.addSource('draft-guide',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ }
+ if(!map.getSource('draft-points')){
+   map.addSource('draft-points',{type:'geojson',data:{type:'FeatureCollection',features:[]}});
+ }
+
+ const firstSymbol=(map.getStyle().layers||[]).find(l=>l.type==='symbol');
+ const beforeId=firstSymbol ? firstSymbol.id : undefined;
+
+ if(!map.getLayer('draft-guide-line')){
+   map.addLayer({
+     id:'draft-guide-line',
+     type:'line',
+     source:'draft-guide',
+     paint:{
+       'line-color':'#2f6bff',
+       'line-width':3,
+       'line-opacity':0.36,
+       'line-dasharray':[1,1.6]
+     }
+   }, beforeId);
+ }
+ if(!map.getLayer('draft-route-line')){
+   map.addLayer({
+     id:'draft-route-line',
+     type:'line',
+     source:'draft-route',
+     paint:{
+       'line-color':'#ff5872',
+       'line-width':6,
+       'line-opacity':0.95
+     }
+   }, beforeId);
+ }
+ if(!map.getLayer('draft-point-circle')){
+   map.addLayer({
+     id:'draft-point-circle',
+     type:'circle',
+     source:'draft-points',
+     paint:{
+       'circle-radius':['case',['==',['get','selected'],true],12,10],
+       'circle-color':['case',['==',['get','selected'],true],'#ff5872','#2f6bff'],
+       'circle-stroke-color':'#ffffff',
+       'circle-stroke-width':3,
+       'circle-opacity':0.98
+     }
+   });
+ }
+ if(!map.getLayer('draft-point-label')){
+   map.addLayer({
+     id:'draft-point-label',
+     type:'symbol',
+     source:'draft-points',
+     layout:{
+       'text-field':['to-string',['get','indexLabel']],
+       'text-size':11,
+       'text-font':['Noto Sans Bold'],
+       'text-allow-overlap':true,
+       'text-ignore-placement':true
+     },
+     paint:{
+       'text-color':'#ffffff'
+     }
+   });
+ }
+}
+function renderDraftRoute(){
+ if(!map || !map.isStyleLoaded()) return;
+ ensureDraftRouteLayer();
+
+ // Clear any old HTML marker objects from D66-10/11.
+ draftMarkers.forEach(m=>{try{m.remove()}catch(e){}});
+ draftMarkers=[];
+
+ const waypoints=getDraftWaypoints();
+ const actualRoute=(st.routeSnapped && st.draftRoute && st.draftRoute.length>=2) ? st.draftRoute : waypoints;
+
+ const routeFeatures=[];
+ if(actualRoute && actualRoute.length>=2){
+   routeFeatures.push({type:'Feature',geometry:{type:'LineString',coordinates:actualRoute},properties:{}});
+ }
+
+ const guideFeatures=[];
+ if(st.routeSnapped && waypoints && waypoints.length>=2){
+   guideFeatures.push({type:'Feature',geometry:{type:'LineString',coordinates:waypoints},properties:{}});
+ }
+
+ const pointFeatures=waypoints.map((p,i)=>({
+   type:'Feature',
+   geometry:{type:'Point',coordinates:p},
+   properties:{idx:i,indexLabel:i+1,selected:st.selectedDraftIndex===i}
+ }));
+
+ const routeSrc=map.getSource('draft-route');
+ if(routeSrc) routeSrc.setData({type:'FeatureCollection',features:routeFeatures});
+
+ const guideSrc=map.getSource('draft-guide');
+ if(guideSrc) guideSrc.setData({type:'FeatureCollection',features:guideFeatures});
+
+ const pointSrc=map.getSource('draft-points');
+ if(pointSrc) pointSrc.setData({type:'FeatureCollection',features:pointFeatures});
+
+ try{
+   map.setPaintProperty('draft-route-line','line-color',st.routeSnapped?'#16B978':'#ff5872');
+   map.setPaintProperty('draft-route-line','line-width',st.routeSnapped?7:6);
+   map.setPaintProperty('draft-route-line','line-opacity',st.routeSnapped?0.96:0.90);
+   map.setPaintProperty('draft-guide-line','line-opacity',st.routeSnapped?0.42:0);
+ }catch(e){}
+
+ updateDraftStats();
+ updateRouteMiniSummary();
+}
+function selectDraftPoint(index){
+ const pts=getDraftWaypoints();
+ if(index<0 || index>=pts.length) return;
+ if(st.selectedDraftIndex===index){
+   st.selectedDraftIndex=-1;
+   renderDraftRoute();
+   setRouteTip('選択解除しました。地図をタップすると新しい点を追加します。','layer-editing');
+   return;
+ }
+ st.selectedDraftIndex=index;
+ renderDraftRoute();
+ setRouteTip(`${index+1}番の点を選択中。地図の別の場所をタップすると、その点を移動します。`,'layer-editing');
+}
+function addDraftPoint(lngLat){
+ if(!st.routeEdit) return;
+
+ // When tapping an existing point, layer click handler sets this flag.
+ if(st.ignoreNextMapTap){
+   st.ignoreNextMapTap=false;
+   return;
+ }
+
+ const pts=getDraftWaypoints();
+
+ // If a point is selected, the next map tap moves it instead of adding a new point.
+ if(Number.isInteger(st.selectedDraftIndex) && st.selectedDraftIndex>=0 && st.selectedDraftIndex<pts.length){
+   const i=st.selectedDraftIndex;
+   pts[i]=[Number(lngLat.lng.toFixed(6)), Number(lngLat.lat.toFixed(6))];
+   st.routeSnapped=false;
+   st.draftRoute=pts.slice();
+   renderDraftRoute();
+   setRouteTip(`${i+1}番の点を移動しました。必要なら「道に合わせる」を押してください。選択点をもう一度タップで解除できます。`,'layer-editing');
+   return;
+ }
+
+ pts.push([Number(lngLat.lng.toFixed(6)), Number(lngLat.lat.toFixed(6))]);
+ st.selectedDraftIndex=pts.length-1;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ setRouteTip('点を追加しました。選択点をもう一度タップで解除。大まかに置いた後「道に合わせる」で補正できます。','layer-editing');
+}
+function bindDraftPointLayerEvents(){
+ if(!map || map.__draftPointEventsBound) return;
+ map.__draftPointEventsBound=true;
+
+ map.on('click','draft-point-circle',e=>{
+   if(!st.routeEdit || !e.features || !e.features.length) return;
+   st.ignoreNextMapTap=true;
+   const idx=e.features[0].properties.idx;
+   selectDraftPoint(Number(idx));
+ });
+
+ map.on('click','draft-point-label',e=>{
+   if(!st.routeEdit || !e.features || !e.features.length) return;
+   st.ignoreNextMapTap=true;
+   const idx=e.features[0].properties.idx;
+   selectDraftPoint(Number(idx));
+ });
+
+ map.on('mouseenter','draft-point-circle',()=>{map.getCanvas().style.cursor='pointer'});
+ map.on('mouseleave','draft-point-circle',()=>{map.getCanvas().style.cursor=''});
+ map.on('mouseenter','draft-point-label',()=>{map.getCanvas().style.cursor='pointer'});
+ map.on('mouseleave','draft-point-label',()=>{map.getCanvas().style.cursor=''});
 }
 
 document.addEventListener('click',e=>{
