@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-8 Map Bar No Overflow</title>
+<title>Japan Ride D66-9 Snap Route To Road</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1184,6 +1184,40 @@
     font-size:9px!important;
   }
 }
+
+
+/* D66-9: マイルート「道に合わせる」 */
+.route-editor-actions{
+  grid-template-columns:1fr 1fr 1.25fr 1fr!important;
+}
+.route-editor-actions .snap{
+  background:#2f6bff!important;
+  color:#fff!important;
+}
+.route-editor-actions button[disabled]{
+  opacity:.56!important;
+}
+.route-editor-tip.snap-ok{
+  background:#e8f7f0!important;
+  color:#12895b!important;
+}
+.route-editor-tip.snap-warn{
+  background:#fff7ed!important;
+  color:#b45309!important;
+}
+.route-editor-tip.snap-err{
+  background:#fef2f2!important;
+  color:#b42318!important;
+}
+@media(max-width:430px){
+  .route-editor-actions{
+    grid-template-columns:1fr 1fr!important;
+  }
+  .route-editor-actions .save,
+  .route-editor-actions .snap{
+    grid-column:auto!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1213,7 +1247,7 @@
 <div class="route-editor-actions">
 <button id="undoRoutePointBtn">1つ戻す</button>
 <button id="clearRouteBtn">クリア</button>
-<button class="save" id="saveRouteBtn">保存</button>
+<button class="snap" id="snapRouteBtn">道に合わせる</button><button class="save" id="saveRouteBtn">保存</button>
 </div>
 </div>
 </div>
@@ -1710,6 +1744,7 @@ function startRouteEdit(){
  document.querySelector('.phone').classList.add('route-editing');
  setDisplay('maponly');
  if($('routeNameInput')) $('routeNameInput').value='';
+ setRouteTip('地図をタップしてルート点を追加');
  ensureDraftRouteLayer();
  renderDraftRoute();
  if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
@@ -1733,11 +1768,13 @@ function undoDraftPoint(){
  if(!st.routeEdit) return;
  (st.draftRoute||[]).pop();
  renderDraftRoute();
+ setRouteTip('地図をタップしてルート点を追加');
 }
 function clearDraftRoute(){
  if(!st.routeEdit) return;
  st.draftRoute=[];
  renderDraftRoute();
+ setRouteTip('地図をタップしてルート点を追加');
 }
 function saveDraftRoute(){
  const pts=st.draftRoute||[];
@@ -1796,6 +1833,65 @@ function deleteMyRoute(id){
  renderMyRoutes();
 }
 
+
+function setRouteTip(text, cls=''){
+ const tip=document.querySelector('.route-editor-tip');
+ if(!tip) return;
+ tip.classList.remove('snap-ok','snap-warn','snap-err');
+ if(cls) tip.classList.add(cls);
+ tip.textContent=text;
+}
+function compressRoutePoints(points, maxPoints=25){
+ if(points.length<=maxPoints) return points;
+ const result=[];
+ for(let i=0;i<maxPoints;i++){
+   const idx=Math.round(i*(points.length-1)/(maxPoints-1));
+   result.push(points[idx]);
+ }
+ return result;
+}
+async function snapDraftRouteToRoad(){
+ if(!st.routeEdit) return;
+ const pts=st.draftRoute||[];
+ if(pts.length<2){
+   setRouteTip('2地点以上タップしてから「道に合わせる」を押してください','snap-warn');
+   return;
+ }
+ const btn=$('snapRouteBtn');
+ if(btn){btn.disabled=true;btn.textContent='補正中...'}
+ setRouteTip('道路に沿うルートへ補正中...','snap-warn');
+ const original=pts.slice();
+ const queryPts=compressRoutePoints(pts, 25);
+ const coord=queryPts.map(p=>p[0]+','+p[1]).join(';');
+ const profiles=['bike','foot','driving'];
+ let lastErr=null;
+ for(const profile of profiles){
+   try{
+     const url=`https://router.project-osrm.org/route/v1/${profile}/${coord}?overview=full&geometries=geojson&alternatives=false&steps=false`;
+     const res=await fetch(url);
+     if(!res.ok) throw new Error('HTTP '+res.status);
+     const data=await res.json();
+     if(data.code!=='Ok' || !data.routes || !data.routes[0] || !data.routes[0].geometry){
+       throw new Error(data.message || data.code || 'route failed');
+     }
+     const coords=data.routes[0].geometry.coordinates;
+     if(!coords || coords.length<2) throw new Error('empty geometry');
+     st.draftRoute=coords.map(p=>[Number(p[0]),Number(p[1])]);
+     renderDraftRoute();
+     setRouteTip(`道路沿いに補正しました（${profile} / ${routeDistanceKm(st.draftRoute).toFixed(2)}km）`,'snap-ok');
+     if(btn){btn.disabled=false;btn.textContent='道に合わせる'}
+     return;
+   }catch(e){
+     lastErr=e;
+   }
+ }
+ st.draftRoute=original;
+ renderDraftRoute();
+ setRouteTip('道路補正に失敗しました。点を少し減らすか、道路上に近い位置で試してください','snap-err');
+ if(btn){btn.disabled=false;btn.textContent='道に合わせる'}
+ console.warn('snap route failed', lastErr);
+}
+
 document.addEventListener('click',e=>{
  const mainTab=e.target.closest('[data-main-tab]');
  if(mainTab){
@@ -1810,6 +1906,7 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#exitRouteEditBtn')){exitRouteEdit();return}
  if(e.target.closest('#undoRoutePointBtn')){undoDraftPoint();return}
  if(e.target.closest('#clearRouteBtn')){clearDraftRoute();return}
+ if(e.target.closest('#snapRouteBtn')){snapDraftRouteToRoad();return}
  if(e.target.closest('#saveRouteBtn')){saveDraftRoute();return}
  const useBtn=e.target.closest('[data-use-route]');
  if(useBtn){useMyRoute(useBtn.dataset.useRoute);return}
