@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66 Map Controls + Single Place</title>
+<title>Japan Ride D66-1 Map Tools Building Terrain</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -493,6 +493,42 @@
   background:rgba(255,255,255,.86)!important;
   color:#111827!important;
 }
+
+
+/* D66-1: add Building/Terrain toggles inside the existing 地図操作 panel only */
+.map-tools-panel .map-tool.toggle{
+  grid-column:auto!important;
+  height:40px!important;
+  border-radius:999px!important;
+  font-size:11px!important;
+}
+.map-tools-panel .map-tool.toggle.on{
+  background:#2f6bff!important;
+  color:#fff!important;
+}
+.panel-map-overlay{
+  display:none;
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
+.phone.buildings-on .building-overlay-panel{
+  display:block;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.16) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,.12) 1px, transparent 1px);
+  background-size:34px 34px;
+  opacity:.42;
+}
+.phone.terrain-on .terrain-overlay-panel{
+  display:block;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(34,197,94,.22), transparent 38%),
+    radial-gradient(circle at 70% 60%, rgba(16,185,129,.18), transparent 42%),
+    repeating-linear-gradient(25deg, rgba(255,255,255,.12) 0 1px, transparent 1px 18px);
+  opacity:.48;
+}
 </style>
 </head>
 <body>
@@ -501,14 +537,16 @@
 <div class="tile-layer" id="tileLayer"></div>
 <svg class="route-svg" id="routeSvg"></svg>
 <div class="current-marker" id="currentMarker">🚴</div>
+
+<div class="panel-map-overlay terrain-overlay-panel" id="terrainOverlayPanel"></div>
+<div class="panel-map-overlay building-overlay-panel" id="buildingOverlayPanel"></div>
 </div>
 <div class="map-tools-panel" id="mapToolsPanel">
 <button class="map-tool" id="recenterBtn2">⌖</button>
 <button class="map-tool" id="zoomInBtn">＋</button>
 <button class="map-tool" id="zoomOutBtn">−</button>
-<button class="map-tool text" id="closeMapTools">閉じる</button>
+<button class="map-tool text toggle" id="buildingTogglePanel">建物 OFF</button><button class="map-tool text toggle" id="terrainTogglePanel">地形 OFF</button><button class="map-tool text" id="closeMapTools">閉じる</button>
 </div>
-
 <div class="right-map-tools">
 <button aria-label="現在地へ" class="recenter-btn" id="recenterBtn">
 <svg aria-hidden="true" class="recenter-svg" viewbox="0 0 64 64">
@@ -620,7 +658,7 @@
 const LEG=195;
 const CP=[{km:0,t:'large',n:'三保松原'},{km:12,t:'small'},{km:27,t:'small'},{km:35,t:'medium',n:'大井川'},{km:52,t:'small'},{km:70,t:'medium',n:'掛川城'},{km:88,t:'small'},{km:104,t:'small'},{km:115,t:'medium',n:'浜名湖・弁天島'},{km:133,t:'small'},{km:160,t:'small'},{km:168,t:'medium',n:'岡崎城'},{km:186,t:'small'},{km:195,t:'large',n:'名古屋城'}];
 const zones=[{n:'ウォームアップ',c:'#9CC3FF',max:108},{n:'脂肪燃焼',c:'#16B978',max:132},{n:'有酸素',c:'#F6C544',max:150},{n:'全力',c:'#FF8A3D',max:168},{n:'最大',c:'#FF5872',max:999}];
-let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,display:'detail',input:'sensor',zoom:15,center:[138.3102,34.8362],route:[[138.3082,34.8377],[138.3088,34.8370],[138.3096,34.8365],[138.3105,34.8360],[138.3114,34.8356],[138.3121,34.8350]],street:false};
+let st={km:8.2,sess:0,t:720,cal:96,hr:123,mx:28.4,rpm:58,running:true,display:'detail',input:'sensor',zoom:15,center:[138.3102,34.8362],route:[[138.3082,34.8377],[138.3088,34.8370],[138.3096,34.8365],[138.3105,34.8360],[138.3114,34.8356],[138.3121,34.8350]],street:false,buildings:false,terrain:false};
 const $=id=>document.getElementById(id);
 function setupDots(){CP.forEach(c=>{let d=document.createElement('div');d.className='dot '+c.t;d.style.left=(c.km/LEG*100)+'%';$('dots').appendChild(d);});}
 function zoneOf(hr){for(let i=0;i<zones.length;i++)if(hr<zones[i].max)return i;return 4;}
@@ -646,6 +684,25 @@ function cycleDisplay(){setDisplay(st.display==='detail'?'compact':st.display===
 function setInput(mode){st.input=mode;document.querySelector('.phone').classList.toggle('manual',mode==='manual');$('inputModeToggle').textContent=mode==='manual'?'手動入力':'センサー入力';}
 function toggleInput(){setInput(st.input==='sensor'?'manual':'sensor');}
 function bindPan(){let down=false,last=null,drag=false;const el=$('map');el.addEventListener('pointerdown',e=>{down=true;last=[e.clientX,e.clientY];drag=false;el.setPointerCapture(e.pointerId)});el.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-last[0],dy=e.clientY-last[1];if(Math.abs(dx)+Math.abs(dy)>4)drag=true;last=[e.clientX,e.clientY];const c=lonLatToTile(st.center[0],st.center[1],st.zoom);st.center=tileToLonLat(c[0]-dx/256,c[1]-dy/256,st.zoom);renderMap()});el.addEventListener('pointerup',()=>{down=false});}
+
+function syncBuildingTerrainPanel(){
+ const app=document.querySelector('.phone');
+ if(app){
+   app.classList.toggle('buildings-on',!!st.buildings);
+   app.classList.toggle('terrain-on',!!st.terrain);
+ }
+ const b=$('buildingTogglePanel');
+ if(b){
+   b.textContent=st.buildings?'建物 ON':'建物 OFF';
+   b.classList.toggle('on',!!st.buildings);
+ }
+ const t=$('terrainTogglePanel');
+ if(t){
+   t.textContent=st.terrain?'地形 ON':'地形 OFF';
+   t.classList.toggle('on',!!st.terrain);
+ }
+}
+
 document.addEventListener('click',e=>{
 
  if(e.target.closest('[data-main-tab]')){
@@ -658,6 +715,18 @@ document.addEventListener('click',e=>{
    return;
  }
 
+
+
+ if(e.target.closest('#buildingTogglePanel')){
+   st.buildings=!st.buildings;
+   syncBuildingTerrainPanel();
+   return;
+ }
+ if(e.target.closest('#terrainTogglePanel')){
+   st.terrain=!st.terrain;
+   syncBuildingTerrainPanel();
+   return;
+ }
 
  if(e.target.closest('#mapToolsToggle')){
    const p=document.getElementById('mapToolsPanel');
@@ -692,6 +761,6 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#streetToggle')){st.street=!st.street;$('streetFull').classList.toggle('open',st.street);e.target.classList.toggle('off',!st.street);e.target.textContent=st.street?'SV ON':'SV OFF';return}
 });
 window.addEventListener('resize',renderMap);
-setupDots();bindPan();setDisplay('detail');setInput('sensor');renderMap();renderUI();
+setupDots();bindPan();setDisplay('detail');setInput('sensor');syncBuildingTerrainPanel();renderMap();renderUI();
 </script></body>
 </html>
