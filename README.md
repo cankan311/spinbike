@@ -1,5 +1,6 @@
-D48 Collapsible UI
-- D47ベース
-- UIを隠す/表示を追加
-- 折り畳み時は地図を広く表示
-- 旅ログ、ペダル±、地形/建物は維持
+D49 TV Mirror Mode
+- D48ベース
+- TV表示ボタン追加
+- スマホ画面ミラーリング時に横長テレビ向けUIへ切替
+- 通常表示で戻る
+- GitHub Pagesはindex.html上書き
