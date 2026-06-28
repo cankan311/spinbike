@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-12 Aligned Route Edit Points</title>
+<title>Japan Ride D66-13 Route Edit Interaction Fix</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1367,6 +1367,13 @@
   content:'青い点 = 編集点 / 赤い点 = 選択中　';
   font-weight:1000;
 }
+
+
+/* D66-13: ルート作成中は既存の走行ルート線を見せない */
+.phone.route-editing .route-editor-tip.interaction-fixed::before{
+  content:'地図タップ = 点追加 / 点タップ = 選択 / 点ドラッグ = 移動　';
+  font-weight:1000;
+}
 </style>
 </head>
 <body>
@@ -2636,6 +2643,147 @@ function bindDraftPointLayerEvents(){
  map.on('mouseleave','draft-point-circle',()=>{map.getCanvas().style.cursor=''});
  map.on('mouseenter','draft-point-label',()=>{map.getCanvas().style.cursor='pointer'});
  map.on('mouseleave','draft-point-label',()=>{map.getCanvas().style.cursor=''});
+}
+
+
+/* D66-13 route edit interaction fix
+   - Empty map tap always adds a new point.
+   - Existing point tap only selects for delete.
+   - Existing point drag moves it.
+   - Hide the normal ride route while editing so it doesn't look like an edit line.
+*/
+function setMainRideRouteVisible(show){
+ if(!map || !map.isStyleLoaded()) return;
+ ['route','route-glow'].forEach(id=>{
+   try{
+     if(map.getLayer(id)) map.setLayoutProperty(id,'visibility',show?'visible':'none');
+   }catch(e){}
+ });
+}
+function startRouteEdit(){
+ if(!map || !map.isStyleLoaded()) return;
+ st.routeEdit=true;
+ st.draftWaypoints=[];
+ st.draftRoute=[];
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ st.draggingDraftIndex=-1;
+ st.ignoreNextMapTap=false;
+ document.querySelector('.phone').classList.add('route-editing');
+ document.querySelector('.phone').classList.remove('route-editor-collapsed');
+ if($('toggleRouteEditorBtn')) $('toggleRouteEditorBtn').textContent='たたむ';
+ setDisplay('maponly');
+ setMainRideRouteVisible(false);
+ if($('routeNameInput')) $('routeNameInput').value='';
+ setRouteTip('地図をタップで点追加。点タップで選択、点ドラッグで移動できます。','interaction-fixed');
+ ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
+ renderDraftRoute();
+ if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
+ setTimeout(()=>map.resize(),80);
+}
+function exitRouteEdit(){
+ st.routeEdit=false;
+ const phone=document.querySelector('.phone');
+ phone.classList.remove('route-editing');
+ phone.classList.remove('route-editor-collapsed');
+ st.draftWaypoints=[];
+ st.draftRoute=[];
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ st.draggingDraftIndex=-1;
+ st.ignoreNextMapTap=false;
+ renderDraftRoute();
+ setMainRideRouteVisible(true);
+ setDisplay('detail');
+ renderMyRoutes();
+}
+function addDraftPoint(lngLat){
+ if(!st.routeEdit) return;
+
+ // If the tap came from an existing point, consume it and do not add.
+ if(st.ignoreNextMapTap){
+   st.ignoreNextMapTap=false;
+   return;
+ }
+ if(Number.isInteger(st.draggingDraftIndex) && st.draggingDraftIndex>=0) return;
+
+ const pts=getDraftWaypoints();
+ pts.push([Number(lngLat.lng.toFixed(6)), Number(lngLat.lat.toFixed(6))]);
+ st.selectedDraftIndex=pts.length-1;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ setRouteTip('点を追加しました。続けて地図をタップすると次の点を追加します。','interaction-fixed');
+}
+function moveDraftPoint(index,lngLat,final=false){
+ const pts=getDraftWaypoints();
+ if(index<0 || index>=pts.length) return;
+ pts[index]=[Number(lngLat.lng.toFixed(6)), Number(lngLat.lat.toFixed(6))];
+ st.selectedDraftIndex=index;
+ st.routeSnapped=false;
+ st.draftRoute=pts.slice();
+ renderDraftRoute();
+ if(final){
+   setRouteTip(`${index+1}番の点を移動しました。必要なら「道に合わせる」を押してください。`,'interaction-fixed');
+ }
+}
+function bindDraftPointLayerEvents(){
+ if(!map || map.__draftPointEventsBoundD6613) return;
+ map.__draftPointEventsBoundD6613=true;
+
+ function startDrag(e){
+   if(!st.routeEdit || !e.features || !e.features.length) return;
+   if(e.preventDefault) e.preventDefault();
+   st.ignoreNextMapTap=true;
+   const idx=Number(e.features[0].properties.idx);
+   st.draggingDraftIndex=idx;
+   st.selectedDraftIndex=idx;
+   try{map.dragPan.disable()}catch(err){}
+   try{map.touchZoomRotate.disableRotation()}catch(err){}
+   try{map.getCanvas().style.cursor='grabbing'}catch(err){}
+   renderDraftRoute();
+ }
+ function duringDrag(e){
+   if(!st.routeEdit) return;
+   const idx=Number(st.draggingDraftIndex);
+   if(!Number.isInteger(idx) || idx<0) return;
+   if(e && e.lngLat) moveDraftPoint(idx,e.lngLat,false);
+ }
+ function endDrag(e){
+   const idx=Number(st.draggingDraftIndex);
+   if(Number.isInteger(idx) && idx>=0 && e && e.lngLat){
+     moveDraftPoint(idx,e.lngLat,true);
+   }
+   st.draggingDraftIndex=-1;
+   try{map.dragPan.enable()}catch(err){}
+   try{map.touchZoomRotate.enableRotation()}catch(err){}
+   try{map.getCanvas().style.cursor=''}catch(err){}
+   setTimeout(()=>{st.ignoreNextMapTap=false},120);
+ }
+ function pointClick(e){
+   if(!st.routeEdit || !e.features || !e.features.length) return;
+   st.ignoreNextMapTap=true;
+   const idx=Number(e.features[0].properties.idx);
+   selectDraftPoint(idx);
+   setTimeout(()=>{st.ignoreNextMapTap=false},120);
+ }
+
+ map.on('mousedown','draft-point-circle',startDrag);
+ map.on('touchstart','draft-point-circle',startDrag);
+ map.on('mousemove',duringDrag);
+ map.on('touchmove',duringDrag);
+ map.on('mouseup',endDrag);
+ map.on('touchend',endDrag);
+ map.on('touchcancel',endDrag);
+
+ map.on('click','draft-point-circle',pointClick);
+ map.on('click','draft-point-label',pointClick);
+
+ map.on('mouseenter','draft-point-circle',()=>{map.getCanvas().style.cursor='pointer'});
+ map.on('mouseleave','draft-point-circle',()=>{if(st.draggingDraftIndex<0)map.getCanvas().style.cursor=''});
+ map.on('mouseenter','draft-point-label',()=>{map.getCanvas().style.cursor='pointer'});
+ map.on('mouseleave','draft-point-label',()=>{if(st.draggingDraftIndex<0)map.getCanvas().style.cursor=''});
 }
 
 document.addEventListener('click',e=>{
