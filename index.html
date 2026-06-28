@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-6 My Route Basic</title>
+<title>Japan Ride D66-8 Map Bar No Overflow</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -941,6 +941,249 @@
     width:calc(100vw - 24px);
   }
 }
+
+
+/* D66-7: 地図ビューの操作カードを下貼り横長に変更 + 小型走行HUD */
+.map-view-hud{
+  display:none;
+  position:absolute;
+  z-index:99996;
+  left:12px;
+  bottom:calc(env(safe-area-inset-bottom) + 72px);
+  gap:6px;
+  pointer-events:none;
+}
+.map-view-hud div{
+  min-width:72px;
+  border-radius:16px;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
+  padding:7px 9px;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+.map-view-hud small{
+  display:block;
+  font-size:9px;
+  line-height:1;
+  font-weight:1000;
+  color:#667085;
+}
+.map-view-hud b{
+  display:block;
+  margin-top:3px;
+  font-size:16px;
+  line-height:1;
+  font-weight:1000;
+  color:#111827;
+  white-space:nowrap;
+}
+.map-view-hud em{
+  font-style:normal;
+  font-size:9px;
+  font-weight:900;
+  color:#667085;
+  margin-left:2px;
+}
+.phone.maponly .map-view-hud,
+.phone.route-editing .map-view-hud{
+  display:flex!important;
+}
+
+/* 地図ビュー/ルート作成中の地図操作は、大きな右下カードではなく下部横長バーに統一 */
+.phone.maponly .map-tools-panel,
+.phone.route-editing .map-tools-panel{
+  display:flex!important;
+  position:absolute!important;
+  z-index:99998!important;
+  left:10px!important;
+  right:10px!important;
+  bottom:calc(env(safe-area-inset-bottom) + 10px)!important;
+  top:auto!important;
+  width:auto!important;
+  max-width:none!important;
+  height:54px!important;
+  grid-template-columns:none!important;
+  gap:6px!important;
+  padding:6px!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.92)!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+  pointer-events:auto!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+}
+.phone.maponly .map-tools-panel::-webkit-scrollbar,
+.phone.route-editing .map-tools-panel::-webkit-scrollbar{
+  display:none!important;
+}
+.phone.maponly .map-tools-panel .map-tool,
+.phone.route-editing .map-tools-panel .map-tool{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:48px!important;
+  height:42px!important;
+  padding:0 12px!important;
+  border-radius:16px!important;
+  font-size:18px!important;
+  line-height:1!important;
+}
+.phone.maponly .map-tools-panel .map-tool.text,
+.phone.route-editing .map-tools-panel .map-tool.text{
+  grid-column:auto!important;
+  min-width:72px!important;
+  height:42px!important;
+  border-radius:999px!important;
+  font-size:11px!important;
+  padding:0 12px!important;
+  white-space:nowrap!important;
+}
+.phone.maponly #detailFromMapView{
+  display:block!important;
+  min-width:86px!important;
+  background:#111827!important;
+  border-color:#111827!important;
+  color:#fff!important;
+}
+.phone.route-editing #detailFromMapView{
+  display:none!important;
+}
+.phone.maponly #closeMapTools,
+.phone.route-editing #closeMapTools{
+  display:none!important;
+}
+/* ルート作成中は左上の編集カードがあるため、HUDを右上に逃がす */
+.phone.route-editing .map-view-hud{
+  left:auto!important;
+  right:12px!important;
+  bottom:auto!important;
+  top:calc(env(safe-area-inset-top) + 148px)!important;
+  flex-direction:column!important;
+}
+.phone.route-editing .map-view-hud div{
+  min-width:78px;
+}
+@media(max-width:430px){
+  .map-view-hud{
+    left:10px;
+    bottom:calc(env(safe-area-inset-bottom) + 70px);
+  }
+  .map-view-hud div{
+    min-width:64px;
+    padding:6px 8px;
+  }
+  .map-view-hud b{
+    font-size:14px;
+  }
+  .phone.maponly .map-tools-panel,
+  .phone.route-editing .map-tools-panel{
+    left:8px!important;
+    right:8px!important;
+    height:52px!important;
+    border-radius:21px!important;
+  }
+  .phone.maponly .map-tools-panel .map-tool,
+  .phone.route-editing .map-tools-panel .map-tool{
+    min-width:46px!important;
+    height:40px!important;
+    padding:0 10px!important;
+  }
+}
+
+
+/* D66-8: 下の地図操作バーが右にはみ出ないように固定 */
+.phone.maponly .map-tools-panel,
+.phone.route-editing .map-tools-panel{
+  left:8px!important;
+  right:auto!important;
+  bottom:calc(env(safe-area-inset-bottom) + 8px)!important;
+  width:calc(100vw - 16px)!important;
+  max-width:calc(100vw - 16px)!important;
+  height:50px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:5px!important;
+  padding:5px!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+.phone.maponly .map-tools-panel .map-tool,
+.phone.route-editing .map-tools-panel .map-tool{
+  height:40px!important;
+  min-width:0!important;
+  width:auto!important;
+  padding:0!important;
+  border-radius:15px!important;
+  font-size:17px!important;
+  flex:0 0 40px!important;
+  box-sizing:border-box!important;
+}
+.phone.maponly .map-tools-panel .map-tool.text,
+.phone.route-editing .map-tools-panel .map-tool.text{
+  height:40px!important;
+  min-width:0!important;
+  padding:0 5px!important;
+  font-size:10px!important;
+  border-radius:999px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  box-sizing:border-box!important;
+}
+.phone.maponly #detailFromMapView{
+  flex:0 0 72px!important;
+}
+.phone.maponly #recenterBtn2,
+.phone.maponly #zoomInBtn,
+.phone.maponly #zoomOutBtn,
+.phone.route-editing #recenterBtn2,
+.phone.route-editing #zoomInBtn,
+.phone.route-editing #zoomOutBtn{
+  flex:0 0 40px!important;
+}
+.phone.maponly #buildingTogglePanel,
+.phone.maponly #terrainTogglePanel,
+.phone.route-editing #buildingTogglePanel,
+.phone.route-editing #terrainTogglePanel{
+  flex:1 1 52px!important;
+}
+.phone.maponly .map-view-hud{
+  bottom:calc(env(safe-area-inset-bottom) + 64px)!important;
+}
+@media(max-width:380px){
+  .phone.maponly .map-tools-panel,
+  .phone.route-editing .map-tools-panel{
+    left:6px!important;
+    width:calc(100vw - 12px)!important;
+    max-width:calc(100vw - 12px)!important;
+    gap:4px!important;
+    padding:4px!important;
+  }
+  .phone.maponly #detailFromMapView{
+    flex:0 0 66px!important;
+    font-size:9px!important;
+  }
+  .phone.maponly #recenterBtn2,
+  .phone.maponly #zoomInBtn,
+  .phone.maponly #zoomOutBtn,
+  .phone.route-editing #recenterBtn2,
+  .phone.route-editing #zoomInBtn,
+  .phone.route-editing #zoomOutBtn{
+    flex:0 0 36px!important;
+  }
+  .phone.maponly #buildingTogglePanel,
+  .phone.maponly #terrainTogglePanel,
+  .phone.route-editing #buildingTogglePanel,
+  .phone.route-editing #terrainTogglePanel{
+    flex:1 1 48px!important;
+    font-size:9px!important;
+  }
+}
 </style>
 </head>
 <body>
@@ -952,7 +1195,6 @@
 <button class="map-tool" id="zoomOutBtn">−</button>
 <button class="map-tool text toggle" id="buildingTogglePanel">建物 OFF</button><button class="map-tool text toggle" id="terrainTogglePanel">地形 OFF</button><button class="map-tool text" id="closeMapTools">閉じる</button>
 </div>
-
 <div class="route-editor" id="routeEditor">
 <div class="route-editor-card">
 <div class="route-editor-head">
@@ -974,6 +1216,11 @@
 <button class="save" id="saveRouteBtn">保存</button>
 </div>
 </div>
+</div>
+<div class="map-view-hud" id="mapViewHud">
+<div><small>速度</small><b><span id="mapHudSpeed">14.6</span><em>km/h</em></b></div>
+<div><small>時間</small><b id="mapHudTime">12:00</b></div>
+<div><small>距離</small><b><span id="mapHudDist">0.00</span><em>km</em></b></div>
 </div>
 <nav aria-label="メインメニュー" class="bottom-tabs" id="bottomTabs">
 <button class="bottom-tab active" data-main-tab="ride"><span>🚴</span><b>走る</b></button>
@@ -1119,6 +1366,9 @@ function renderUI(){
  if($('zoneDot'))$('zoneDot').style.background=zones[z].c;
  if($('bars'))$('bars').innerHTML=zones.map((zz,i)=>`<div class="zone-seg ${i===z?'active':''}" style="background:${zz.c}"></div>`).join('');
  if($('zoneGuide'))$('zoneGuide').innerHTML='<span class="zone-name">今は'+zones[z].n+'ゾーンです</span><span class="zone-tip">'+(z>=3?'無理しすぎに注意':'')+'</span>';
+ if($('mapHudSpeed'))$('mapHudSpeed').textContent=kmh.toFixed(1);
+ if($('mapHudTime'))$('mapHudTime').textContent=fmtTime(st.t);
+ if($('mapHudDist'))$('mapHudDist').textContent=st.sess.toFixed(2);
 }
 
 function setDisplay(mode){
