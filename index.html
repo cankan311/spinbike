@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-22 Route Data Diagnostics</title>
+<title>Japan Ride D66-24 My Route Ride UI</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1470,89 +1470,92 @@
 .phone.my-route-active .eyebrow{color:#16B978!important}
 
 
-/* D66-22: ルートデータ診断 */
-.route-diag{
-  background:#fff7ed!important;
-  color:#9a3412!important;
+/* D66-23: マイルート走行終了。既存のmodeピルを終了ボタンとして使う */
+.phone.my-route-active #mode{
+  background:#111827!important;
+  color:#fff!important;
 }
-.route-diag-panel{
-  position:absolute;
-  inset:0;
-  z-index:120;
+.phone.my-route-active #mode::before{
+  content:'';
+}
+
+
+/* D66-24: マイルート走行中UIを日本一周UIから分離 */
+.myroute-ride-panel{
   display:none;
-  align-items:flex-end;
-  justify-content:center;
-  background:rgba(15,23,42,.28);
-  padding:12px;
-}
-.route-diag-panel.open{
-  display:flex;
-}
-.route-diag-card{
-  width:100%;
-  max-height:82%;
-  overflow:hidden;
-  background:#fff;
-  border-radius:22px;
-  box-shadow:0 20px 60px rgba(15,23,42,.26);
-  border:1px solid rgba(148,163,184,.35);
-  display:flex;
-  flex-direction:column;
-}
-.route-diag-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 16px 8px;
-}
-.route-diag-close{
-  width:34px;
-  height:34px;
-  border-radius:999px;
-  border:0;
-  background:#eef2f7;
-  font-weight:1000;
-}
-.route-diag-summary{
-  padding:0 16px 10px;
-  font-size:12px;
-  line-height:1.45;
-  color:#475467;
-}
-.route-diag-summary b{
-  color:#111827;
-}
-.route-diag-text{
-  margin:0 12px;
-  min-height:260px;
-  flex:1;
-  resize:none;
-  border:1px solid rgba(148,163,184,.35);
-  border-radius:14px;
+  margin-top:8px;
+  border-radius:18px;
   padding:10px;
-  font-size:11px;
-  line-height:1.45;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  color:#111827;
-  background:#f8fafc;
+  background:linear-gradient(180deg,rgba(232,247,240,.98),rgba(248,255,252,.92));
+  border:1px solid rgba(22,185,120,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.95);
 }
-.route-diag-actions{
-  display:grid;
-  grid-template-columns:1fr 92px;
-  gap:8px;
-  padding:12px;
+.phone.my-route-active .myroute-ride-panel{display:block}
+.phone.my-route-active .hero-icon{
+  background:linear-gradient(180deg,#e8f7f0,#cbf3df)!important;
+  border-color:rgba(22,185,120,.30)!important;
 }
-.route-diag-actions button{
-  border:0;
-  border-radius:14px;
-  padding:11px 10px;
+.phone.my-route-active .landmark{
+  font-size:25px!important;
+  letter-spacing:.02em!important;
+  -webkit-text-stroke:0!important;
+}
+.phone.my-route-active .remain{display:none!important}
+.phone.my-route-active #dots{display:none!important}
+.phone.my-route-active .progress{margin-top:9px}
+.phone.my-route-active .fill{background:linear-gradient(90deg,#9eecc8,#16B978)!important}
+.phone.my-route-active .subgoals{
+  margin-top:6px;
+  color:#12895b!important;
+}
+.myroute-big{
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+  font-family:var(--display-font);
+  font-size:28px;
+  line-height:1;
   font-weight:1000;
-  background:#111827;
-  color:#fff;
-}
-.route-diag-actions button:last-child{
-  background:#eef2f7;
   color:#111827;
+  font-variant-numeric:tabular-nums;
+}
+.myroute-big small{
+  font-family:inherit;
+  font-size:14px;
+  color:#475467;
+  font-weight:900;
+}
+.myroute-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:6px;
+  margin-top:8px;
+}
+.myroute-grid div{
+  min-width:0;
+  border-radius:14px;
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(22,185,120,.14);
+  padding:7px 7px 6px;
+}
+.myroute-grid small{
+  display:block;
+  font-size:9.5px;
+  line-height:1;
+  color:#667085;
+  font-weight:900;
+  margin-bottom:4px;
+}
+.myroute-grid b{
+  display:block;
+  font-size:13px;
+  line-height:1.1;
+  color:#111827;
+  font-weight:1000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-variant-numeric:tabular-nums;
 }
 </style>
 </head>
@@ -1639,6 +1642,17 @@
 <div class="remain" id="remain">あと 186.8 km</div>
 </div>
 </div>
+
+<div aria-hidden="true" class="myroute-ride-panel" id="myRouteRidePanel">
+<div class="myroute-big">
+<span id="myRouteDone">0.00</span><small> / <span id="myRouteTotal">0.00</span> km</small>
+</div>
+<div class="myroute-grid">
+<div><small>残り</small><b id="myRouteRemain">0.00km</b></div>
+<div><small>進捗</small><b id="myRoutePercent">0%</b></div>
+<div><small>現在</small><b id="myRouteNow">スタート</b></div>
+</div>
+</div>
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
@@ -1678,21 +1692,6 @@
 </div>
 </div>
 </div>
-
-<div aria-hidden="true" class="route-diag-panel" id="routeDiagPanel">
-<div class="route-diag-card">
-<div class="route-diag-head">
-<strong>ルートデータ診断</strong>
-<button class="route-diag-close" id="closeRouteDiagBtn">×</button>
-</div>
-<div class="route-diag-summary" id="routeDiagSummary"></div>
-<textarea class="route-diag-text" id="routeDiagText" readonly=""></textarea>
-<div class="route-diag-actions">
-<button id="copyRouteDiagBtn">診断内容をコピー</button>
-<button id="closeRouteDiagBtn2">閉じる</button>
-</div>
-</div>
-</div>
 </div>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script><script>
 const LEG=195;
@@ -1710,6 +1709,7 @@ let st={
 let map=null, marker=null;
 const ROUTES_KEY='japanRide.myRoutes.v1';
 let draftMarkers=[];
+const DEFAULT_MAIN_ROUTE=st.route.map(p=>[Number(p[0]),Number(p[1])]);
 const $=id=>document.getElementById(id);
 
 function setupDots(){
@@ -1793,11 +1793,30 @@ function setActiveRoute(route){
  st.sess=0;
  st.t=0;
  document.querySelector('.phone').classList.add('my-route-active');
- if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート';
+ if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート走行中';
  if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
  renderUI();
  updateRouteProgressOnMap();
 }
+
+function clearActiveRoute(){
+ st.activeRouteId=null;
+ st.activeRouteName='';
+ st.activeRouteDistanceKm=0;
+ st.route=DEFAULT_MAIN_ROUTE.map(p=>[p[0],p[1]]);
+ document.querySelector('.phone').classList.remove('my-route-active');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
+ if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
+ updateMainRouteOnMap();
+ renderUI();
+}
+function confirmClearActiveRoute(){
+ if(!st.activeRouteId) return;
+ const ok=confirm('マイルート走行を終了して、日本一周ルートに戻しますか？');
+ if(!ok) return;
+ clearActiveRoute();
+}
+
 function addDemoRideDistance(km){
  st.sess+=km;
  st.t+=30;
@@ -1805,12 +1824,28 @@ function addDemoRideDistance(km){
  renderUI();
 }
 
+
+/* D66-24 my route ride UI */
+function updateMyRouteRidePanel(routeTotal, traveled, routeRemain, prog){
+ if($('myRouteRidePanel')) $('myRouteRidePanel').setAttribute('aria-hidden', st.activeRouteId ? 'false' : 'true');
+ if($('myRouteDone')) $('myRouteDone').textContent=traveled.toFixed(2);
+ if($('myRouteTotal')) $('myRouteTotal').textContent=routeTotal.toFixed(2);
+ if($('myRouteRemain')) $('myRouteRemain').textContent=routeRemain.toFixed(2)+'km';
+ if($('myRoutePercent')) $('myRoutePercent').textContent=Math.round(prog)+'%';
+ if($('myRouteNow')){
+   if(traveled<=0.001) $('myRouteNow').textContent='スタート';
+   else if(routeRemain<=0.001) $('myRouteNow').textContent='ゴール';
+   else $('myRouteNow').textContent=traveled.toFixed(2)+'km';
+ }
+}
+
 function renderUI(){
  const kmh=st.rpm*2*2.1/60*3.6;
  const active=!!st.activeRouteId;
  const routeTotal=active ? Math.max(0.01, Number(st.activeRouteDistanceKm||0)) : 0;
- const routeRemain=active ? Math.max(0, routeTotal-st.sess) : 0;
- const prog=active ? Math.min(100,(st.sess/routeTotal)*100) : Math.min(100,st.km/LEG*100);
+ const routeTraveled=active ? Math.min(Math.max(0,st.sess), routeTotal) : 0;
+ const routeRemain=active ? Math.max(0, routeTotal-routeTraveled) : 0;
+ const prog=active ? Math.min(100,(routeTraveled/routeTotal)*100) : Math.min(100,st.km/LEG*100);
  const z=zoneOf(st.hr);
  const nS=next('small'),nM=next('medium'),nL=next('large');
  if($('speed'))$('speed').textContent=kmh.toFixed(1);
@@ -1822,14 +1857,18 @@ function renderUI(){
    $('cadenceRing').setAttribute('stroke-dasharray', C.toFixed(1));
    $('cadenceRing').setAttribute('stroke-dashoffset', (C*(1-rpmRatio)).toFixed(1));
  }
- if($('mode'))$('mode').textContent=active?'マイルート走行中':(st.running?'追従 ON':'追従 OFF');
+ if($('mode'))$('mode').textContent=active?'ルート終了':(st.running?'追従 ON':'追従 OFF');
  if(active){
-   if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート';
+   if(document.querySelector('.hero-icon')) document.querySelector('.hero-icon').textContent='🚴';
+   if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート走行中';
    if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName||'マイルート';
-   if($('remain'))$('remain').textContent='あと '+routeRemain.toFixed(2)+' km';
-   if($('smallGoal'))$('smallGoal').textContent='ルート距離 '+routeTotal.toFixed(2)+'km';
-   if($('mediumGoal'))$('mediumGoal').textContent='走行中 '+Math.min(st.sess,routeTotal).toFixed(2)+'km';
+   if($('remain'))$('remain').textContent='';
+   updateMyRouteRidePanel(routeTotal, routeTraveled, routeRemain, prog);
+   if($('smallGoal'))$('smallGoal').textContent='ゴールまで '+routeRemain.toFixed(2)+'km';
+   if($('mediumGoal'))$('mediumGoal').textContent='進捗 '+Math.round(prog)+'%';
  }else{
+   updateMyRouteRidePanel(0,0,0,0);
+   if(document.querySelector('.hero-icon')) document.querySelector('.hero-icon').textContent='🏯';
    if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
    if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
    if($('remain'))$('remain').textContent='あと '+(nL?(nL.km-st.km).toFixed(1):'0.0')+' km';
@@ -1839,7 +1878,7 @@ function renderUI(){
  if($('fill'))$('fill').style.width=prog+'%';
  if($('bike'))$('bike').style.left=prog+'%';
  const stats=[
-   ['距離',st.sess.toFixed(2),'km'],
+   [active?'走行済み':'距離',active?routeTraveled.toFixed(2):st.sess.toFixed(2),'km'],
    ['時間',fmtTime(st.t),''],
    ['消費',Math.round(st.cal),'kcal'],
    ['最高',st.mx.toFixed(1),'km/h'],
@@ -3531,144 +3570,9 @@ function useMyRoute(id, closePage=true){
  }
 }
 
-
-/* D66-22 route data diagnostics
-   実データを見ずに決め打ちしないための確認用。localStorageのrawと正規化後を並べて表示する。
-*/
-function loadRawMyRoutes(){
- try{
-   const raw=JSON.parse(localStorage.getItem(ROUTES_KEY)||'[]');
-   return Array.isArray(raw) ? raw : [];
- }catch(e){
-   return [];
- }
-}
-function compactJsonForDiag(obj){
- try{
-   return JSON.stringify(obj,null,2);
- }catch(e){
-   return String(obj);
- }
-}
-function coordCountForDiag(v){
- return normalizeCoordArray(v).length;
-}
-function candidateCountsForDiag(r){
- const keys=['points','waypoints','route','coords','coordinates','path','polyline','line','draftWaypoints','draftRoute','geometry'];
- const out={};
- keys.forEach(k=>{
-   if(r && Object.prototype.hasOwnProperty.call(r,k)){
-     out[k]=coordCountForDiag(r[k]);
-   }
- });
- return out;
-}
-function makeRouteDiagText(id){
- const rawRoutes=loadRawMyRoutes();
- const raw=rawRoutes.find(r=>String(r && r.id)===String(id));
- const normalized=loadMyRoutes().find(r=>String(r && r.id)===String(id));
- const counts=raw ? candidateCountsForDiag(raw) : {};
- const normalizedPoints=normalized ? coordCountForDiag(normalized.points) : 0;
- const normalizedWaypoints=normalized ? coordCountForDiag(normalized.waypoints) : 0;
- const lines=[];
- lines.push('D66-22 Route Data Diagnostics');
- lines.push('routeId: '+id);
- lines.push('ROUTES_KEY: '+ROUTES_KEY);
- lines.push('');
- lines.push('[Raw route exists]');
- lines.push(raw ? 'YES' : 'NO');
- lines.push('');
- lines.push('[Raw route keys]');
- lines.push(raw ? Object.keys(raw).join(', ') : '(none)');
- lines.push('');
- lines.push('[Candidate coordinate counts from raw]');
- lines.push(Object.keys(counts).length ? JSON.stringify(counts,null,2) : '(no candidate keys or 0)');
- lines.push('');
- lines.push('[Normalized result]');
- lines.push(JSON.stringify({
-   exists:!!normalized,
-   id:normalized && normalized.id,
-   name:normalized && normalized.name,
-   points:normalizedPoints,
-   waypoints:normalizedWaypoints,
-   distanceKm:normalized && normalized.distanceKm
- },null,2));
- lines.push('');
- lines.push('[Judgement]');
- if(!raw){
-   lines.push('保存済みルートのrawデータが見つかっていません。');
- }else if(normalizedPoints>=2 || normalizedWaypoints>=2){
-   lines.push('座標データは復元できています。編集で表示されない場合は描画側・レイヤー側の問題です。');
- }else if(Object.values(counts).some(n=>n>=2)){
-   lines.push('rawには座標らしきデータがありますが、正規化後に落ちています。normalize処理の不足です。');
- }else{
-   lines.push('raw内に2点以上の座標データが見つかりません。過去の保存時点で座標が空になっている可能性があります。');
- }
- lines.push('');
- lines.push('[Raw JSON]');
- lines.push(raw ? compactJsonForDiag(raw) : '(none)');
- return lines.join('\n');
-}
-function showRouteDiag(id){
- const text=makeRouteDiagText(id);
- const normalized=loadMyRoutes().find(r=>String(r && r.id)===String(id));
- const pts=normalized ? coordCountForDiag(normalized.points) : 0;
- const wps=normalized ? coordCountForDiag(normalized.waypoints) : 0;
- const dist=normalized && normalized.distanceKm ? Number(normalized.distanceKm).toFixed(2) : '0.00';
- if($('routeDiagSummary')){
-   $('routeDiagSummary').innerHTML=`<b>${escapeHtml((normalized&&normalized.name)||'不明なルート')}</b><br>正規化後：points ${pts}点 / waypoints ${wps}点 / ${dist}km`;
- }
- if($('routeDiagText')) $('routeDiagText').value=text;
- if($('routeDiagPanel')){
-   $('routeDiagPanel').classList.add('open');
-   $('routeDiagPanel').setAttribute('aria-hidden','false');
- }
-}
-function closeRouteDiag(){
- if($('routeDiagPanel')){
-   $('routeDiagPanel').classList.remove('open');
-   $('routeDiagPanel').setAttribute('aria-hidden','true');
- }
-}
-async function copyRouteDiag(){
- const text=$('routeDiagText') ? $('routeDiagText').value : '';
- try{
-   await navigator.clipboard.writeText(text);
-   if($('routeDiagSummary')) $('routeDiagSummary').innerHTML += '<br>コピーしました';
- }catch(e){
-   if($('routeDiagText')){
-     $('routeDiagText').focus();
-     $('routeDiagText').select();
-   }
-   alert('コピーできない場合は、テキスト欄を長押ししてコピーしてください');
- }
-}
-function renderMyRoutes(){
- const list=$('myRouteList');
- if(!list) return;
- const routes=loadMyRoutes();
- if(!routes.length){
-   list.innerHTML='<div class="route-empty">まだ保存したルートはありません。<br>「新しいルートを作る」から地図をタップして作成できます。</div>';
-   return;
- }
- list.innerHTML=routes.map(r=>`
-  <div class="route-item">
-    <div class="route-item-top">
-      <div>
-        <strong>${escapeHtml(r.name||'無題のルート')}</strong>
-        <small>${(r.distanceKm||0).toFixed(2)}km ・ ${(r.waypoints||r.points||[]).length}地点</small>
-      </div>
-    </div>
-    <div class="route-item-actions">
-      <button class="route-use" data-use-route="${r.id}">このルートを走る</button>
-      <button class="route-edit" data-edit-route="${r.id}">編集</button>
-      <button class="route-diag" data-diag-route="${r.id}">診断</button>
-      <button class="route-delete" data-delete-route="${r.id}">削除</button>
-    </div>
-  </div>`).join('');
-}
-
 document.addEventListener('click',e=>{
+ if(e.target.closest('#mode') && st.activeRouteId){confirmClearActiveRoute();return}
+
  if(document.querySelector('.phone').classList.contains('route-editor-collapsed') && e.target.closest('#routeEditor')){
    openRouteEditorCard();
    return;
@@ -3695,11 +3599,6 @@ document.addEventListener('click',e=>{
 
  const editBtn=e.target.closest('[data-edit-route]');
  if(editBtn){editMyRoute(editBtn.dataset.editRoute);return}
-
- const diagBtn=e.target.closest('[data-diag-route]');
- if(diagBtn){showRouteDiag(diagBtn.dataset.diagRoute);return}
- if(e.target.closest('#closeRouteDiagBtn')||e.target.closest('#closeRouteDiagBtn2')){closeRouteDiag();return}
- if(e.target.closest('#copyRouteDiagBtn')){copyRouteDiag();return}
 
  const delBtn=e.target.closest('[data-delete-route]');
  if(delBtn){deleteMyRoute(delBtn.dataset.deleteRoute);return}
