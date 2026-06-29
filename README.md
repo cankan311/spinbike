@@ -1,17 +1,27 @@
-D66-32 Dedicated Blue Route Layer
+D66-33 Split Route Colors
 
-D66-31ベース。
-D66-31で青線が見えなかったため、汎用ID route を信用せず、
-アプリ専用の route source/layer を追加して確実に描画する修正版。
+D66-32ベース。
+青/緑の考え方を修正。
+全体青の上に緑を重ねる方式ではなく、現在位置でルート座標を2分割する。
 
-修正:
-- app-route-source / app-route-progress-source を追加
-- app-route-blue-glow / app-route-blue-line を追加
-- app-route-progress-green を追加
-- これから走る全体ルートは青
-- 走った区間は緑
-- 旧 route / route-progress は互換用に残すが、表示は app-route-* を使う
-- 緑線は青線より細くして、重なっても青線の存在が見えるように調整
+仕様:
+- スタート → 現在位置: 緑
+- 現在位置 → ゴール: 青
+- 走行前: 全ルート青、緑なし
+- 走行中: 後ろが緑、前が青
+- 完走後: 全ルート緑、青は終点だけ
+
+実装:
+- routeSplitAtDistance() を追加
+- app-route-future-source / app-route-passed-source を追加
+- app-route-future-blue / app-route-passed-green を追加
+- 旧 route / route-progress / D66-32の app-route-blue-line は非表示にして干渉防止
+
+検証:
+- JS構文チェック済み
+- routeSplitAtDistance の分割テスト済み
+- passed の終点と future の始点が一致することを確認
+- self-test画像同梱
 
 触っていない:
 - normalizeSavedRoute
@@ -30,4 +40,3 @@ D66-31で青線が見えなかったため、汎用ID route を信用せず、
 - 道に合わせる無し
 - SVなし
 - 初倉駅の固定文言なし
-- JS構文チェック済み
