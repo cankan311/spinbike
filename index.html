@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-26 Checkpoint Ride Display</title>
+<title>Japan Ride D66-28 Ride Logs Manual Preview</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1633,7 +1633,7 @@
 }
 
 
-/* D66-26: 次チェックポイント表示と到達エフェクト */
+/* D66-27: 次チェックポイント表示と到達エフェクト。読込系関数は触らない */
 .myroute-next-line{
   margin-top:8px;
   border-radius:14px;
@@ -1721,6 +1721,197 @@
   78%{opacity:1}
   100%{opacity:0}
 }
+
+
+/* D66-28: 走行記録保存 + プレビュー用手入力 */
+.ride-result-modal{
+  position:absolute;
+  inset:0;
+  z-index:190;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  padding:14px;
+  background:rgba(15,23,42,.35);
+}
+.ride-result-modal.open{
+  display:flex;
+}
+.ride-result-card{
+  width:100%;
+  border-radius:25px;
+  padding:16px;
+  background:rgba(255,255,255,.97);
+  border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 20px 60px rgba(15,23,42,.28);
+}
+.ride-result-title small{
+  display:block;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.14em;
+  color:#16B978;
+}
+.ride-result-title strong{
+  display:block;
+  margin-top:2px;
+  font-size:20px;
+  font-weight:1000;
+  color:#111827;
+}
+.ride-result-route{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:1000;
+  color:#475467;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.ride-result-main{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:10px;
+  margin-top:10px;
+}
+.ride-result-main b{
+  font-family:var(--display-font);
+  font-size:27px;
+  line-height:1;
+  font-weight:1000;
+  color:#111827;
+  font-variant-numeric:tabular-nums;
+}
+.ride-result-main span{
+  flex:none;
+  border-radius:999px;
+  padding:6px 9px;
+  background:#eefbf5;
+  color:#12895b;
+  font-size:11px;
+  font-weight:1000;
+}
+.ride-result-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:6px;
+  margin-top:12px;
+}
+.ride-result-grid div{
+  border-radius:14px;
+  padding:8px 7px;
+  background:#f8fafc;
+  border:1px solid rgba(148,163,184,.24);
+}
+.ride-result-grid small{
+  display:block;
+  font-size:9.5px;
+  color:#667085;
+  font-weight:1000;
+  margin-bottom:4px;
+}
+.ride-result-grid b{
+  display:block;
+  font-size:13px;
+  font-weight:1000;
+  color:#111827;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-variant-numeric:tabular-nums;
+}
+.ride-result-actions{
+  display:grid;
+  grid-template-columns:1fr 100px;
+  gap:8px;
+  margin-top:14px;
+}
+.ride-result-actions button{
+  border:0;
+  border-radius:15px;
+  padding:12px 10px;
+  font-weight:1000;
+}
+.save-log{
+  background:#16B978;
+  color:#fff;
+}
+.discard-log{
+  background:#eef2f7;
+  color:#111827;
+}
+.ride-log-summary{
+  margin-bottom:10px;
+  padding:10px 12px;
+  border-radius:16px;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(148,163,184,.24);
+  color:#475467;
+  font-size:12px;
+  font-weight:900;
+}
+.ride-log-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.ride-log-item{
+  border-radius:17px;
+  padding:11px 12px;
+  background:rgba(255,255,255,.88);
+  border:1px solid rgba(148,163,184,.28);
+  box-shadow:0 8px 20px rgba(15,23,42,.08);
+}
+.ride-log-item-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.ride-log-item strong{
+  display:block;
+  min-width:0;
+  font-size:14px;
+  line-height:1.2;
+  font-weight:1000;
+  color:#111827;
+}
+.ride-log-item small{
+  display:block;
+  margin-top:3px;
+  color:#667085;
+  font-size:10.5px;
+  font-weight:900;
+}
+.ride-log-badge{
+  flex:none;
+  border-radius:999px;
+  padding:5px 8px;
+  font-size:10px;
+  font-weight:1000;
+  background:#eefbf5;
+  color:#12895b;
+}
+.ride-log-meta{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:6px;
+  margin-top:9px;
+}
+.ride-log-meta span{
+  min-width:0;
+  border-radius:12px;
+  padding:7px 6px;
+  text-align:center;
+  background:#f8fafc;
+  font-size:11px;
+  font-weight:1000;
+  color:#111827;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 </style>
 </head>
 <body>
@@ -1795,7 +1986,10 @@
 <section class="simple-page" id="recordsPage">
 <div class="simple-sheet">
 <div class="simple-head"><div><small>RECORDS</small><strong>記録</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
-<div class="simple-body"><div class="simple-empty">走行記録・グラフを表示する画面。</div></div>
+<div class="simple-body">
+<div class="ride-log-summary" id="rideLogSummary">走行記録はまだありません。</div>
+<div class="ride-log-list" id="rideLogList"></div>
+</div>
 </div>
 </section>
 <section class="simple-page" id="settingsPage">
@@ -1830,7 +2024,6 @@
 <small>次のチェックポイント</small>
 <b><span id="myRouteNextName">未設定</span><span id="myRouteNextRemain"></span></b>
 </div>
-
 </div>
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
@@ -1871,12 +2064,35 @@
 </div>
 </div>
 </div>
-
 <div aria-hidden="true" class="checkpoint-arrival-effect" id="checkpointArrivalEffect">
 <div class="checkpoint-arrival-card">
 <div class="checkpoint-arrival-icons">🎉🚴‍♂️✨</div>
 <strong id="checkpointArrivalName">チェックポイント到達！</strong>
 <small>チェックポイント到達！</small>
+</div>
+</div>
+
+<div aria-hidden="true" class="ride-result-modal" id="rideResultModal">
+<div class="ride-result-card">
+<div class="ride-result-title">
+<small>RIDE RESULT</small>
+<strong>走行おつかれさま！</strong>
+</div>
+<div class="ride-result-route" id="rideResultRoute">マイルート</div>
+<div class="ride-result-main">
+<b id="rideResultDistance">0.00 / 0.00 km</b>
+<span id="rideResultStatus">途中終了</span>
+</div>
+<div class="ride-result-grid">
+<div><small>進捗</small><b id="rideResultPercent">0%</b></div>
+<div><small>時間</small><b id="rideResultTime">00:00</b></div>
+<div><small>消費</small><b id="rideResultCal">0kcal</b></div>
+<div><small>CP</small><b id="rideResultCp">0 / 0</b></div>
+</div>
+<div class="ride-result-actions">
+<button class="save-log" id="saveRideLogBtn">記録を保存</button>
+<button class="discard-log" id="discardRideLogBtn">保存しない</button>
+</div>
 </div>
 </div>
 </div>
@@ -1895,6 +2111,7 @@ let st={
 };
 let map=null, marker=null;
 const ROUTES_KEY='japanRide.myRoutes.v1';
+const RIDE_LOGS_KEY='japanRide.rideLogs.v1';
 let draftMarkers=[];
 const DEFAULT_MAIN_ROUTE=st.route.map(p=>[Number(p[0]),Number(p[1])]);
 const $=id=>document.getElementById(id);
@@ -4301,29 +4518,27 @@ function useMyRoute(id, closePage=true){
 }
 
 
-/* D66-26 checkpoint ride display
-   - Placeholder/wording is generic.
-   - Goal distance remains.
-   - Next named checkpoint distance is shown separately.
-   - A cute arrival effect fires when passing a named checkpoint.
+/* D66-27 safe checkpoint ride display
+   保存/読込/編集/走行開始の根幹関数は上書きしない。
+   ここでは走行中表示だけを追加する。
 */
-function checkpointDistanceKm(cp){
+function cpDistanceForDisplay(cp){
  if(!cp) return 0;
  if(Number.isFinite(Number(cp.distanceKm))) return Number(cp.distanceKm);
  return distanceAtIndex(st.route||[], Number(cp.index||0));
 }
-function activeCheckpointItems(){
+function activeCpItemsForDisplay(){
  const cps=normalizeCheckpoints(st.activeRouteCheckpoints||[], st.route||[]);
  return cps.map(cp=>({
    index:cp.index,
    name:cp.name,
-   distanceKm:checkpointDistanceKm(cp),
+   distanceKm:cpDistanceForDisplay(cp),
    key:String(cp.index)+'::'+cp.name
  })).filter(cp=>cp.name && Number.isFinite(cp.distanceKm) && cp.distanceKm>0.005)
    .sort((a,b)=>a.distanceKm-b.distanceKm);
 }
 function getNextCheckpointInfo(traveledKm){
- const items=activeCheckpointItems();
+ const items=activeCpItemsForDisplay();
  const next=items.find(cp=>cp.distanceKm>traveledKm+0.005);
  if(next){
    return {name:next.name, remainKm:Math.max(0,next.distanceKm-traveledKm), isGoal:false};
@@ -4348,11 +4563,10 @@ function showCheckpointArrival(name){
 function checkCheckpointArrival(traveledKm){
  if(!st.activeRouteId) return;
  if(!Array.isArray(st.reachedCheckpointKeys)) st.reachedCheckpointKeys=[];
- const newly=activeCheckpointItems().filter(cp=>cp.distanceKm<=traveledKm+0.005 && !st.reachedCheckpointKeys.includes(cp.key));
+ const newly=activeCpItemsForDisplay().filter(cp=>cp.distanceKm<=traveledKm+0.005 && !st.reachedCheckpointKeys.includes(cp.key));
  if(!newly.length) return;
  newly.forEach(cp=>st.reachedCheckpointKeys.push(cp.key));
- const last=newly[newly.length-1];
- showCheckpointArrival(last.name);
+ showCheckpointArrival(newly[newly.length-1].name);
 }
 function updateMyRouteRidePanel(routeTotal, traveled, routeRemain, prog){
  if($('myRouteRidePanel')) $('myRouteRidePanel').setAttribute('aria-hidden', st.activeRouteId ? 'false' : 'true');
@@ -4360,7 +4574,6 @@ function updateMyRouteRidePanel(routeTotal, traveled, routeRemain, prog){
  if($('myRouteTotal')) $('myRouteTotal').textContent=routeTotal.toFixed(2);
  if($('myRouteRemain')) $('myRouteRemain').textContent=routeRemain.toFixed(2)+'km';
  if($('myRoutePercent')) $('myRoutePercent').textContent=Math.round(prog)+'%';
-
  const next=st.activeRouteId ? getNextCheckpointInfo(traveled) : null;
  if($('myRouteNow')){
    if(!st.activeRouteId) $('myRouteNow').textContent='スタート';
@@ -4380,81 +4593,159 @@ function updateMyRouteRidePanel(routeTotal, traveled, routeRemain, prog){
  }
  checkCheckpointArrival(traveled);
 }
-function setActiveRoute(route){
- st.activeRouteId=route.id;
- st.activeRouteName=route.name || 'マイルート';
- st.activeRouteDistanceKm=Number(route.distanceKm || routeDistanceKm(route.points||[]));
- const basePts=(route.waypoints && route.waypoints.length) ? route.waypoints : (route.points||[]);
- st.activeRouteCheckpoints=normalizeCheckpoints(route.checkpoints||[], basePts).map(cp=>({
-   ...cp,
-   distanceKm:distanceAtIndex(basePts, cp.index)
- }));
- st.reachedCheckpointKeys=[];
- st.sess=0;
- st.t=0;
- document.querySelector('.phone').classList.add('my-route-active');
- if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート走行中';
- if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
+
+
+/* D66-28 ride logs + manual preview
+   注意: マイルート本体の読込/保存/編集関数は上書きしない。
+   追加するのは走行記録、ルート終了時の結果表示、手入力プレビュー進行だけ。
+*/
+function loadRideLogs(){
+ try{
+   const raw=JSON.parse(localStorage.getItem(RIDE_LOGS_KEY)||'[]');
+   return Array.isArray(raw) ? raw : [];
+ }catch(e){
+   return [];
+ }
+}
+function saveRideLogs(logs){
+ localStorage.setItem(RIDE_LOGS_KEY, JSON.stringify(Array.isArray(logs)?logs:[]));
+}
+function formatDateTimeJa(iso){
+ const d=new Date(iso);
+ if(Number.isNaN(d.getTime())) return '';
+ const y=d.getFullYear();
+ const m=String(d.getMonth()+1).padStart(2,'0');
+ const day=String(d.getDate()).padStart(2,'0');
+ const hh=String(d.getHours()).padStart(2,'0');
+ const mm=String(d.getMinutes()).padStart(2,'0');
+ return `${y}/${m}/${day} ${hh}:${mm}`;
+}
+function activeCheckpointCountForLog(traveledKm){
+ const cps=typeof activeCpItemsForDisplay==='function' ? activeCpItemsForDisplay() : normalizeCheckpoints(st.activeRouteCheckpoints||[], st.route||[]).map(cp=>({name:cp.name,index:cp.index,distanceKm:distanceAtIndex(st.route||[],cp.index)}));
+ const total=cps.length;
+ const reached=cps.filter(cp=>Number(cp.distanceKm)<=traveledKm+0.005).length;
+ return {reached,total};
+}
+function currentRideSummary(){
+ const total=Math.max(0.01,Number(st.activeRouteDistanceKm||routeDistanceKm(st.route||[])));
+ const traveled=Math.min(Math.max(0,Number(st.sess||0)),total);
+ const remain=Math.max(0,total-traveled);
+ const percent=Math.min(100,(traveled/total)*100);
+ const cp=activeCheckpointCountForLog(traveled);
+ const complete=remain<=0.01 || percent>=99.5;
+ return {
+   id:'log'+Date.now(),
+   routeId:st.activeRouteId,
+   routeName:st.activeRouteName||'マイルート',
+   createdAt:new Date().toISOString(),
+   distanceKm:traveled,
+   totalKm:total,
+   remainKm:remain,
+   percent,
+   timeSec:Math.max(0,Number(st.t||0)),
+   calories:Math.max(0,Math.round(Number(st.activeRideSessionCal||0))),
+   checkpointsReached:cp.reached,
+   checkpointsTotal:cp.total,
+   complete
+ };
+}
+function openRideResultModal(){
+ if(!st.activeRouteId) return;
+ const summary=currentRideSummary();
+ st.pendingRideLog=summary;
+ if($('rideResultRoute')) $('rideResultRoute').textContent=summary.routeName;
+ if($('rideResultDistance')) $('rideResultDistance').textContent=`${summary.distanceKm.toFixed(2)} / ${summary.totalKm.toFixed(2)} km`;
+ if($('rideResultStatus')) $('rideResultStatus').textContent=summary.complete?'完走':'途中終了';
+ if($('rideResultPercent')) $('rideResultPercent').textContent=Math.round(summary.percent)+'%';
+ if($('rideResultTime')) $('rideResultTime').textContent=fmtTime(summary.timeSec);
+ if($('rideResultCal')) $('rideResultCal').textContent=summary.calories+'kcal';
+ if($('rideResultCp')) $('rideResultCp').textContent=`${summary.checkpointsReached} / ${summary.checkpointsTotal}`;
+ if($('rideResultModal')){
+   $('rideResultModal').classList.add('open');
+   $('rideResultModal').setAttribute('aria-hidden','false');
+ }
+}
+function closeRideResultModal(){
+ if($('rideResultModal')){
+   $('rideResultModal').classList.remove('open');
+   $('rideResultModal').setAttribute('aria-hidden','true');
+ }
+}
+function finishActiveRide(saveLog){
+ const summary=st.pendingRideLog || currentRideSummary();
+ if(saveLog && summary){
+   const logs=loadRideLogs();
+   logs.unshift(summary);
+   saveRideLogs(logs.slice(0,200));
+ }
+ closeRideResultModal();
+ st.pendingRideLog=null;
+ st.activeRideSessionCal=0;
+ clearActiveRoute();
+ if(saveLog){
+   setTabTo('records');
+   renderRideLogs();
+ }
+}
+function confirmClearActiveRoute(){
+ if(!st.activeRouteId) return;
+ openRideResultModal();
+}
+function renderRideLogs(){
+ const list=$('rideLogList');
+ const summary=$('rideLogSummary');
+ if(!list) return;
+ const logs=loadRideLogs();
+ if(summary){
+   if(!logs.length) summary.textContent='走行記録はまだありません。';
+   else{
+     const total=logs.reduce((s,l)=>s+Number(l.distanceKm||0),0);
+     summary.textContent=`記録 ${logs.length}件 ・ 合計 ${total.toFixed(2)}km`;
+   }
+ }
+ if(!logs.length){
+   list.innerHTML='<div class="simple-empty">まだ走行記録はありません。マイルート走行を終了すると保存できます。</div>';
+   return;
+ }
+ list.innerHTML=logs.map(l=>`
+  <div class="ride-log-item">
+    <div class="ride-log-item-top">
+      <div>
+        <strong>${escapeHtml(l.routeName||'マイルート')}</strong>
+        <small>${formatDateTimeJa(l.createdAt)}</small>
+      </div>
+      <span class="ride-log-badge">${l.complete?'完走':'途中終了'}</span>
+    </div>
+    <div class="ride-log-meta">
+      <span>${Number(l.distanceKm||0).toFixed(2)}km</span>
+      <span>${fmtTime(Number(l.timeSec||0))}</span>
+      <span>${Math.round(Number(l.percent||0))}%</span>
+    </div>
+  </div>`).join('');
+}
+function addDemoRideDistance(km){
+ const n=Math.max(0,Number(km||0));
+ if(!st.running){
+   renderUI();
+   return;
+ }
+ st.sess+=n;
+ st.t+=30;
+ const calAdd=Math.max(1,n*28);
+ st.cal+=calAdd;
+ if(st.activeRouteId){
+   st.activeRideSessionCal=(Number(st.activeRideSessionCal||0)+calAdd);
+ }else{
+   st.km=Math.min(LEG,st.km+n);
+ }
  renderUI();
  updateRouteProgressOnMap();
 }
-function clearActiveRoute(){
- st.activeRouteId=null;
- st.activeRouteName='';
- st.activeRouteDistanceKm=0;
- st.activeRouteCheckpoints=[];
- st.reachedCheckpointKeys=[];
- st.route=DEFAULT_MAIN_ROUTE.map(p=>[p[0],p[1]]);
- document.querySelector('.phone').classList.remove('my-route-active');
- if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
- if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
- updateMainRouteOnMap();
- updateActiveCheckpointLayer();
- renderUI();
-}
-function saveDraftRoute(){
- const input=$('checkpointNameInput');
- if(input && !input.disabled && Number.isInteger(st.selectedDraftIndex) && st.selectedDraftIndex>=0){
-   const typed=String(input.value||'').trim();
-   const existing=getCheckpointName(st.selectedDraftIndex);
-   if(typed || existing) setCheckpointName(st.selectedDraftIndex, typed);
- }
- const pts=cloneCoords(getDraftWaypoints());
- const route=cloneCoords((st.draftRoute && st.draftRoute.length) ? st.draftRoute : pts);
- if(pts.length<2 || route.length<2){
-   alert('2地点以上タップしてから保存してください');
-   return;
- }
- const nameInput=$('routeNameInput');
- const name=(nameInput && nameInput.value.trim()) || 'マイルート '+new Date().toLocaleDateString('ja-JP');
- const routes=loadMyRoutes();
- const distanceKm=routeDistanceKm(route);
- const checkpoints=compactCheckpointsForSave(pts);
-
- if(st.editingRouteId){
-   const idx=routes.findIndex(r=>String(r.id)===String(st.editingRouteId));
-   if(idx>=0){
-     routes[idx]={...routes[idx], name, points:route, waypoints:pts, checkpoints, distanceKm, updatedAt:new Date().toISOString()};
-     saveMyRoutes(routes);
-     useMyRoute(routes[idx].id, false);
-   }else{
-     const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, checkpoints, distanceKm, createdAt:new Date().toISOString()};
-     routes.unshift(routeObj);
-     saveMyRoutes(routes);
-     useMyRoute(routeObj.id, false);
-   }
- }else{
-   const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, checkpoints, distanceKm, createdAt:new Date().toISOString()};
-   routes.unshift(routeObj);
-   saveMyRoutes(routes);
-   useMyRoute(routeObj.id, false);
- }
- exitRouteEdit();
- setTabTo('routes');
- renderMyRoutes();
-}
 
 document.addEventListener('click',e=>{
+ if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
+ if(e.target.closest('#discardRideLogBtn')){finishActiveRide(false);return}
+
  if(e.target.closest('#mode') && st.activeRouteId){confirmClearActiveRoute();return}
 
  if(document.querySelector('.phone').classList.contains('route-editor-collapsed') && e.target.closest('#routeEditor')){
@@ -4467,6 +4758,7 @@ document.addEventListener('click',e=>{
    const tab=mainTab.dataset.mainTab;
    setTabTo(tab);
    if(tab==='routes') renderMyRoutes();
+   if(tab==='records') renderRideLogs();
    return;
  }
 
@@ -4521,9 +4813,10 @@ window.addEventListener('resize',()=>{if(map)map.resize()});
 setupDots();
 renderUI();
 setDisplay('detail');
-setInput('sensor');
+setInput('manual');
 initMap();
 renderMyRoutes();
+renderRideLogs();
 updateUndoButton();
 
 
