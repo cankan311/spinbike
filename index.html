@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-39 Mode Navigation</title>
+<title>Japan Ride D66-40 State Aware Navigation</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -2039,6 +2039,31 @@
   .ride-mode-btn{padding:7px 6px}
   .ride-mode-hint{display:none}
 }
+
+
+/* D66-40: 状態別導線。マイルート走行中は切替UIを出さない */
+.phone.my-route-active .ride-mode-switch,
+.phone.my-route-active .ride-mode-hint{
+  display:none!important;
+}
+.ride-mode-hint{
+  display:none!important;
+}
+.ride-mode-switch{
+  margin:0 0 7px!important;
+  padding:3px!important;
+  border-radius:15px!important;
+}
+.ride-mode-btn{
+  border-radius:12px!important;
+  padding:6px 6px!important;
+}
+.ride-mode-btn span{
+  font-size:11.5px!important;
+}
+.ride-mode-btn small{
+  display:none!important;
+}
 </style>
 </head>
 <body>
@@ -2111,7 +2136,6 @@
 <small>作成・編集・選択はここ。選ぶと「走る」タブの走行前状態へ進みます。</small>
 </div>
 </div>
-
 <button class="simple-action" id="startRouteEditBtn">＋ 新しいルートを作る</button>
 <div class="route-list" id="myRouteList"></div>
 </div>
@@ -2136,7 +2160,6 @@
 <div class="ui">
 <div class="top">
 <div class="hero">
-
 <div class="ride-mode-switch" id="rideModeSwitch">
 <button class="ride-mode-btn active" data-ride-mode="japan">
 <span>日本一周</span><small>本編</small>
@@ -6457,6 +6480,33 @@ function handleRideModeButton(mode){
  };
 })();
 
+
+/* D66-40 state aware navigation
+   - 日本一周/マイルート切替は、ルート未選択時の入口としてだけ表示。
+   - マイルート選択後/走行前/走行中/一時停止/完走では非表示。
+   - ルート終了は既存の右上ボタンに一本化。
+   注意: 保存/読込/編集/追従/描画ロジックは触らない。
+*/
+function updateModeNavVisibility(){
+ const active=!!st.activeRouteId;
+ const sw=$('rideModeSwitch');
+ const hint=$('rideModeHint');
+ if(sw) sw.style.display=active?'none':'';
+ if(hint) hint.style.display='none';
+}
+(function(){
+ const prevUpdateRideModeNavigation=updateRideModeNavigation;
+ updateRideModeNavigation=function(){
+   prevUpdateRideModeNavigation();
+   updateModeNavVisibility();
+ };
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   prevRenderUI();
+   updateModeNavVisibility();
+ };
+})();
+
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
  if(e.target.closest('#discardRideLogBtn')){finishActiveRide(false);return}
@@ -6537,6 +6587,7 @@ initMap();
 renderMyRoutes();
 renderRideLogs();
 updateUndoButton();
+updateModeNavVisibility();
 updateRideModeNavigation();
 syncAutoFollowButton();
 startSmoothRideLoop();
