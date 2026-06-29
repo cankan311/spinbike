@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-25 Named Checkpoints</title>
+<title>Japan Ride D66-26 Checkpoint Ride Display</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1631,6 +1631,96 @@
 .phone.route-editor-collapsed .checkpoint-editor{
   display:none!important;
 }
+
+
+/* D66-26: 次チェックポイント表示と到達エフェクト */
+.myroute-next-line{
+  margin-top:8px;
+  border-radius:14px;
+  padding:8px 9px;
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(22,185,120,.18);
+}
+.myroute-next-line small{
+  display:block;
+  font-size:9.5px;
+  line-height:1;
+  color:#667085;
+  font-weight:1000;
+  margin-bottom:5px;
+}
+.myroute-next-line b{
+  display:block;
+  min-width:0;
+  color:#111827;
+  font-size:14px;
+  line-height:1.2;
+  font-weight:1000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#myRouteNextRemain{
+  margin-left:4px;
+  color:#12895b;
+  font-variant-numeric:tabular-nums;
+}
+.checkpoint-arrival-effect{
+  position:absolute;
+  inset:0;
+  z-index:180;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  background:radial-gradient(circle at center,rgba(22,185,120,.16),rgba(255,255,255,0) 58%);
+}
+.checkpoint-arrival-effect.show{
+  display:flex;
+  animation:checkpointFade 1.8s ease both;
+}
+.checkpoint-arrival-card{
+  max-width:78%;
+  border-radius:24px;
+  padding:18px 18px 16px;
+  text-align:center;
+  background:rgba(255,255,255,.96);
+  border:1px solid rgba(22,185,120,.22);
+  box-shadow:0 18px 50px rgba(15,23,42,.25);
+  transform-origin:center;
+  animation:checkpointPop 1.8s ease both;
+}
+.checkpoint-arrival-icons{
+  font-size:28px;
+  line-height:1;
+  margin-bottom:8px;
+}
+.checkpoint-arrival-card strong{
+  display:block;
+  font-size:18px;
+  font-weight:1000;
+  color:#111827;
+  line-height:1.2;
+}
+.checkpoint-arrival-card small{
+  display:block;
+  margin-top:5px;
+  color:#12895b;
+  font-weight:1000;
+}
+@keyframes checkpointPop{
+  0%{transform:scale(.72) translateY(10px);opacity:0}
+  18%{transform:scale(1.06) translateY(0);opacity:1}
+  35%{transform:scale(1)}
+  78%{transform:scale(1);opacity:1}
+  100%{transform:scale(.96);opacity:0}
+}
+@keyframes checkpointFade{
+  0%{opacity:0}
+  12%{opacity:1}
+  78%{opacity:1}
+  100%{opacity:0}
+}
 </style>
 </head>
 <body>
@@ -1666,12 +1756,11 @@
 <b id="checkpointTarget">点を選択</b>
 </div>
 <div class="checkpoint-editor-row">
-<input disabled="" id="checkpointNameInput" placeholder="選択点名 例：初倉駅"/>
+<input disabled="" id="checkpointNameInput" placeholder="チェックポイント名"/>
 <button disabled="" id="saveCheckpointNameBtn">登録</button>
 </div>
 <button class="checkpoint-clear" disabled="" id="clearCheckpointNameBtn">名前削除</button>
 </div>
-
 <div class="route-editor-tip">地図をタップしてルート点を追加</div>
 <div class="route-editor-actions">
 <button id="undoRoutePointBtn">1つ戻す</button>
@@ -1737,6 +1826,11 @@
 <div><small>進捗</small><b id="myRoutePercent">0%</b></div>
 <div><small>次</small><b id="myRouteNow">スタート</b></div>
 </div>
+<div class="myroute-next-line" id="myRouteNextLine">
+<small>次のチェックポイント</small>
+<b><span id="myRouteNextName">未設定</span><span id="myRouteNextRemain"></span></b>
+</div>
+
 </div>
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
@@ -1775,6 +1869,14 @@
 <div class="dock-grid" id="metrics"></div>
 <div class="secondary-wrap" id="secondaryWrap"><div class="dock-grid" id="metrics2"></div></div>
 </div>
+</div>
+</div>
+
+<div aria-hidden="true" class="checkpoint-arrival-effect" id="checkpointArrivalEffect">
+<div class="checkpoint-arrival-card">
+<div class="checkpoint-arrival-icons">🎉🚴‍♂️✨</div>
+<strong id="checkpointArrivalName">チェックポイント到達！</strong>
+<small>チェックポイント到達！</small>
 </div>
 </div>
 </div>
@@ -4196,6 +4298,160 @@ function useMyRoute(id, closePage=true){
    setTabTo('ride');
    setDisplay('detail');
  }
+}
+
+
+/* D66-26 checkpoint ride display
+   - Placeholder/wording is generic.
+   - Goal distance remains.
+   - Next named checkpoint distance is shown separately.
+   - A cute arrival effect fires when passing a named checkpoint.
+*/
+function checkpointDistanceKm(cp){
+ if(!cp) return 0;
+ if(Number.isFinite(Number(cp.distanceKm))) return Number(cp.distanceKm);
+ return distanceAtIndex(st.route||[], Number(cp.index||0));
+}
+function activeCheckpointItems(){
+ const cps=normalizeCheckpoints(st.activeRouteCheckpoints||[], st.route||[]);
+ return cps.map(cp=>({
+   index:cp.index,
+   name:cp.name,
+   distanceKm:checkpointDistanceKm(cp),
+   key:String(cp.index)+'::'+cp.name
+ })).filter(cp=>cp.name && Number.isFinite(cp.distanceKm) && cp.distanceKm>0.005)
+   .sort((a,b)=>a.distanceKm-b.distanceKm);
+}
+function getNextCheckpointInfo(traveledKm){
+ const items=activeCheckpointItems();
+ const next=items.find(cp=>cp.distanceKm>traveledKm+0.005);
+ if(next){
+   return {name:next.name, remainKm:Math.max(0,next.distanceKm-traveledKm), isGoal:false};
+ }
+ const total=Number(st.activeRouteDistanceKm||routeDistanceKm(st.route||[]));
+ return {name:'ゴール', remainKm:Math.max(0,total-traveledKm), isGoal:true};
+}
+function showCheckpointArrival(name){
+ const box=$('checkpointArrivalEffect');
+ if(!box) return;
+ if($('checkpointArrivalName')) $('checkpointArrivalName').textContent=name+' 到達！';
+ box.classList.remove('show');
+ void box.offsetWidth;
+ box.classList.add('show');
+ box.setAttribute('aria-hidden','false');
+ clearTimeout(st.checkpointArrivalTimer);
+ st.checkpointArrivalTimer=setTimeout(()=>{
+   box.classList.remove('show');
+   box.setAttribute('aria-hidden','true');
+ },1800);
+}
+function checkCheckpointArrival(traveledKm){
+ if(!st.activeRouteId) return;
+ if(!Array.isArray(st.reachedCheckpointKeys)) st.reachedCheckpointKeys=[];
+ const newly=activeCheckpointItems().filter(cp=>cp.distanceKm<=traveledKm+0.005 && !st.reachedCheckpointKeys.includes(cp.key));
+ if(!newly.length) return;
+ newly.forEach(cp=>st.reachedCheckpointKeys.push(cp.key));
+ const last=newly[newly.length-1];
+ showCheckpointArrival(last.name);
+}
+function updateMyRouteRidePanel(routeTotal, traveled, routeRemain, prog){
+ if($('myRouteRidePanel')) $('myRouteRidePanel').setAttribute('aria-hidden', st.activeRouteId ? 'false' : 'true');
+ if($('myRouteDone')) $('myRouteDone').textContent=traveled.toFixed(2);
+ if($('myRouteTotal')) $('myRouteTotal').textContent=routeTotal.toFixed(2);
+ if($('myRouteRemain')) $('myRouteRemain').textContent=routeRemain.toFixed(2)+'km';
+ if($('myRoutePercent')) $('myRoutePercent').textContent=Math.round(prog)+'%';
+
+ const next=st.activeRouteId ? getNextCheckpointInfo(traveled) : null;
+ if($('myRouteNow')){
+   if(!st.activeRouteId) $('myRouteNow').textContent='スタート';
+   else $('myRouteNow').textContent=next ? `${next.name} ${next.remainKm.toFixed(2)}km` : 'ゴール';
+ }
+ if($('myRouteNextName') && $('myRouteNextRemain')){
+   if(!st.activeRouteId){
+     $('myRouteNextName').textContent='未設定';
+     $('myRouteNextRemain').textContent='';
+   }else if(next && !next.isGoal){
+     $('myRouteNextName').textContent=next.name;
+     $('myRouteNextRemain').textContent='まであと '+next.remainKm.toFixed(2)+'km';
+   }else{
+     $('myRouteNextName').textContent='ゴール';
+     $('myRouteNextRemain').textContent='まであと '+routeRemain.toFixed(2)+'km';
+   }
+ }
+ checkCheckpointArrival(traveled);
+}
+function setActiveRoute(route){
+ st.activeRouteId=route.id;
+ st.activeRouteName=route.name || 'マイルート';
+ st.activeRouteDistanceKm=Number(route.distanceKm || routeDistanceKm(route.points||[]));
+ const basePts=(route.waypoints && route.waypoints.length) ? route.waypoints : (route.points||[]);
+ st.activeRouteCheckpoints=normalizeCheckpoints(route.checkpoints||[], basePts).map(cp=>({
+   ...cp,
+   distanceKm:distanceAtIndex(basePts, cp.index)
+ }));
+ st.reachedCheckpointKeys=[];
+ st.sess=0;
+ st.t=0;
+ document.querySelector('.phone').classList.add('my-route-active');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート走行中';
+ if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
+ renderUI();
+ updateRouteProgressOnMap();
+}
+function clearActiveRoute(){
+ st.activeRouteId=null;
+ st.activeRouteName='';
+ st.activeRouteDistanceKm=0;
+ st.activeRouteCheckpoints=[];
+ st.reachedCheckpointKeys=[];
+ st.route=DEFAULT_MAIN_ROUTE.map(p=>[p[0],p[1]]);
+ document.querySelector('.phone').classList.remove('my-route-active');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
+ if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
+ updateMainRouteOnMap();
+ updateActiveCheckpointLayer();
+ renderUI();
+}
+function saveDraftRoute(){
+ const input=$('checkpointNameInput');
+ if(input && !input.disabled && Number.isInteger(st.selectedDraftIndex) && st.selectedDraftIndex>=0){
+   const typed=String(input.value||'').trim();
+   const existing=getCheckpointName(st.selectedDraftIndex);
+   if(typed || existing) setCheckpointName(st.selectedDraftIndex, typed);
+ }
+ const pts=cloneCoords(getDraftWaypoints());
+ const route=cloneCoords((st.draftRoute && st.draftRoute.length) ? st.draftRoute : pts);
+ if(pts.length<2 || route.length<2){
+   alert('2地点以上タップしてから保存してください');
+   return;
+ }
+ const nameInput=$('routeNameInput');
+ const name=(nameInput && nameInput.value.trim()) || 'マイルート '+new Date().toLocaleDateString('ja-JP');
+ const routes=loadMyRoutes();
+ const distanceKm=routeDistanceKm(route);
+ const checkpoints=compactCheckpointsForSave(pts);
+
+ if(st.editingRouteId){
+   const idx=routes.findIndex(r=>String(r.id)===String(st.editingRouteId));
+   if(idx>=0){
+     routes[idx]={...routes[idx], name, points:route, waypoints:pts, checkpoints, distanceKm, updatedAt:new Date().toISOString()};
+     saveMyRoutes(routes);
+     useMyRoute(routes[idx].id, false);
+   }else{
+     const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, checkpoints, distanceKm, createdAt:new Date().toISOString()};
+     routes.unshift(routeObj);
+     saveMyRoutes(routes);
+     useMyRoute(routeObj.id, false);
+   }
+ }else{
+   const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, checkpoints, distanceKm, createdAt:new Date().toISOString()};
+   routes.unshift(routeObj);
+   saveMyRoutes(routes);
+   useMyRoute(routeObj.id, false);
+ }
+ exitRouteEdit();
+ setTabTo('routes');
+ renderMyRoutes();
 }
 
 document.addEventListener('click',e=>{
