@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-21 Saved Route Normalize Fix</title>
+<title>Japan Ride D66-22 Route Data Diagnostics</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1468,6 +1468,92 @@
 /* D66-19: 保存済みルートを「走る」モードへ反映 */
 .phone.my-route-active .hero-icon{background:#e8f7f0!important}
 .phone.my-route-active .eyebrow{color:#16B978!important}
+
+
+/* D66-22: ルートデータ診断 */
+.route-diag{
+  background:#fff7ed!important;
+  color:#9a3412!important;
+}
+.route-diag-panel{
+  position:absolute;
+  inset:0;
+  z-index:120;
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  background:rgba(15,23,42,.28);
+  padding:12px;
+}
+.route-diag-panel.open{
+  display:flex;
+}
+.route-diag-card{
+  width:100%;
+  max-height:82%;
+  overflow:hidden;
+  background:#fff;
+  border-radius:22px;
+  box-shadow:0 20px 60px rgba(15,23,42,.26);
+  border:1px solid rgba(148,163,184,.35);
+  display:flex;
+  flex-direction:column;
+}
+.route-diag-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px 8px;
+}
+.route-diag-close{
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  border:0;
+  background:#eef2f7;
+  font-weight:1000;
+}
+.route-diag-summary{
+  padding:0 16px 10px;
+  font-size:12px;
+  line-height:1.45;
+  color:#475467;
+}
+.route-diag-summary b{
+  color:#111827;
+}
+.route-diag-text{
+  margin:0 12px;
+  min-height:260px;
+  flex:1;
+  resize:none;
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:14px;
+  padding:10px;
+  font-size:11px;
+  line-height:1.45;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+  color:#111827;
+  background:#f8fafc;
+}
+.route-diag-actions{
+  display:grid;
+  grid-template-columns:1fr 92px;
+  gap:8px;
+  padding:12px;
+}
+.route-diag-actions button{
+  border:0;
+  border-radius:14px;
+  padding:11px 10px;
+  font-weight:1000;
+  background:#111827;
+  color:#fff;
+}
+.route-diag-actions button:last-child{
+  background:#eef2f7;
+  color:#111827;
+}
 </style>
 </head>
 <body>
@@ -1589,6 +1675,21 @@
 </div>
 <div class="dock-grid" id="metrics"></div>
 <div class="secondary-wrap" id="secondaryWrap"><div class="dock-grid" id="metrics2"></div></div>
+</div>
+</div>
+</div>
+
+<div aria-hidden="true" class="route-diag-panel" id="routeDiagPanel">
+<div class="route-diag-card">
+<div class="route-diag-head">
+<strong>ルートデータ診断</strong>
+<button class="route-diag-close" id="closeRouteDiagBtn">×</button>
+</div>
+<div class="route-diag-summary" id="routeDiagSummary"></div>
+<textarea class="route-diag-text" id="routeDiagText" readonly=""></textarea>
+<div class="route-diag-actions">
+<button id="copyRouteDiagBtn">診断内容をコピー</button>
+<button id="closeRouteDiagBtn2">閉じる</button>
 </div>
 </div>
 </div>
@@ -3430,6 +3531,143 @@ function useMyRoute(id, closePage=true){
  }
 }
 
+
+/* D66-22 route data diagnostics
+   実データを見ずに決め打ちしないための確認用。localStorageのrawと正規化後を並べて表示する。
+*/
+function loadRawMyRoutes(){
+ try{
+   const raw=JSON.parse(localStorage.getItem(ROUTES_KEY)||'[]');
+   return Array.isArray(raw) ? raw : [];
+ }catch(e){
+   return [];
+ }
+}
+function compactJsonForDiag(obj){
+ try{
+   return JSON.stringify(obj,null,2);
+ }catch(e){
+   return String(obj);
+ }
+}
+function coordCountForDiag(v){
+ return normalizeCoordArray(v).length;
+}
+function candidateCountsForDiag(r){
+ const keys=['points','waypoints','route','coords','coordinates','path','polyline','line','draftWaypoints','draftRoute','geometry'];
+ const out={};
+ keys.forEach(k=>{
+   if(r && Object.prototype.hasOwnProperty.call(r,k)){
+     out[k]=coordCountForDiag(r[k]);
+   }
+ });
+ return out;
+}
+function makeRouteDiagText(id){
+ const rawRoutes=loadRawMyRoutes();
+ const raw=rawRoutes.find(r=>String(r && r.id)===String(id));
+ const normalized=loadMyRoutes().find(r=>String(r && r.id)===String(id));
+ const counts=raw ? candidateCountsForDiag(raw) : {};
+ const normalizedPoints=normalized ? coordCountForDiag(normalized.points) : 0;
+ const normalizedWaypoints=normalized ? coordCountForDiag(normalized.waypoints) : 0;
+ const lines=[];
+ lines.push('D66-22 Route Data Diagnostics');
+ lines.push('routeId: '+id);
+ lines.push('ROUTES_KEY: '+ROUTES_KEY);
+ lines.push('');
+ lines.push('[Raw route exists]');
+ lines.push(raw ? 'YES' : 'NO');
+ lines.push('');
+ lines.push('[Raw route keys]');
+ lines.push(raw ? Object.keys(raw).join(', ') : '(none)');
+ lines.push('');
+ lines.push('[Candidate coordinate counts from raw]');
+ lines.push(Object.keys(counts).length ? JSON.stringify(counts,null,2) : '(no candidate keys or 0)');
+ lines.push('');
+ lines.push('[Normalized result]');
+ lines.push(JSON.stringify({
+   exists:!!normalized,
+   id:normalized && normalized.id,
+   name:normalized && normalized.name,
+   points:normalizedPoints,
+   waypoints:normalizedWaypoints,
+   distanceKm:normalized && normalized.distanceKm
+ },null,2));
+ lines.push('');
+ lines.push('[Judgement]');
+ if(!raw){
+   lines.push('保存済みルートのrawデータが見つかっていません。');
+ }else if(normalizedPoints>=2 || normalizedWaypoints>=2){
+   lines.push('座標データは復元できています。編集で表示されない場合は描画側・レイヤー側の問題です。');
+ }else if(Object.values(counts).some(n=>n>=2)){
+   lines.push('rawには座標らしきデータがありますが、正規化後に落ちています。normalize処理の不足です。');
+ }else{
+   lines.push('raw内に2点以上の座標データが見つかりません。過去の保存時点で座標が空になっている可能性があります。');
+ }
+ lines.push('');
+ lines.push('[Raw JSON]');
+ lines.push(raw ? compactJsonForDiag(raw) : '(none)');
+ return lines.join('\n');
+}
+function showRouteDiag(id){
+ const text=makeRouteDiagText(id);
+ const normalized=loadMyRoutes().find(r=>String(r && r.id)===String(id));
+ const pts=normalized ? coordCountForDiag(normalized.points) : 0;
+ const wps=normalized ? coordCountForDiag(normalized.waypoints) : 0;
+ const dist=normalized && normalized.distanceKm ? Number(normalized.distanceKm).toFixed(2) : '0.00';
+ if($('routeDiagSummary')){
+   $('routeDiagSummary').innerHTML=`<b>${escapeHtml((normalized&&normalized.name)||'不明なルート')}</b><br>正規化後：points ${pts}点 / waypoints ${wps}点 / ${dist}km`;
+ }
+ if($('routeDiagText')) $('routeDiagText').value=text;
+ if($('routeDiagPanel')){
+   $('routeDiagPanel').classList.add('open');
+   $('routeDiagPanel').setAttribute('aria-hidden','false');
+ }
+}
+function closeRouteDiag(){
+ if($('routeDiagPanel')){
+   $('routeDiagPanel').classList.remove('open');
+   $('routeDiagPanel').setAttribute('aria-hidden','true');
+ }
+}
+async function copyRouteDiag(){
+ const text=$('routeDiagText') ? $('routeDiagText').value : '';
+ try{
+   await navigator.clipboard.writeText(text);
+   if($('routeDiagSummary')) $('routeDiagSummary').innerHTML += '<br>コピーしました';
+ }catch(e){
+   if($('routeDiagText')){
+     $('routeDiagText').focus();
+     $('routeDiagText').select();
+   }
+   alert('コピーできない場合は、テキスト欄を長押ししてコピーしてください');
+ }
+}
+function renderMyRoutes(){
+ const list=$('myRouteList');
+ if(!list) return;
+ const routes=loadMyRoutes();
+ if(!routes.length){
+   list.innerHTML='<div class="route-empty">まだ保存したルートはありません。<br>「新しいルートを作る」から地図をタップして作成できます。</div>';
+   return;
+ }
+ list.innerHTML=routes.map(r=>`
+  <div class="route-item">
+    <div class="route-item-top">
+      <div>
+        <strong>${escapeHtml(r.name||'無題のルート')}</strong>
+        <small>${(r.distanceKm||0).toFixed(2)}km ・ ${(r.waypoints||r.points||[]).length}地点</small>
+      </div>
+    </div>
+    <div class="route-item-actions">
+      <button class="route-use" data-use-route="${r.id}">このルートを走る</button>
+      <button class="route-edit" data-edit-route="${r.id}">編集</button>
+      <button class="route-diag" data-diag-route="${r.id}">診断</button>
+      <button class="route-delete" data-delete-route="${r.id}">削除</button>
+    </div>
+  </div>`).join('');
+}
+
 document.addEventListener('click',e=>{
  if(document.querySelector('.phone').classList.contains('route-editor-collapsed') && e.target.closest('#routeEditor')){
    openRouteEditorCard();
@@ -3457,6 +3695,11 @@ document.addEventListener('click',e=>{
 
  const editBtn=e.target.closest('[data-edit-route]');
  if(editBtn){editMyRoute(editBtn.dataset.editRoute);return}
+
+ const diagBtn=e.target.closest('[data-diag-route]');
+ if(diagBtn){showRouteDiag(diagBtn.dataset.diagRoute);return}
+ if(e.target.closest('#closeRouteDiagBtn')||e.target.closest('#closeRouteDiagBtn2')){closeRouteDiag();return}
+ if(e.target.closest('#copyRouteDiagBtn')){copyRouteDiag();return}
 
  const delBtn=e.target.closest('[data-delete-route]');
  if(delBtn){deleteMyRoute(delBtn.dataset.deleteRoute);return}
