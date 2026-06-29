@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-37 Pre Ride Preview UI</title>
+<title>Japan Ride D66-39 Mode Navigation</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1948,129 +1948,96 @@
 }
 
 
-/* D66-37: 走行前プレビューUI */
-.pre-ride-preview-card{
-  display:none;
-  margin-top:10px;
-  border-radius:20px;
-  padding:11px 12px;
-  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(247,250,255,.92));
-  border:1px solid rgba(47,107,255,.20);
-  box-shadow:0 10px 26px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.9);
+
+
+
+/* D66-39: 日本一周 / マイルート 導線整理 */
+.ride-mode-switch{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:0 0 10px;
+  padding:4px;
+  border-radius:18px;
+  background:rgba(241,245,249,.88);
+  border:1px solid rgba(148,163,184,.28);
 }
-.phone.my-route-active.my-route-ready .pre-ride-preview-card{
-  display:block;
-}
-.phone.my-route-active.my-route-ready .myroute-ride-panel{
-  display:block;
-}
-.phone.my-route-riding .pre-ride-preview-card,
-.phone.my-route-paused .pre-ride-preview-card,
-.phone.my-route-complete .pre-ride-preview-card{
-  display:none!important;
-}
-.pre-ride-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:flex-start;
-}
-.pre-ride-head small{
-  display:block;
-  flex:none;
-  color:#2563eb;
-  font-size:10px;
-  font-weight:1000;
-  letter-spacing:.08em;
-}
-.pre-ride-head strong{
-  display:block;
+.ride-mode-btn{
   min-width:0;
-  text-align:right;
+  border:0;
+  border-radius:14px;
+  padding:8px 8px;
+  background:transparent;
+  color:#475467;
+  text-align:center;
+  font-family:inherit;
+}
+.ride-mode-btn span{
+  display:block;
+  font-size:12px;
+  font-weight:1000;
+  line-height:1.1;
+}
+.ride-mode-btn small{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  font-weight:900;
+  color:inherit;
+  opacity:.78;
+}
+.ride-mode-btn.active{
+  background:#ffffff;
   color:#111827;
-  font-size:15px;
-  line-height:1.15;
+  box-shadow:0 4px 14px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.phone.mode-myroute .ride-mode-btn[data-ride-mode="myroute"]{
+  color:#12895b;
+}
+.phone.mode-japan .ride-mode-btn[data-ride-mode="japan"]{
+  color:#2563eb;
+}
+.ride-mode-hint{
+  margin:-5px 2px 8px;
+  color:#667085;
+  font-size:10.5px;
+  line-height:1.2;
   font-weight:1000;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.pre-ride-stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin-top:8px;
-}
-.pre-ride-stats div{
-  border-radius:14px;
-  padding:8px 9px;
-  background:#ffffff;
+.route-mode-guide{
+  margin-bottom:10px;
+  border-radius:18px;
+  padding:11px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(247,250,255,.82));
   border:1px solid rgba(148,163,184,.24);
 }
-.pre-ride-stats small{
+.route-mode-guide strong{
   display:block;
-  font-size:9.5px;
-  font-weight:1000;
-  color:#667085;
-  margin-bottom:3px;
-}
-.pre-ride-stats b{
-  display:block;
-  font-size:16px;
+  font-size:15px;
   font-weight:1000;
   color:#111827;
-  font-variant-numeric:tabular-nums;
 }
-.pre-ride-legend{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-  margin-top:9px;
-}
-.pre-ride-legend span{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  color:#344054;
+.route-mode-guide small{
+  display:block;
+  margin-top:4px;
   font-size:11px;
-  line-height:1.25;
-  font-weight:900;
+  line-height:1.35;
+  font-weight:850;
+  color:#667085;
 }
-.pre-ride-legend i{
-  width:18px;
-  height:5px;
-  border-radius:999px;
-  flex:none;
-  display:inline-block;
-}
-.legend-blue{background:#2563eb}
-.legend-green{background:#16B978}
-.legend-follow{
-  height:18px!important;
-  width:18px!important;
-  border-radius:50%!important;
-  background:#e8f7ef;
-  border:2px solid #16B978;
-}
-.pre-ride-note{
-  margin-top:9px;
-  border-radius:13px;
-  padding:8px 9px;
-  background:rgba(22,185,120,.08);
-  color:#12895b;
-  font-size:11px;
-  line-height:1.25;
-  font-weight:1000;
-  text-align:center;
-}
-.phone.compact .pre-ride-preview-card,
-.phone.maponly .pre-ride-preview-card{
+.phone.compact .ride-mode-switch,
+.phone.compact .ride-mode-hint,
+.phone.maponly .ride-mode-switch,
+.phone.maponly .ride-mode-hint{
   display:none!important;
 }
 @media(max-height:740px){
-  .pre-ride-preview-card{padding:9px 10px;margin-top:7px}
-  .pre-ride-legend{gap:4px;margin-top:7px}
-  .pre-ride-note{margin-top:7px;padding:7px 8px}
+  .ride-mode-switch{margin-bottom:7px}
+  .ride-mode-btn{padding:7px 6px}
+  .ride-mode-hint{display:none}
 }
 </style>
 </head>
@@ -2134,10 +2101,17 @@
 <section class="simple-page" id="routesPage">
 <div class="simple-sheet route-sheet">
 <div class="simple-head">
-<div><small>MY ROUTE</small><strong>マイルート</strong></div>
+<div><small>ROUTES</small><strong>ルート</strong></div>
 <button class="simple-close" data-main-tab="ride">×</button>
 </div>
 <div class="simple-body">
+<div class="route-mode-guide" id="routeModeGuide">
+<div>
+<strong>マイルート</strong>
+<small>作成・編集・選択はここ。選ぶと「走る」タブの走行前状態へ進みます。</small>
+</div>
+</div>
+
 <button class="simple-action" id="startRouteEditBtn">＋ 新しいルートを作る</button>
 <div class="route-list" id="myRouteList"></div>
 </div>
@@ -2162,6 +2136,16 @@
 <div class="ui">
 <div class="top">
 <div class="hero">
+
+<div class="ride-mode-switch" id="rideModeSwitch">
+<button class="ride-mode-btn active" data-ride-mode="japan">
+<span>日本一周</span><small>本編</small>
+</button>
+<button class="ride-mode-btn" data-ride-mode="myroute">
+<span>マイルート</span><small>自分の道</small>
+</button>
+</div>
+<div class="ride-mode-hint" id="rideModeHint">日本一周モード</div>
 <div class="mode" id="mode">追従 ON</div>
 <div class="hero-main">
 <div class="hero-icon">🏯</div>
@@ -2185,23 +2169,6 @@
 <b><span id="myRouteNextName">未設定</span><span id="myRouteNextRemain"></span></b>
 </div>
 </div>
-<div aria-hidden="true" class="pre-ride-preview-card" id="preRidePreviewCard">
-<div class="pre-ride-head">
-<small>これから走るルート</small>
-<strong id="preRideRouteName">マイルート</strong>
-</div>
-<div class="pre-ride-stats">
-<div><small>距離</small><b id="preRideDistance">0.00km</b></div>
-<div><small>CP</small><b id="preRideCheckpointCount">0</b></div>
-</div>
-<div class="pre-ride-legend">
-<span><i class="legend-blue"></i>青：これから走る道</span>
-<span><i class="legend-green"></i>緑：走った道</span>
-<span><i class="legend-follow"></i>追従ON：進行方向に地図が向きます</span>
-</div>
-<div class="pre-ride-note">START / GOAL を確認してからスタート</div>
-</div>
-
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
@@ -6404,23 +6371,62 @@ function updateRoutePreviewMarkers(){
 })();
 
 
-/* D66-37 pre-ride preview UI
-   仕様台帳:
-   - マイルート選択直後は走行前。
-   - ルート名/総距離/チェックポイント数/色の意味/追従ONの意味が一目で分かる。
-   - 保存/読込/編集系は触らない。
-*/
-function updatePreRidePreviewCard(){
- const card=$('preRidePreviewCard');
- if(!card) return;
- const ready=!!st.activeRouteId && st.myRouteRideState==='ready';
- card.setAttribute('aria-hidden',ready?'false':'true');
 
- const total=Math.max(0,Number(st.activeRouteDistanceKm||routeDistanceKm(st.route||[])));
- const cps=normalizeCheckpoints(st.activeRouteCheckpoints||[], st.route||[]);
- if($('preRideRouteName')) $('preRideRouteName').textContent=st.activeRouteName||'マイルート';
- if($('preRideDistance')) $('preRideDistance').textContent=total.toFixed(2)+'km';
- if($('preRideCheckpointCount')) $('preRideCheckpointCount').textContent=String(cps.length);
+
+/* D66-39 mode navigation
+   仕様台帳:
+   - 日本一周=本編/旅モード
+   - マイルート=自分で作る日々の練習/走行モード
+   - マイルート選択後は「走行前」→「スタート」→「走行中」→「終了/保存」
+   - 保存/読込/編集/描画/追従ロジックは触らず、導線表示だけ整理する。
+*/
+function currentRideModeName(){
+ if(st.activeRouteId){
+   if(st.myRouteRideState==='ready') return 'マイルート：走行前';
+   if(st.myRouteRideState==='riding') return 'マイルート：走行中';
+   if(st.myRouteRideState==='paused') return 'マイルート：一時停止';
+   if(st.myRouteRideState==='complete') return 'マイルート：完走';
+   return 'マイルート';
+ }
+ return '日本一周モード';
+}
+function updateRideModeNavigation(){
+ const active=!!st.activeRouteId;
+ const phone=document.querySelector('.phone');
+ if(phone){
+   phone.classList.toggle('mode-japan',!active);
+   phone.classList.toggle('mode-myroute',active);
+ }
+ document.querySelectorAll('[data-ride-mode]').forEach(btn=>{
+   const mode=btn.dataset.rideMode;
+   btn.classList.toggle('active', active ? mode==='myroute' : mode==='japan');
+ });
+ const hint=$('rideModeHint');
+ if(hint){
+   if(active){
+     const name=st.activeRouteName || 'マイルート';
+     hint.textContent=currentRideModeName()+' / '+name;
+   }else{
+     hint.textContent='日本一周モード / 旅の続きから走る';
+   }
+ }
+}
+function handleRideModeButton(mode){
+ if(mode==='japan'){
+   if(st.activeRouteId){
+     confirmClearActiveRoute();
+   }else{
+     setTabTo('ride');
+     setDisplay('detail');
+   }
+   updateRideModeNavigation();
+   return;
+ }
+ if(mode==='myroute'){
+   setTabTo('routes');
+   renderMyRoutes();
+   updateRideModeNavigation();
+ }
 }
 (function(){
  const prevRenderUI=renderUI;
@@ -6431,23 +6437,23 @@ function updatePreRidePreviewCard(){
 
  renderUI=function(){
    prevRenderUI();
-   updatePreRidePreviewCard();
+   updateRideModeNavigation();
  };
  setActiveRoute=function(route){
    prevSetActiveRoute(route);
-   updatePreRidePreviewCard();
+   updateRideModeNavigation();
  };
  clearActiveRoute=function(){
    prevClearActiveRoute();
-   updatePreRidePreviewCard();
+   updateRideModeNavigation();
  };
  startMyRouteRide=function(){
    prevStartMyRouteRide();
-   updatePreRidePreviewCard();
+   updateRideModeNavigation();
  };
  pauseMyRouteRide=function(){
    prevPauseMyRouteRide();
-   updatePreRidePreviewCard();
+   updateRideModeNavigation();
  };
 })();
 
@@ -6461,6 +6467,9 @@ document.addEventListener('click',e=>{
    openRouteEditorCard();
    return;
  }
+
+ const rideModeBtn=e.target.closest('[data-ride-mode]');
+ if(rideModeBtn){handleRideModeButton(rideModeBtn.dataset.rideMode);return}
 
  const mainTab=e.target.closest('[data-main-tab]');
  if(mainTab){
@@ -6528,7 +6537,7 @@ initMap();
 renderMyRoutes();
 renderRideLogs();
 updateUndoButton();
-updatePreRidePreviewCard();
+updateRideModeNavigation();
 syncAutoFollowButton();
 startSmoothRideLoop();
 
