@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-34 Auto Follow Toggle</title>
+<title>Japan Ride D66-35 Auto Follow Bearing</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -6018,6 +6018,141 @@ function clearActiveRoute(){
  if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
  updateSplitRouteColors(0);
  renderUI();
+}
+
+
+/* D66-35 auto follow bearing
+   自動追従ON = 現在位置を追う + 地図の向きを進行方向へ合わせる。
+   追従OFF時は中心も向きも勝手に動かさない。
+   注意: マイルート保存/読込/編集系は触らない。
+*/
+function normalizeBearingDeg(deg){
+ let d=Number(deg||0)%360;
+ if(d<0) d+=360;
+ return d;
+}
+function bearingBetweenPoints(a,b){
+ if(!a || !b) return Number(map && map.getBearing ? map.getBearing() : 0);
+ const lon1=a[0]*Math.PI/180;
+ const lon2=b[0]*Math.PI/180;
+ const lat1=a[1]*Math.PI/180;
+ const lat2=b[1]*Math.PI/180;
+ const y=Math.sin(lon2-lon1)*Math.cos(lat2);
+ const x=Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon2-lon1);
+ return normalizeBearingDeg(Math.atan2(y,x)*180/Math.PI);
+}
+function routeHeadingAtDistance(coords,distanceKm){
+ if(!coords || coords.length<2) return Number(map && map.getBearing ? map.getBearing() : 0);
+ const total=routeDistanceKm(coords);
+ const d=Math.max(0,Math.min(Number(distanceKm||0),total));
+ const here=routePointAtDistance(coords,d);
+ let ahead=null;
+ const aheadStep=Math.max(0.015, Math.min(0.08, total*0.04));
+ if(d<total-0.002){
+   ahead=routePointAtDistance(coords,Math.min(total,d+aheadStep));
+   if(here && ahead && hav(here,ahead)>0.5) return bearingBetweenPoints(here,ahead);
+ }
+ // ゴール直前は少し後ろから現在位置を見る
+ const behind=routePointAtDistance(coords,Math.max(0,d-aheadStep));
+ if(behind && here && hav(behind,here)>0.5) return bearingBetweenPoints(behind,here);
+ // それでも取れない場合は最初に距離が取れる区間
+ for(let i=1;i<coords.length;i++){
+   if(hav(coords[i-1],coords[i])>0.5) return bearingBetweenPoints(coords[i-1],coords[i]);
+ }
+ return Number(map && map.getBearing ? map.getBearing() : 0);
+}
+function recenterToBike(){
+ if(!map) return;
+ st.autoFollowRoute=true;
+ if(typeof syncAutoFollowButton==='function') syncAutoFollowButton();
+ const active=!!st.activeRouteId;
+ const dist=active ? getActiveRouteTraveledKm() : 0;
+ const p=active ? routePointAtDistance(st.route,dist) : (marker ? marker.getLngLat().toArray() : st.route[0]);
+ const heading=active ? routeHeadingAtDistance(st.route,dist) : 50;
+ if(p) map.easeTo({center:p,zoom:15.8,pitch:58,bearing:heading,duration:360});
+}
+function updateSmoothRouteMapPosition(forceLine=false){
+ if(!map || !map.isStyleLoaded() || !st.route || !st.route.length) return;
+ const active=!!st.activeRouteId;
+ if(!active) return;
+ const traveled=getActiveRouteTraveledKm();
+ const p=routePointAtDistance(st.route,traveled);
+ if(p && marker) marker.setLngLat(p);
+
+ const now=performance.now();
+ if(forceLine || !st.lastSmoothLineAt || now-st.lastSmoothLineAt>70){
+   updateSplitRouteColors(traveled);
+   if(typeof updateActiveCheckpointLayer==='function') updateActiveCheckpointLayer();
+   st.lastSmoothLineAt=now;
+ }
+
+ if(active && st.myRouteRideState==='riding' && st.autoFollowRoute!==false && p){
+   if(!st.lastAutoFollowAt || now-st.lastAutoFollowAt>90){
+     const heading=routeHeadingAtDistance(st.route,traveled);
+     try{
+       map.jumpTo({
+         center:p,
+         zoom:Math.max(map.getZoom(),15.4),
+         pitch:Math.max(map.getPitch(),58),
+         bearing:heading
+       });
+     }catch(e){}
+     st.lastAutoFollowAt=now;
+   }
+ }
+
+ const total=getActiveRouteTotalKm();
+ const prog=Math.min(100,(traveled/total)*100);
+ if($('fill')) $('fill').style.width=prog+'%';
+ if($('bike')) $('bike').style.left=prog+'%';
+}
+function startMyRouteRide(){
+ if(!st.activeRouteId) return;
+ st.myRouteRideState='riding';
+ st.running=true;
+ if(st.autoFollowRoute==null) st.autoFollowRoute=true;
+ if(typeof syncAutoFollowButton==='function') syncAutoFollowButton();
+ st.lastSmoothFrameAt=0;
+ st.lastUiRenderAt=0;
+ const phone=document.querySelector('.phone');
+ phone.classList.remove('my-route-ready','my-route-paused','my-route-complete');
+ phone.classList.add('my-route-riding');
+ updateSplitRouteColors(getActiveRouteTraveledKm());
+ renderUI();
+ if(st.autoFollowRoute!==false) recenterToBike();
+}
+function setActiveRoute(route){
+ st.activeRouteId=route.id;
+ st.activeRouteName=route.name || 'マイルート';
+ st.activeRouteDistanceKm=Number(route.distanceKm || routeDistanceKm(route.points||[]));
+ const basePts=(route.waypoints && route.waypoints.length) ? route.waypoints : (route.points||[]);
+ st.activeRouteCheckpoints=normalizeCheckpoints(route.checkpoints||[], basePts).map(cp=>({
+   ...cp,
+   distanceKm:distanceAtIndex(basePts, cp.index)
+ }));
+ st.reachedCheckpointKeys=[];
+ st.pendingRideLog=null;
+ st.resultShown=false;
+ st.myRouteRideState='ready';
+ st.running=false;
+ st.sess=0;
+ st.t=0;
+ st.activeRideSessionCal=0;
+ st.activeRideMaxSpeed=0;
+ st.autoFollowRoute=true;
+ if(typeof syncAutoFollowButton==='function') syncAutoFollowButton();
+ st.lastSmoothFrameAt=0;
+ st.lastUiRenderAt=0;
+ const phone=document.querySelector('.phone');
+ phone.classList.add('my-route-active','my-route-ready');
+ phone.classList.remove('my-route-riding','my-route-paused','my-route-complete');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート確認';
+ if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
+ updateSplitRouteColors(0);
+ renderUI();
+ updateSmoothRouteMapPosition(true);
+ // 走行前でも「これから走る向き」を見せる
+ setTimeout(()=>{ if(st.activeRouteId && st.autoFollowRoute!==false) recenterToBike(); },120);
 }
 
 document.addEventListener('click',e=>{
