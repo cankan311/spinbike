@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-20 Edit Route Load Fix</title>
+<title>Japan Ride D66-21 Saved Route Normalize Fix</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -3203,6 +3203,231 @@ function editMyRoute(id){
    }catch(e){}
  }
  setTimeout(()=>{if(map)map.resize();renderDraftRoute();},120);
+}
+
+
+/* D66-21 saved route normalize fix
+   既存保存データの形が points / waypoints / route / coordinates 等で揺れても、
+   編集時に座標を拾って表示できるようにする。
+*/
+function normalizeCoordPoint(p){
+ if(!p) return null;
+ if(Array.isArray(p) && p.length>=2){
+   const lng=Number(p[0]), lat=Number(p[1]);
+   if(Number.isFinite(lng) && Number.isFinite(lat) && Math.abs(lng)<=180 && Math.abs(lat)<=90) return [lng,lat];
+ }
+ if(typeof p==='object'){
+   const lng=Number(p.lng ?? p.lon ?? p.long ?? p.longitude ?? p.x);
+   const lat=Number(p.lat ?? p.latitude ?? p.y);
+   if(Number.isFinite(lng) && Number.isFinite(lat) && Math.abs(lng)<=180 && Math.abs(lat)<=90) return [lng,lat];
+ }
+ return null;
+}
+function normalizeCoordArray(v){
+ if(!v) return [];
+ if(typeof v==='string'){
+   try{v=JSON.parse(v)}catch(e){return []}
+ }
+ if(v && v.type==='FeatureCollection' && Array.isArray(v.features)){
+   const best=v.features.map(f=>normalizeCoordArray(f)).sort((a,b)=>b.length-a.length)[0];
+   return best || [];
+ }
+ if(v && v.type==='Feature' && v.geometry) return normalizeCoordArray(v.geometry);
+ if(v && v.type==='LineString' && Array.isArray(v.coordinates)) return normalizeCoordArray(v.coordinates);
+ if(v && v.type==='MultiLineString' && Array.isArray(v.coordinates)){
+   return v.coordinates.flatMap(seg=>normalizeCoordArray(seg));
+ }
+ if(Array.isArray(v)){
+   const direct=v.map(normalizeCoordPoint).filter(Boolean);
+   if(direct.length) return direct;
+   const nested=v.map(normalizeCoordArray).filter(a=>a.length).sort((a,b)=>b.length-a.length)[0];
+   return nested || [];
+ }
+ if(typeof v==='object'){
+   const keys=['waypoints','points','route','coords','coordinates','path','polyline','line','draftWaypoints','draftRoute','geometry'];
+   for(const k of keys){
+     const arr=normalizeCoordArray(v[k]);
+     if(arr.length) return arr;
+   }
+ }
+ return [];
+}
+function normalizeSavedRoute(r){
+ const points=normalizeCoordArray(r.points).length ? normalizeCoordArray(r.points) : normalizeCoordArray(r);
+ const waypoints=normalizeCoordArray(r.waypoints).length ? normalizeCoordArray(r.waypoints) : points;
+ const distanceKm=points.length>=2 ? routeDistanceKm(points) : Number(r.distanceKm||0);
+ return {
+   ...r,
+   id:r.id || ('r'+Date.now()+Math.random().toString(16).slice(2)),
+   name:r.name || '無題のルート',
+   points:points,
+   waypoints:waypoints,
+   distanceKm:distanceKm
+ };
+}
+function loadMyRoutes(){
+ try{
+   const raw=JSON.parse(localStorage.getItem(ROUTES_KEY)||'[]');
+   if(!Array.isArray(raw)) return [];
+   return raw.map(normalizeSavedRoute);
+ }catch(e){
+   return [];
+ }
+}
+function saveMyRoutes(routes){
+ const normalized=(routes||[]).map(normalizeSavedRoute);
+ localStorage.setItem(ROUTES_KEY, JSON.stringify(normalized));
+}
+function renderMyRoutes(){
+ const list=$('myRouteList');
+ if(!list) return;
+ const routes=loadMyRoutes();
+ if(!routes.length){
+   list.innerHTML='<div class="route-empty">まだ保存したルートはありません。<br>「新しいルートを作る」から地図をタップして作成できます。</div>';
+   return;
+ }
+ list.innerHTML=routes.map(r=>`
+  <div class="route-item">
+    <div class="route-item-top">
+      <div>
+        <strong>${escapeHtml(r.name||'無題のルート')}</strong>
+        <small>${(r.distanceKm||0).toFixed(2)}km ・ ${(r.waypoints||r.points||[]).length}地点</small>
+      </div>
+    </div>
+    <div class="route-item-actions">
+      <button class="route-use" data-use-route="${r.id}">このルートを走る</button>
+      <button class="route-edit" data-edit-route="${r.id}">編集</button>
+      <button class="route-delete" data-delete-route="${r.id}">削除</button>
+    </div>
+  </div>`).join('');
+}
+function editMyRoute(id){
+ const route=loadMyRoutes().find(r=>String(r.id)===String(id));
+ if(!route){
+   alert('編集するルートが見つかりません');
+   return;
+ }
+ if(!map || !map.isStyleLoaded()){
+   alert('地図の読み込み後にもう一度押してください');
+   return;
+ }
+
+ const editPts=normalizeCoordArray(route.waypoints).length ? normalizeCoordArray(route.waypoints) : normalizeCoordArray(route.points);
+ if(!editPts.length){
+   alert('このルートには点データが保存されていません。新しく作り直してください。');
+   return;
+ }
+
+ st.routeEdit=true;
+ st.editingRouteId=route.id;
+ st.draftWaypoints=cloneCoords(editPts);
+ st.draftRoute=cloneCoords(editPts);
+ st.routeSnapped=false;
+ st.selectedDraftIndex=-1;
+ st.draggingDraftIndex=-1;
+ st.ignoreNextMapTap=false;
+ clearRouteHistory();
+
+ const phone=document.querySelector('.phone');
+ phone.classList.add('route-editing');
+ phone.classList.remove('route-editor-collapsed');
+
+ setTabTo('ride');
+ setRouteEditorTitle('マイルート編集');
+ setDisplay('maponly');
+ setMainRideRouteVisible(false);
+
+ if($('routeNameInput')) $('routeNameInput').value=route.name || '';
+ setRouteTip('保存済みルートを読み込みました。点を追加・移動して保存できます。');
+
+ ensureDraftRouteLayer();
+ bindDraftPointLayerEvents();
+ renderDraftRoute();
+
+ if($('draftPointCount')) $('draftPointCount').textContent=editPts.length;
+ if($('draftDistance')) $('draftDistance').textContent=routeDistanceKm(editPts).toFixed(2)+'km';
+ updateRouteMiniSummary();
+
+ if($('mapToolsPanel')) $('mapToolsPanel').classList.add('open');
+
+ const b=editPts.reduce((bb,p)=>{
+   bb[0]=Math.min(bb[0],p[0]);bb[1]=Math.min(bb[1],p[1]);bb[2]=Math.max(bb[2],p[0]);bb[3]=Math.max(bb[3],p[1]);
+   return bb;
+ },[Infinity,Infinity,-Infinity,-Infinity]);
+ try{
+   if(Number.isFinite(b[0]) && (Math.abs(b[0]-b[2])>0.00001 || Math.abs(b[1]-b[3])>0.00001)){
+     map.fitBounds([[b[0],b[1]],[b[2],b[3]]],{padding:90,duration:450,pitch:58,bearing:50});
+   }else{
+     map.easeTo({center:editPts[0],zoom:16,pitch:58,bearing:50,duration:450});
+   }
+ }catch(e){}
+
+ setTimeout(()=>{if(map)map.resize();renderDraftRoute();},160);
+}
+function saveDraftRoute(){
+ const pts=cloneCoords(getDraftWaypoints());
+ const route=cloneCoords((st.draftRoute && st.draftRoute.length) ? st.draftRoute : pts);
+ if(pts.length<2 || route.length<2){
+   alert('2地点以上タップしてから保存してください');
+   return;
+ }
+ const nameInput=$('routeNameInput');
+ const name=(nameInput && nameInput.value.trim()) || 'マイルート '+new Date().toLocaleDateString('ja-JP');
+ const routes=loadMyRoutes();
+ const distanceKm=routeDistanceKm(route);
+
+ if(st.editingRouteId){
+   const idx=routes.findIndex(r=>String(r.id)===String(st.editingRouteId));
+   if(idx>=0){
+     routes[idx]={...routes[idx], name, points:route, waypoints:pts, distanceKm, updatedAt:new Date().toISOString()};
+     saveMyRoutes(routes);
+     useMyRoute(routes[idx].id, false);
+   }else{
+     const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+     routes.unshift(routeObj);
+     saveMyRoutes(routes);
+     useMyRoute(routeObj.id, false);
+   }
+ }else{
+   const routeObj={id:'r'+Date.now(), name, points:route, waypoints:pts, distanceKm, createdAt:new Date().toISOString()};
+   routes.unshift(routeObj);
+   saveMyRoutes(routes);
+   useMyRoute(routeObj.id, false);
+ }
+ exitRouteEdit();
+ setTabTo('routes');
+ renderMyRoutes();
+}
+
+
+/* D66-21 use normalized route */
+function useMyRoute(id, closePage=true){
+ const routes=loadMyRoutes();
+ const route=routes.find(r=>String(r.id)===String(id));
+ if(!route) return;
+ const pts=normalizeCoordArray(route.points);
+ if(!pts.length){
+   alert('このルートには走行用の点データがありません');
+   return;
+ }
+ route.points=pts;
+ route.waypoints=normalizeCoordArray(route.waypoints).length ? normalizeCoordArray(route.waypoints) : pts;
+ route.distanceKm=routeDistanceKm(pts);
+ st.route=pts;
+ st.routeDist=routeLength(st.route);
+ setActiveRoute(route);
+ updateMainRouteOnMap();
+ if(map && pts.length){
+   const b=pts.reduce((bb,p)=>{
+     bb[0]=Math.min(bb[0],p[0]);bb[1]=Math.min(bb[1],p[1]);bb[2]=Math.max(bb[2],p[0]);bb[3]=Math.max(bb[3],p[1]);
+     return bb;
+   },[Infinity,Infinity,-Infinity,-Infinity]);
+   try{map.fitBounds([[b[0],b[1]],[b[2],b[3]]],{padding:80,duration:500,pitch:58,bearing:50})}catch(e){}
+ }
+ if(closePage){
+   setTabTo('ride');
+   setDisplay('detail');
+ }
 }
 
 document.addEventListener('click',e=>{
