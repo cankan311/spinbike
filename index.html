@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-33 Split Route Colors</title>
+<title>Japan Ride D66-34 Auto Follow Toggle</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1934,13 +1934,25 @@
 .phone.my-route-ready .myroute-next-line{
   border-color:rgba(47,107,255,.18);
 }
+
+
+/* D66-34: 自動追従ON/OFFボタン */
+#autoFollowTogglePanel.on{
+  background:#e8f7ef!important;
+  color:#12895b!important;
+  border-color:rgba(22,185,120,.35)!important;
+}
+#autoFollowTogglePanel.off{
+  background:#eef2f7!important;
+  color:#475467!important;
+}
 </style>
 </head>
 <body>
 <div class="phone">
 <div class="map" id="map"></div>
 <div class="map-tools-panel" id="mapToolsPanel"><button class="map-tool text" id="detailFromMapView">詳細表示</button>
-<button class="map-tool" id="recenterBtn2">⌖</button>
+<button class="map-tool" id="recenterBtn2">⌖</button><button class="map-tool text toggle on" id="autoFollowTogglePanel">追従 ON</button>
 <button class="map-tool" id="zoomInBtn">＋</button>
 <button class="map-tool" id="zoomOutBtn">−</button>
 <button class="map-tool text toggle" id="buildingTogglePanel">建物 OFF</button><button class="map-tool text toggle" id="terrainTogglePanel">地形 OFF</button><button class="map-tool text" id="closeMapTools">閉じる</button>
@@ -5906,6 +5918,108 @@ function clearActiveRoute(){
  renderUI();
 }
 
+
+/* D66-34 auto follow toggle
+   自動追従ON/OFFを明示ボタンとして復活。
+   - 上のmode pillはマイルート中は「ルート終了」のまま
+   - 追従ON/OFFは地図操作パネル内の専用ボタンで切替
+   注意: マイルート保存/読込/編集系は触らない。
+*/
+function syncAutoFollowButton(){
+ const btn=$('autoFollowTogglePanel');
+ if(!btn) return;
+ const on=st.autoFollowRoute!==false;
+ btn.textContent=on?'追従 ON':'追従 OFF';
+ btn.classList.toggle('on',on);
+ btn.classList.toggle('off',!on);
+}
+function setAutoFollowRoute(on, recenter=false){
+ st.autoFollowRoute=!!on;
+ syncAutoFollowButton();
+ if(st.autoFollowRoute && recenter && typeof recenterToBike==='function'){
+   recenterToBike();
+ }
+}
+function toggleAutoFollowRoute(){
+ setAutoFollowRoute(st.autoFollowRoute===false, st.autoFollowRoute===false);
+}
+function recenterToBike(){
+ if(!map) return;
+ st.autoFollowRoute=true;
+ syncAutoFollowButton();
+ const active=!!st.activeRouteId;
+ const p=active ? routePointAtDistance(st.route,getActiveRouteTraveledKm()) : (marker ? marker.getLngLat().toArray() : st.route[0]);
+ if(p) map.easeTo({center:p,zoom:15.8,pitch:58,bearing:50,duration:360});
+}
+function startMyRouteRide(){
+ if(!st.activeRouteId) return;
+ st.myRouteRideState='riding';
+ st.running=true;
+ if(st.autoFollowRoute==null) st.autoFollowRoute=true;
+ syncAutoFollowButton();
+ st.lastSmoothFrameAt=0;
+ st.lastUiRenderAt=0;
+ const phone=document.querySelector('.phone');
+ phone.classList.remove('my-route-ready','my-route-paused','my-route-complete');
+ phone.classList.add('my-route-riding');
+ updateSplitRouteColors(getActiveRouteTraveledKm());
+ renderUI();
+ if(st.autoFollowRoute!==false) recenterToBike();
+}
+function setActiveRoute(route){
+ st.activeRouteId=route.id;
+ st.activeRouteName=route.name || 'マイルート';
+ st.activeRouteDistanceKm=Number(route.distanceKm || routeDistanceKm(route.points||[]));
+ const basePts=(route.waypoints && route.waypoints.length) ? route.waypoints : (route.points||[]);
+ st.activeRouteCheckpoints=normalizeCheckpoints(route.checkpoints||[], basePts).map(cp=>({
+   ...cp,
+   distanceKm:distanceAtIndex(basePts, cp.index)
+ }));
+ st.reachedCheckpointKeys=[];
+ st.pendingRideLog=null;
+ st.resultShown=false;
+ st.myRouteRideState='ready';
+ st.running=false;
+ st.sess=0;
+ st.t=0;
+ st.activeRideSessionCal=0;
+ st.activeRideMaxSpeed=0;
+ st.autoFollowRoute=true;
+ syncAutoFollowButton();
+ st.lastSmoothFrameAt=0;
+ st.lastUiRenderAt=0;
+ const phone=document.querySelector('.phone');
+ phone.classList.add('my-route-active','my-route-ready');
+ phone.classList.remove('my-route-riding','my-route-paused','my-route-complete');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='マイルート確認';
+ if($('landmarkTitle')) $('landmarkTitle').textContent=st.activeRouteName;
+ updateSplitRouteColors(0);
+ renderUI();
+ updateSmoothRouteMapPosition(true);
+}
+function clearActiveRoute(){
+ st.activeRouteId=null;
+ st.activeRouteName='';
+ st.activeRouteDistanceKm=0;
+ st.activeRouteCheckpoints=[];
+ st.reachedCheckpointKeys=[];
+ st.pendingRideLog=null;
+ st.resultShown=false;
+ st.myRouteRideState='';
+ st.running=true;
+ st.activeRideSessionCal=0;
+ st.activeRideMaxSpeed=0;
+ st.autoFollowRoute=true;
+ syncAutoFollowButton();
+ st.route=DEFAULT_MAIN_ROUTE.map(p=>[p[0],p[1]]);
+ const phone=document.querySelector('.phone');
+ phone.classList.remove('my-route-active','my-route-ready','my-route-riding','my-route-paused','my-route-complete');
+ if($('heroEyebrow')) $('heroEyebrow').textContent='次の名所';
+ if($('landmarkTitle')) $('landmarkTitle').textContent='名古屋城';
+ updateSplitRouteColors(0);
+ renderUI();
+}
+
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
  if(e.target.closest('#discardRideLogBtn')){finishActiveRide(false);return}
@@ -5960,6 +6074,7 @@ document.addEventListener('click',e=>{
    if(p)p.classList.remove('open');
    return;
  }
+ if(e.target.closest('#autoFollowTogglePanel')){toggleAutoFollowRoute();return}
  if(e.target.closest('#recenterBtn2')){recenterToBike();return}
  if(e.target.closest('#zoomInBtn')){if(map)map.easeTo({zoom:Math.min(18,map.getZoom()+1),duration:220});return}
  if(e.target.closest('#zoomOutBtn')){if(map)map.easeTo({zoom:Math.max(5,map.getZoom()-1),duration:220});return}
@@ -5982,6 +6097,7 @@ initMap();
 renderMyRoutes();
 renderRideLogs();
 updateUndoButton();
+syncAutoFollowButton();
 startSmoothRideLoop();
 
 if(!window.__japanRideManualTickD6629){
