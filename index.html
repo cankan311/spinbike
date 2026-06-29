@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-35 Auto Follow Bearing</title>
+<title>Japan Ride D66-37 Pre Ride Preview UI</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -1946,6 +1946,132 @@
   background:#eef2f7!important;
   color:#475467!important;
 }
+
+
+/* D66-37: 走行前プレビューUI */
+.pre-ride-preview-card{
+  display:none;
+  margin-top:10px;
+  border-radius:20px;
+  padding:11px 12px;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(247,250,255,.92));
+  border:1px solid rgba(47,107,255,.20);
+  box-shadow:0 10px 26px rgba(15,23,42,.10), inset 0 1px 0 rgba(255,255,255,.9);
+}
+.phone.my-route-active.my-route-ready .pre-ride-preview-card{
+  display:block;
+}
+.phone.my-route-active.my-route-ready .myroute-ride-panel{
+  display:block;
+}
+.phone.my-route-riding .pre-ride-preview-card,
+.phone.my-route-paused .pre-ride-preview-card,
+.phone.my-route-complete .pre-ride-preview-card{
+  display:none!important;
+}
+.pre-ride-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.pre-ride-head small{
+  display:block;
+  flex:none;
+  color:#2563eb;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.08em;
+}
+.pre-ride-head strong{
+  display:block;
+  min-width:0;
+  text-align:right;
+  color:#111827;
+  font-size:15px;
+  line-height:1.15;
+  font-weight:1000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.pre-ride-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:8px;
+}
+.pre-ride-stats div{
+  border-radius:14px;
+  padding:8px 9px;
+  background:#ffffff;
+  border:1px solid rgba(148,163,184,.24);
+}
+.pre-ride-stats small{
+  display:block;
+  font-size:9.5px;
+  font-weight:1000;
+  color:#667085;
+  margin-bottom:3px;
+}
+.pre-ride-stats b{
+  display:block;
+  font-size:16px;
+  font-weight:1000;
+  color:#111827;
+  font-variant-numeric:tabular-nums;
+}
+.pre-ride-legend{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  margin-top:9px;
+}
+.pre-ride-legend span{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#344054;
+  font-size:11px;
+  line-height:1.25;
+  font-weight:900;
+}
+.pre-ride-legend i{
+  width:18px;
+  height:5px;
+  border-radius:999px;
+  flex:none;
+  display:inline-block;
+}
+.legend-blue{background:#2563eb}
+.legend-green{background:#16B978}
+.legend-follow{
+  height:18px!important;
+  width:18px!important;
+  border-radius:50%!important;
+  background:#e8f7ef;
+  border:2px solid #16B978;
+}
+.pre-ride-note{
+  margin-top:9px;
+  border-radius:13px;
+  padding:8px 9px;
+  background:rgba(22,185,120,.08);
+  color:#12895b;
+  font-size:11px;
+  line-height:1.25;
+  font-weight:1000;
+  text-align:center;
+}
+.phone.compact .pre-ride-preview-card,
+.phone.maponly .pre-ride-preview-card{
+  display:none!important;
+}
+@media(max-height:740px){
+  .pre-ride-preview-card{padding:9px 10px;margin-top:7px}
+  .pre-ride-legend{gap:4px;margin-top:7px}
+  .pre-ride-note{margin-top:7px;padding:7px 8px}
+}
 </style>
 </head>
 <body>
@@ -2059,6 +2185,23 @@
 <b><span id="myRouteNextName">未設定</span><span id="myRouteNextRemain"></span></b>
 </div>
 </div>
+<div aria-hidden="true" class="pre-ride-preview-card" id="preRidePreviewCard">
+<div class="pre-ride-head">
+<small>これから走るルート</small>
+<strong id="preRideRouteName">マイルート</strong>
+</div>
+<div class="pre-ride-stats">
+<div><small>距離</small><b id="preRideDistance">0.00km</b></div>
+<div><small>CP</small><b id="preRideCheckpointCount">0</b></div>
+</div>
+<div class="pre-ride-legend">
+<span><i class="legend-blue"></i>青：これから走る道</span>
+<span><i class="legend-green"></i>緑：走った道</span>
+<span><i class="legend-follow"></i>追従ON：進行方向に地図が向きます</span>
+</div>
+<div class="pre-ride-note">START / GOAL を確認してからスタート</div>
+</div>
+
 <div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
@@ -6155,6 +6298,159 @@ function setActiveRoute(route){
  setTimeout(()=>{ if(st.activeRouteId && st.autoFollowRoute!==false) recenterToBike(); },120);
 }
 
+
+/* D66-36 start/goal preview markers
+   仕様台帳:
+   - マイルート選択直後は走行前。
+   - 走るルート全体、スタート、ゴール、チェックポイントを確認できる。
+   - 保存/読込/編集系は触らない。
+   実装:
+   - 既存の setActiveRoute / clearActiveRoute / updateRouteProgressOnMap を包むだけ。
+   - マイルート本体データの正規化・保存・読込には触らない。
+*/
+function ensureRoutePreviewMarkersLayer(){
+ if(!map || !map.isStyleLoaded()) return;
+ if(!map.getSource('app-route-markers-source')){
+   map.addSource('app-route-markers-source',{
+     type:'geojson',
+     data:{type:'FeatureCollection',features:[]}
+   });
+ }
+ if(!map.getLayer('app-route-marker-circle')){
+   map.addLayer({
+     id:'app-route-marker-circle',
+     type:'circle',
+     source:'app-route-markers-source',
+     paint:{
+       'circle-radius':['case',['==',['get','kind'],'start'],9,10],
+       'circle-color':['case',['==',['get','kind'],'start'],'#16B978','#ff5872'],
+       'circle-stroke-color':'#ffffff',
+       'circle-stroke-width':3,
+       'circle-opacity':1
+     }
+   });
+ }
+ if(!map.getLayer('app-route-marker-label')){
+   map.addLayer({
+     id:'app-route-marker-label',
+     type:'symbol',
+     source:'app-route-markers-source',
+     layout:{
+       'text-field':['get','label'],
+       'text-size':12,
+       'text-offset':[0,1.45],
+       'text-anchor':'top',
+       'text-allow-overlap':true,
+       'text-ignore-placement':true
+     },
+     paint:{
+       'text-color':'#111827',
+       'text-halo-color':'#ffffff',
+       'text-halo-width':2.5
+     }
+   });
+ }
+ try{
+   // ルート線より上。地図ラベルと重なってもSTART/GOALを優先。
+   const layers=map.getStyle().layers||[];
+   if(map.getLayer('app-route-marker-circle')) map.moveLayer('app-route-marker-circle');
+   if(map.getLayer('app-route-marker-label')) map.moveLayer('app-route-marker-label');
+ }catch(e){}
+}
+function updateRoutePreviewMarkers(){
+ if(!map || !map.isStyleLoaded()) return;
+ ensureRoutePreviewMarkersLayer();
+ const src=map.getSource('app-route-markers-source');
+ if(!src) return;
+
+ const features=[];
+ const route=st.route||[];
+ if(st.activeRouteId && route.length>=2){
+   features.push({
+     type:'Feature',
+     geometry:{type:'Point',coordinates:route[0]},
+     properties:{kind:'start',label:'START'}
+   });
+   features.push({
+     type:'Feature',
+     geometry:{type:'Point',coordinates:route[route.length-1]},
+     properties:{kind:'goal',label:'GOAL'}
+   });
+ }
+ src.setData({type:'FeatureCollection',features});
+}
+(function(){
+ const prevSetActiveRoute=setActiveRoute;
+ const prevClearActiveRoute=clearActiveRoute;
+ const prevUpdateRouteProgressOnMap=updateRouteProgressOnMap;
+ const prevUpdateMainRouteOnMap=updateMainRouteOnMap;
+
+ setActiveRoute=function(route){
+   prevSetActiveRoute(route);
+   updateRoutePreviewMarkers();
+ };
+ clearActiveRoute=function(){
+   prevClearActiveRoute();
+   updateRoutePreviewMarkers();
+ };
+ updateRouteProgressOnMap=function(){
+   prevUpdateRouteProgressOnMap();
+   updateRoutePreviewMarkers();
+ };
+ updateMainRouteOnMap=function(){
+   prevUpdateMainRouteOnMap();
+   updateRoutePreviewMarkers();
+ };
+})();
+
+
+/* D66-37 pre-ride preview UI
+   仕様台帳:
+   - マイルート選択直後は走行前。
+   - ルート名/総距離/チェックポイント数/色の意味/追従ONの意味が一目で分かる。
+   - 保存/読込/編集系は触らない。
+*/
+function updatePreRidePreviewCard(){
+ const card=$('preRidePreviewCard');
+ if(!card) return;
+ const ready=!!st.activeRouteId && st.myRouteRideState==='ready';
+ card.setAttribute('aria-hidden',ready?'false':'true');
+
+ const total=Math.max(0,Number(st.activeRouteDistanceKm||routeDistanceKm(st.route||[])));
+ const cps=normalizeCheckpoints(st.activeRouteCheckpoints||[], st.route||[]);
+ if($('preRideRouteName')) $('preRideRouteName').textContent=st.activeRouteName||'マイルート';
+ if($('preRideDistance')) $('preRideDistance').textContent=total.toFixed(2)+'km';
+ if($('preRideCheckpointCount')) $('preRideCheckpointCount').textContent=String(cps.length);
+}
+(function(){
+ const prevRenderUI=renderUI;
+ const prevSetActiveRoute=setActiveRoute;
+ const prevClearActiveRoute=clearActiveRoute;
+ const prevStartMyRouteRide=startMyRouteRide;
+ const prevPauseMyRouteRide=pauseMyRouteRide;
+
+ renderUI=function(){
+   prevRenderUI();
+   updatePreRidePreviewCard();
+ };
+ setActiveRoute=function(route){
+   prevSetActiveRoute(route);
+   updatePreRidePreviewCard();
+ };
+ clearActiveRoute=function(){
+   prevClearActiveRoute();
+   updatePreRidePreviewCard();
+ };
+ startMyRouteRide=function(){
+   prevStartMyRouteRide();
+   updatePreRidePreviewCard();
+ };
+ pauseMyRouteRide=function(){
+   prevPauseMyRouteRide();
+   updatePreRidePreviewCard();
+ };
+})();
+
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
  if(e.target.closest('#discardRideLogBtn')){finishActiveRide(false);return}
@@ -6232,6 +6528,7 @@ initMap();
 renderMyRoutes();
 renderRideLogs();
 updateUndoButton();
+updatePreRidePreviewCard();
 syncAutoFollowButton();
 startSmoothRideLoop();
 
