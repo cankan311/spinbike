@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-60 Startup Recursion Fix</title>
+<title>Japan Ride D66-61 Model Explain Ranking Fairness</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -3893,6 +3893,21 @@ html,body,.phone,button,input,textarea,select{
    起動スプラッシュから進まなくなる問題を修正。
    見た目・地図・保存・BLE解析は変更なし。
 */
+
+
+/* D66-61: Model Explain + Ranking Fairness
+   実車感覚モデルの違いをUI上で説明。
+   ランキングはロードバイク有利問題を避けるため、
+   「旅の体感距離」と「公式ランキング距離」を分ける設計を明示。
+*/
+.model-explain-card,.ranking-fair-card{background:#fff;border:1px solid rgba(17,24,39,.06);border-radius:22px;padding:14px;box-shadow:0 8px 22px rgba(15,23,42,.055),inset 0 1px 0 rgba(255,255,255,.92)}
+.model-explain-head small,.ranking-fair-head small{display:block;color:var(--jr-green,#168f61);font-size:10px;font-weight:750;letter-spacing:.08em}
+.model-explain-head strong,.ranking-fair-head strong{display:block;margin-top:3px;color:var(--jr-ink,#111827);font-size:21px;line-height:1.08;font-family:"M PLUS Rounded 1c",var(--jr-font,system-ui),sans-serif;font-weight:800;letter-spacing:-.04em}
+.model-explain-head p,.ranking-fair-head p{margin:7px 0 0;color:var(--jr-text,#4b5563);font-size:12px;line-height:1.5}
+.model-explain-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}.model-row{background:#f7f9fc;border:1px solid rgba(17,24,39,.055);border-radius:16px;padding:10px}.model-row.selected{background:#eefbf3;border-color:rgba(22,143,97,.16)}
+.model-row-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.model-row-head b{color:#111827;font-size:14px;font-weight:800}.model-row-head small{color:#98a2b3;font-size:10px;font-weight:700}
+.model-speed-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}.model-speed-grid div{background:#fff;border:1px solid rgba(17,24,39,.045);border-radius:12px;padding:7px 6px}.model-speed-grid small{display:block;color:#6b7280;font-size:9px;font-weight:650}.model-speed-grid strong{display:block;margin-top:2px;color:#111827;font-size:13px;font-family:var(--jr-number,Roboto,system-ui);font-weight:750;letter-spacing:-.02em}.model-row p{margin:8px 0 0;color:#4b5563;font-size:11px;line-height:1.45}
+.fairness-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.fairness-grid>div{background:#f7f9fc;border:1px solid rgba(17,24,39,.055);border-radius:16px;padding:10px}.fairness-grid small{display:block;color:#6b7280;font-size:10px;font-weight:700}.fairness-grid b{display:block;margin-top:3px;color:#111827;font-size:14px;font-weight:800}.fairness-grid p{margin:6px 0 0;color:#4b5563;font-size:11px;line-height:1.45}.ranking-note{margin-top:10px;background:#eefbf3;color:#12895b;border-radius:14px;padding:9px 10px;font-size:11.5px;line-height:1.45;font-weight:650}@media(max-width:370px){.fairness-grid{grid-template-columns:1fr}}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&amp;display=swap" rel="stylesheet"/></head>
 <body>
@@ -4034,6 +4049,16 @@ html,body,.phone,button,input,textarea,select{
 </div>
 <div class="physics-status" id="physicsStatusText">現在は手入力RPMで走行します。</div>
 </div>
+<div class="model-explain-card">
+<div class="model-explain-head"><div><small>MODEL DETAILS</small><strong>モデルごとの違い</strong><p>同じRPMでも、選んだ自転車タイプによって「進む距離」と「漕ぎやめ後の伸び」が変わります。</p></div></div>
+<div class="model-explain-list" id="rideModelExplainList"></div>
+</div>
+<div class="ranking-fair-card">
+<div class="ranking-fair-head"><div><small>RANKING FAIRNESS</small><strong>ランキングの公平性</strong><p>ロードバイクを選ぶと旅の体感距離は伸びます。ただし公式ランキング用の距離は、全員同じ基準モデルで再計算する設計にします。</p></div></div>
+<div class="fairness-grid"><div><small>旅の距離</small><b>リアル優先</b><p>選んだ自転車モデルで進む。ロードは速く、ママチャリは控えめ。</p></div><div><small>ランキング距離</small><b>公平優先</b><p>全員同じ標準モデルで換算。ロード選択だけでは有利にならない。</p></div></div>
+<div class="ranking-note" id="rankingFairnessText">ランキング公開時は「公式km」と「旅km」を分けて表示します。</div>
+</div>
+
 <div class="sensor-hero-card">
 <div>
 <small>SENSOR DIAGNOSTIC</small>
@@ -9494,6 +9519,20 @@ setInterval(function(){
  }catch(e){}
 },250);
 setTimeout(renderPhysicsSettings,0);
+
+
+/* D66-61 Model Explain + Ranking Fairness
+   実車感覚モデルの説明表示と、ランキング公平性の方針をUIに追加。
+   ランキング実装時は「旅km」と「公式km」を分離する。
+*/
+const JR_RANKING_MODEL_KEY='officialStandard';
+function jrModelSpeedKmh(modelKey,rpm){const m=JR_RIDE_MODELS[modelKey]||JR_RIDE_MODELS.mamachari;return Math.min((Math.max(0,rpm)*m.gear*m.wheelM)/60*3.6,m.maxKmh);}
+function jrModelDecayLabel(modelKey){const map={mamachari:'減速早め',cross:'普通',road:'よく伸びる',fitness:'やや早め'};return map[modelKey]||'普通';}
+function jrModelShortDesc(modelKey){const map={mamachari:'買い物自転車・街乗り感覚。距離は控えめで、漕ぎやめ後も早めに落ちます。',cross:'街乗りスポーツ寄り。速度と惰性のバランスを中間に置いた設定です。',road:'細タイヤ・高効率のロード感覚。同じRPMでも速く、惰性も長めに伸びます。',fitness:'室内バイク用の補正。クロス寄りですが、伸びすぎないように少し抑えています。'};return map[modelKey]||'標準モデルです。';}
+function renderRideModelExplain(){const list=$('rideModelExplainList');if(!list||!window.JR_RIDE_MODELS)return;const order=['mamachari','cross','road','fitness'];list.innerHTML=order.map(k=>{const m=JR_RIDE_MODELS[k];const selected=getRideModelKey&&getRideModelKey()===k;const speeds=[60,80,100].map(r=>`<div><small>${r}rpm</small><strong>${jrModelSpeedKmh(k,r).toFixed(1)}km/h</strong></div>`).join('');return `<div class="model-row ${selected?'selected':''}"><div class="model-row-head"><b>${m.name}</b><small>${jrModelDecayLabel(k)}</small></div><div class="model-speed-grid">${speeds}</div><p>${jrModelShortDesc(k)}</p></div>`;}).join('');const fair=$('rankingFairnessText');if(fair)fair.textContent='ランキング公開時は、選択モデルで進む「旅km」と、全員同じ基準で換算する「公式km」を分けて表示します。';}
+function calcOfficialRankingKmhFromRpm(rpm){return jrModelSpeedKmh('cross',rpm);}
+(function(){const prevRenderPhysicsSettings=renderPhysicsSettings;renderPhysicsSettings=function(){prevRenderPhysicsSettings();renderRideModelExplain();};const prevApplyLanguageUI=typeof applyLanguageUI==='function'?applyLanguageUI:null;if(prevApplyLanguageUI){applyLanguageUI=function(){prevApplyLanguageUI();renderRideModelExplain();};}})();
+setTimeout(renderRideModelExplain,0);
 
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
