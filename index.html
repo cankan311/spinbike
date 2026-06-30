@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-41 Home Shell Lightweight</title>
+<title>Japan Ride D66-56 BLE Sensor Diagnostic</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -2314,22 +2314,1397 @@
   .home-score-card div{padding:11px 10px}
   .home-card{padding:13px;margin-bottom:8px}
 }
+
+
+/* D66-42: 参考アプリ寄せのプレミアムホーム */
+.app-splash{background:radial-gradient(circle at 50% 32%,rgba(37,99,235,.14),transparent 34%),linear-gradient(180deg,#f8fbff 0%,#eef6ff 56%,#f8fafc 100%)!important}
+.splash-card{display:none!important}.splash-premium{text-align:center;color:#111827;animation:splashPop .86s ease both}.splash-logo-wrap{position:relative;width:132px;height:92px;margin:0 auto 8px}.splash-logo-route{position:absolute;left:8px;right:8px;top:35px;height:42px;border-radius:50%;border-bottom:7px solid #2563eb;transform:rotate(-6deg);opacity:.98}.splash-logo-route:before,.splash-logo-route:after{content:"";position:absolute;bottom:-12px;width:15px;height:15px;border-radius:50%;background:#16B978;box-shadow:0 0 0 6px rgba(22,185,120,.14)}.splash-logo-route:before{left:10px}.splash-logo-route:after{right:6px;background:#ff5872;box-shadow:0 0 0 6px rgba(255,88,114,.13)}.splash-bike-premium{position:absolute;left:43px;top:4px;font-size:42px;filter:drop-shadow(0 8px 18px rgba(15,23,42,.14))}.splash-premium strong{display:block;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.02em}.splash-premium small{display:block;margin-top:8px;color:#667085;font-size:13px;font-weight:900}
+.home-page{background:radial-gradient(circle at 85% 4%,rgba(22,185,120,.16),transparent 32%),radial-gradient(circle at 8% 18%,rgba(37,99,235,.12),transparent 34%),linear-gradient(180deg,#f8fbff 0%,#edf6ff 45%,#f7fafc 100%)!important}.home-v2{padding:calc(env(safe-area-inset-top) + 16px) 16px calc(env(safe-area-inset-bottom) + 92px)!important}.home-topbar-v2{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.home-topbar-v2 small{display:block;color:#2563eb;font-size:10.5px;font-weight:1000;letter-spacing:.16em}.home-topbar-v2 h1{margin:3px 0 0;color:#0f172a;font-size:32px;line-height:1;font-weight:1000;letter-spacing:-.02em}.home-icon-action{width:48px;height:48px;border:0;border-radius:18px;background:#fff;box-shadow:0 12px 26px rgba(15,23,42,.10),inset 0 1px 0 rgba(255,255,255,.95);font-size:23px}
+.daily-ride-card{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 108px;gap:12px;align-items:center;border-radius:32px;padding:18px;margin-bottom:12px;background:linear-gradient(135deg,rgba(17,24,39,.96),rgba(37,99,235,.88));color:#fff;box-shadow:0 20px 46px rgba(37,99,235,.24)}.daily-ride-card:after{content:"";position:absolute;right:-48px;top:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.11)}.daily-left{position:relative;z-index:1;min-width:0}.daily-left small{display:block;color:rgba(255,255,255,.72);font-size:10px;font-weight:1000;letter-spacing:.14em}.daily-left strong{display:block;margin-top:5px;font-size:27px;line-height:1.05;font-weight:1000;letter-spacing:-.02em}.daily-left p{margin:8px 0 14px;color:rgba(255,255,255,.78);font-size:12px;line-height:1.35;font-weight:850}.daily-actions{display:flex;gap:7px}.daily-actions button{border:0;border-radius:999px;padding:10px 12px;font-family:inherit;font-size:11.5px;font-weight:1000}.daily-main-btn{background:#fff;color:#111827}.daily-sub-btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.20)!important}
+.ride-score-ring{position:relative;z-index:1;width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#16B978 var(--score-deg,0deg),rgba(255,255,255,.20) 0deg);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}.ride-score-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:linear-gradient(180deg,#fff,#eef6ff)}.ride-score-ring div{position:relative;z-index:1;text-align:center;color:#111827}.ride-score-ring b{display:block;font-family:var(--display-font);font-size:34px;line-height:1;font-weight:1000}.ride-score-ring span{display:block;margin-top:3px;color:#667085;font-size:10px;font-weight:1000}
+.home-metrics-strip{display:grid;grid-template-columns:1.18fr 1fr 1fr;gap:9px;margin-bottom:12px}.home-metrics-strip div,.journey-card-v2,.home-feature-card,.achievement-card-v2{background:rgba(255,255,255,.92);border:1px solid rgba(148,163,184,.18);box-shadow:0 14px 34px rgba(15,23,42,.08),inset 0 1px 0 rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.home-metrics-strip div{border-radius:24px;padding:13px 12px;min-width:0}.home-metrics-strip small,.journey-card-v2 small,.home-feature-card small,.achievement-card-v2 small{display:block;color:#667085;font-size:9.5px;font-weight:1000;letter-spacing:.04em;margin-bottom:5px}.home-metrics-strip strong{display:block;color:#0f172a;font-family:var(--display-font);font-size:25px;line-height:1;font-weight:1000;white-space:nowrap}.home-metrics-strip em{margin-left:3px;font-family:inherit;color:#667085;font-size:10.5px;font-style:normal;font-weight:1000}
+.journey-card-v2{display:flex;align-items:center;gap:13px;border-radius:30px;padding:15px;margin-bottom:12px}.journey-map-pill{flex:none;width:58px;height:58px;display:grid;place-items:center;border-radius:22px;background:linear-gradient(180deg,#e8f7ef,#f4fbf8);font-size:30px}.journey-main{flex:1;min-width:0}.journey-main strong{display:block;color:#0f172a;font-size:21px;line-height:1.1;font-weight:1000}.journey-main p{margin:5px 0 9px;color:#667085;font-size:12px;line-height:1.3;font-weight:850}.journey-progress-line{height:8px;border-radius:999px;overflow:hidden;background:#edf2f7}.journey-progress-line span{display:block;height:100%;width:var(--journey-progress,2%);border-radius:999px;background:linear-gradient(90deg,#2563eb,#16B978)}
+.home-card-grid-v2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.home-feature-card{min-width:0;border:0;border-radius:28px;padding:15px 14px;text-align:left;font-family:inherit}.home-feature-card span{display:grid;place-items:center;width:42px;height:42px;border-radius:17px;margin-bottom:12px;background:#eef6ff;font-size:23px}.home-feature-card.record span{background:#fff1f3}.home-feature-card strong{display:block;color:#0f172a;font-size:24px;line-height:1;font-weight:1000}.home-feature-card p{margin:7px 0 0;color:#667085;font-size:11px;line-height:1.25;font-weight:850}
+.achievement-card-v2{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:30px;padding:16px}.achievement-card-v2 strong{display:block;color:#0f172a;font-size:20px;line-height:1.1;font-weight:1000}.achievement-card-v2 p{margin:6px 0 0;color:#667085;font-size:12px;line-height:1.3;font-weight:850}.achievement-badge{flex:none;width:56px;height:56px;display:grid;place-items:center;border-radius:22px;background:linear-gradient(180deg,#fff7ed,#fff);font-size:30px}
+.bottom-tabs{background:rgba(255,255,255,.96)!important;box-shadow:0 16px 38px rgba(15,23,42,.18)!important}.bottom-tab.active{background:#e8f7ef!important;color:#12895b!important}
+@media(max-height:740px){.daily-ride-card{padding:15px;border-radius:28px;grid-template-columns:1fr 94px}.ride-score-ring{width:90px;height:90px}.daily-left strong{font-size:24px}.home-metrics-strip div{padding:11px 10px}.journey-card-v2{padding:13px;border-radius:26px}}
+
+
+/* D66-43: 参考動画寄せの軽量フォント調整
+   外部フォントは追加せず、Android/健康アプリ系に近い system / Roboto / Noto Sans JP 寄せ。
+*/
+:root{
+  --app-font:-apple-system,BlinkMacSystemFont,"Roboto","Noto Sans JP","Hiragino Sans","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;
+  --display-font:"Roboto","DIN Alternate","Arial Narrow",-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;
+}
+body,button,input,textarea,select{
+  font-family:var(--app-font)!important;
+  letter-spacing:-.015em;
+  font-feature-settings:"palt" 1;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
+}
+.speed-num,.value,.ring-value,.ride-score-ring b,.home-metrics-strip strong,.home-score-card strong,.myroute-big,#myRouteDone,#myRouteTotal,#rideResultDistance{
+  font-family:var(--display-font)!important;
+  letter-spacing:-.035em;
+  font-variant-numeric:tabular-nums;
+}
+.home-topbar-v2 h1,.daily-left strong,.journey-main strong,.home-feature-card strong,.achievement-card-v2 strong,.landmark,.simple-head strong,.ride-result-title strong{
+  font-family:var(--app-font)!important;
+  letter-spacing:-.045em;
+  font-weight:900;
+}
+.home-topbar-v2 small,.daily-left small,.home-metrics-strip small,.journey-card-v2 small,.home-feature-card small,.achievement-card-v2 small,.eyebrow,.label,.simple-head small{
+  letter-spacing:.08em;
+  font-weight:800;
+}
+.bottom-tab b,.ride-mode-btn span,.label-toggle,.home-card-action,.daily-actions button,.action-btn,.pedal-btn{
+  font-weight:800!important;
+}
+
+
+/* D66-45: Stable SVG Icons
+   D66-44の疑似要素CSSアイコンは崩れたため廃止。
+   固定サイズのinline SVGに置き換えて、表示の安定性を優先する。
+*/
+.svg-icon{
+  display:block;
+  width:24px;
+  height:24px;
+  flex:none;
+  color:currentColor;
+}
+.tab-svg{
+  width:22px;
+  height:22px;
+  margin-bottom:2px;
+}
+.home-action-svg{
+  width:25px;
+  height:25px;
+  margin:auto;
+}
+.card-svg{
+  width:28px;
+  height:28px;
+}
+.map-tool-svg{
+  width:22px;
+  height:22px;
+  margin:auto;
+}
+.splash-svg-shell{
+  text-align:center;
+  color:#111827;
+  animation:splashPop .86s ease both;
+}
+.splash-svg-logo{
+  display:block;
+  width:96px;
+  height:96px;
+  margin:0 auto 10px;
+}
+.splash-svg-shell strong{
+  display:block;
+  font-size:31px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:-.03em;
+}
+.splash-svg-shell small{
+  display:block;
+  margin-top:8px;
+  color:#667085;
+  font-size:13px;
+  font-weight:650;
+}
+.bottom-tab span:not(.svg-icon){
+  font-size:0!important;
+}
+.bottom-tab{
+  gap:2px!important;
+}
+.bottom-tab b{
+  font-weight:700!important;
+  letter-spacing:-.01em!important;
+}
+.home-icon-action{
+  display:grid!important;
+  place-items:center!important;
+  color:#168F61!important;
+}
+.journey-map-pill,
+.home-feature-card span,
+.achievement-badge{
+  color:#168F61!important;
+}
+.home-feature-card.record span{
+  color:#2563eb!important;
+}
+.hero-icon{
+  font-size:0!important;
+}
+.hero-icon:before{
+  content:"";
+  display:block;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:3px solid #168F61;
+  box-shadow:12px 0 0 -3px #fff,12px 0 0 0 #168F61;
+  transform:translateX(-6px);
+}
+#bike{
+  font-size:0!important;
+  width:18px!important;
+  height:18px!important;
+  border-radius:50%!important;
+  background:#168F61!important;
+  box-shadow:0 0 0 5px rgba(22,143,97,.16),0 8px 18px rgba(15,23,42,.18)!important;
+}
+.checkpoint-arrival-icons{
+  font-size:0!important;
+}
+.checkpoint-arrival-icons:before{
+  content:"";
+  display:block;
+  width:38px;
+  height:38px;
+  margin:0 auto 6px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at center,#16B978 0 8px,transparent 9px),
+    conic-gradient(from 0deg,#2563eb 0 12%,transparent 12% 25%,#16B978 25% 37%,transparent 37% 50%,#ffb020 50% 62%,transparent 62% 75%,#ff5872 75% 87%,transparent 87%);
+}
+/* Typography tone-down: Zepp-like, less toy-like */
+.home-topbar-v2 h1,
+.daily-left strong,
+.journey-main strong,
+.home-feature-card strong,
+.achievement-card-v2 strong,
+.landmark,
+.simple-head strong{
+  font-weight:820!important;
+  letter-spacing:-.035em!important;
+}
+.daily-left p,
+.journey-main p,
+.home-feature-card p,
+.achievement-card-v2 p{
+  font-weight:560!important;
+}
+.daily-ride-card{
+  background:linear-gradient(135deg,#172033,#2d5fbf)!important;
+  box-shadow:0 18px 42px rgba(37,99,235,.18)!important;
+}
+.home-metrics-strip div,
+.journey-card-v2,
+.home-feature-card,
+.achievement-card-v2{
+  box-shadow:0 10px 28px rgba(15,23,42,.065), inset 0 1px 0 rgba(255,255,255,.92)!important;
+}
+
+
+/* D66-46: Zepp-like Home V3 */
+.home-page{background:radial-gradient(circle at 50% -8%,rgba(255,255,255,.95),transparent 32%),radial-gradient(circle at 10% 5%,rgba(37,99,235,.07),transparent 30%),radial-gradient(circle at 92% 12%,rgba(22,185,120,.07),transparent 30%),linear-gradient(180deg,#f4f6fa 0%,#e9edf3 42%,#f5f7fa 100%)!important}
+.home-zepp{padding:calc(env(safe-area-inset-top) + 14px) 22px calc(env(safe-area-inset-bottom) + 92px)!important}
+.zepp-topbar{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;margin-bottom:10px}.zepp-top-icon{width:42px;height:42px;border:0;border-radius:16px;display:grid;place-items:center;color:#111827;background:transparent}.zepp-top-svg{width:25px;height:25px}.zepp-center-nav{display:flex;align-items:center;justify-content:center;gap:22px;color:#697180}.zepp-chevron{font-size:42px;line-height:1;font-weight:270}.zepp-dot-ring{width:48px;height:48px;border-radius:50%;border:3px solid rgba(17,24,39,.28);border-top-color:rgba(17,24,39,.08)}
+.home-segment{height:50px;display:grid;grid-template-columns:1fr 1.16fr 1.16fr 1fr;gap:0;padding:4px;border-radius:999px;background:rgba(255,255,255,.96);box-shadow:0 8px 22px rgba(15,23,42,.07),inset 0 1px 0 rgba(255,255,255,.94);margin-bottom:26px}.home-segment button{border:0;background:transparent;border-radius:999px;color:#333b48;font-family:var(--app-font);font-size:13px;font-weight:720;letter-spacing:-.02em}.home-segment button.active{background:#050505;color:#fff;box-shadow:0 6px 15px rgba(0,0,0,.16)}
+.zepp-ring-stage{position:relative;height:258px;display:grid;place-items:center;margin-bottom:14px}.main-score-ring{width:178px;height:178px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#238d34 var(--score-deg,0deg),rgba(35,141,52,.18) 0deg);filter:drop-shadow(0 14px 25px rgba(35,141,52,.12))}.main-score-ring:before{content:"";position:absolute;width:133px;height:133px;border-radius:50%;background:linear-gradient(180deg,#f8fafc,#eef2f6);box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}.score-inner{position:relative;z-index:1;text-align:center;color:#238d34}.score-inner strong{display:block;font-family:var(--display-font);font-size:58px;line-height:.92;font-weight:620;letter-spacing:-.06em;font-variant-numeric:tabular-nums}.score-inner span{display:block;margin-top:7px;font-size:12px;line-height:1.1;font-weight:620;letter-spacing:-.01em}
+.side-score{position:absolute;top:88px;width:86px;text-align:center}.side-score.left{left:2px;color:#4c6fd3}.side-score.right{right:2px;color:#f0a51e}.side-score b{display:block;font-family:var(--display-font);font-size:34px;line-height:1;font-weight:560;letter-spacing:-.04em}.side-score span{display:block;margin-top:4px;color:currentColor;font-size:12px;font-weight:600}.side-score:before{content:"";position:absolute;top:-39px;width:22px;height:137px;border-radius:999px;opacity:.76}.side-score.left:before{right:-14px;background:linear-gradient(180deg,rgba(76,111,211,.22),rgba(76,111,211,.86))}.side-score.right:before{left:-14px;background:linear-gradient(180deg,rgba(240,165,30,.22),rgba(240,165,30,.70))}
+.zepp-card{background:rgba(255,255,255,.96)!important;border:1px solid rgba(148,163,184,.12)!important;border-radius:16px!important;box-shadow:0 10px 26px rgba(15,23,42,.06)!important}.insight-card{padding:21px 22px 18px;margin-bottom:16px}.insight-title-row,.focus-title-row{display:flex;align-items:center;justify-content:space-between;gap:12px}.insight-title-row strong,.focus-title-row strong,.activity-head strong{color:#111827;font-size:21px;line-height:1.25;font-weight:560;letter-spacing:-.035em}.insight-title-row span{min-width:46px;height:38px;display:grid;place-items:center;border-radius:12px;color:#fff;background:#aebde9;font-size:20px;font-weight:690}.insight-card p,.focus-card p,.activity-head p{margin:14px 0 0;color:#4b5563;font-size:18px;line-height:1.45;font-weight:420;letter-spacing:-.018em}.insight-actions{display:flex;gap:28px;margin-top:16px}.insight-actions span{width:23px;height:23px;border:2px solid #2f3642;border-radius:50%;opacity:.75}
+.focus-card{padding:22px;margin-bottom:16px}.focus-title-row span{color:#4b5563;font-size:16px;font-weight:480}.balance-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:18px;text-align:center}.balance-row b{display:block;color:#111827;font-family:var(--display-font);font-size:25px;line-height:1;font-weight:560;letter-spacing:-.04em}.balance-row span{display:block;margin-top:5px;color:#697180;font-size:12px;font-weight:520}.balance-bar{position:relative;display:grid;grid-template-columns:var(--balance-blue,85%) 1fr;gap:4px;height:14px;margin:20px 0 14px}.balance-bar i{display:block;border-radius:3px}.balance-bar .blue{background:#1e9ce7}.balance-bar .green{background:#18a66f}.balance-bar em{position:absolute;top:-12px;left:var(--balance-marker,48%);width:3px;height:34px;border-radius:3px;background:#111827;transform:translateX(-50%)}.balance-labels{display:flex;justify-content:space-between;color:#168F61;font-size:15px;font-weight:500}.balance-labels span:first-child{color:#1e9ce7}
+.activity-card{padding:22px;margin-bottom:16px;overflow:hidden}.activity-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.activity-watermark{width:78px;height:78px;color:rgba(17,24,39,.10);flex:none}.activity-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.activity-actions button{border:0;border-radius:14px;padding:13px 10px;font-family:var(--app-font);font-size:14px;font-weight:620}.activity-actions button:first-child{background:#111827;color:#fff}.activity-actions button:last-child{background:#eef2f7;color:#111827}
+.quick-grid-zepp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:6px}.quick-zepp-card{border:0;text-align:left;border-radius:16px;padding:18px;background:rgba(255,255,255,.96);box-shadow:0 10px 26px rgba(15,23,42,.055);font-family:var(--app-font)}.quick-svg{width:34px;height:34px;color:#168F61;margin-bottom:16px}.quick-zepp-card:nth-child(2) .quick-svg{color:#2563eb}.quick-zepp-card small{display:block;color:#697180;font-size:11px;font-weight:690;letter-spacing:.08em}.quick-zepp-card strong{display:block;margin-top:8px;color:#111827;font-size:28px;line-height:1;font-weight:540;letter-spacing:-.04em}.quick-zepp-card span{display:block;margin-top:10px;color:#4b5563;font-size:14px;line-height:1.25;font-weight:430}
+.daily-ride-card,.home-metrics-strip,.journey-card-v2,.home-card-grid-v2,.achievement-card-v2{display:none!important}.bottom-tabs{background:rgba(255,255,255,.96)!important;box-shadow:0 12px 30px rgba(15,23,42,.13)!important}.bottom-tab.active{background:#e9f7ef!important;color:#168F61!important}
+.splash-zepp-shell{text-align:center;color:#111827;animation:splashPop .86s ease both}.splash-zepp-ring{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:rgba(255,255,255,.88);box-shadow:0 14px 30px rgba(15,23,42,.08)}.splash-zepp-svg{width:42px;height:42px;color:#168F61}.splash-zepp-shell strong{display:block;font-size:31px;line-height:1;font-weight:650;letter-spacing:-.04em}.splash-zepp-shell small{display:block;margin-top:8px;color:#697180;font-size:13px;font-weight:430}
+@media(max-height:740px){.home-zepp{padding-top:calc(env(safe-area-inset-top) + 8px)!important}.zepp-ring-stage{height:222px;margin-bottom:8px}.main-score-ring{width:150px;height:150px}.main-score-ring:before{width:112px;height:112px}.score-inner strong{font-size:48px}.side-score{top:74px}.side-score:before{height:112px;top:-31px}.insight-card,.focus-card,.activity-card{padding:18px;margin-bottom:12px}.insight-card p,.focus-card p,.activity-head p{font-size:16px}}
+
+
+/* D66-47: Design Token / Typography Refinement
+   参考アプリの高級感を出すための制約:
+   - 背景=薄いグレー、カード=白
+   - 区切り線を減らす
+   - 角丸/余白/影を統一
+   - 本文は軽く、数字だけ大きく
+   - 色数をグレー + グリーン + 補助ブルーに制限
+*/
+:root{
+  --jr-bg:#f2f4f7;
+  --jr-bg-2:#eef2f6;
+  --jr-card:#ffffff;
+  --jr-ink:#111827;
+  --jr-text:#4b5563;
+  --jr-muted:#6b7280;
+  --jr-soft:#9ca3af;
+  --jr-line:rgba(17,24,39,.075);
+  --jr-green:#168f61;
+  --jr-blue:#2875c7;
+  --jr-yellow:#d99a24;
+  --jr-radius-card:16px;
+  --jr-radius-soft:20px;
+  --jr-radius-pill:999px;
+  --jr-pad-card:22px;
+  --jr-shadow-card:0 8px 22px rgba(15,23,42,.045);
+  --jr-shadow-float:0 12px 28px rgba(15,23,42,.09);
+  --jr-font:-apple-system,BlinkMacSystemFont,"Roboto","Noto Sans JP","Hiragino Sans","Yu Gothic UI","Yu Gothic",Meiryo,sans-serif;
+  --jr-number:"Roboto","DIN Alternate","Arial Narrow",-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;
+}
+body,button,input,textarea,select{
+  font-family:var(--jr-font)!important;
+  color:var(--jr-ink);
+  font-weight:400;
+  letter-spacing:-.006em!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+.home-page{
+  background:
+    radial-gradient(circle at 50% -12%,rgba(255,255,255,.82),transparent 34%),
+    linear-gradient(180deg,var(--jr-bg) 0%,var(--jr-bg-2) 46%,var(--jr-bg) 100%)!important;
+}
+.home-zepp{
+  padding:calc(env(safe-area-inset-top) + 12px) 22px calc(env(safe-area-inset-bottom) + 92px)!important;
+}
+
+/* common card discipline */
+.zepp-card,
+.quick-zepp-card,
+.bottom-tabs,
+.home-segment{
+  background:var(--jr-card)!important;
+  border:0!important;
+  box-shadow:var(--jr-shadow-card)!important;
+}
+.zepp-card,
+.quick-zepp-card{
+  border-radius:var(--jr-radius-card)!important;
+}
+.insight-card,
+.focus-card,
+.activity-card{
+  padding:var(--jr-pad-card)!important;
+  margin-bottom:14px!important;
+}
+
+/* top navigation: quieter */
+.zepp-topbar{
+  margin-bottom:8px!important;
+}
+.zepp-top-icon{
+  color:var(--jr-ink)!important;
+  opacity:.92;
+}
+.zepp-center-nav{
+  color:#697180!important;
+}
+.zepp-chevron{
+  font-size:39px!important;
+  font-weight:230!important;
+  opacity:.9;
+}
+.zepp-dot-ring{
+  width:46px!important;
+  height:46px!important;
+  border-width:2.5px!important;
+  border-color:rgba(17,24,39,.22)!important;
+  border-top-color:rgba(17,24,39,.055)!important;
+}
+
+/* segment: reference-app-like restrained contrast */
+.home-segment{
+  height:48px!important;
+  padding:4px!important;
+  margin-bottom:24px!important;
+  border-radius:var(--jr-radius-pill)!important;
+}
+.home-segment button{
+  font-size:13px!important;
+  font-weight:560!important;
+  color:#343b46!important;
+  letter-spacing:-.015em!important;
+}
+.home-segment button.active{
+  background:#050505!important;
+  color:#fff!important;
+  font-weight:650!important;
+  box-shadow:0 5px 13px rgba(0,0,0,.15)!important;
+}
+
+/* score area */
+.zepp-ring-stage{
+  height:250px!important;
+  margin-bottom:14px!important;
+}
+.main-score-ring{
+  width:174px!important;
+  height:174px!important;
+  background:conic-gradient(var(--jr-green) var(--score-deg,0deg), rgba(22,143,97,.16) 0deg)!important;
+  filter:drop-shadow(0 12px 22px rgba(22,143,97,.10))!important;
+}
+.main-score-ring:before{
+  width:131px!important;
+  height:131px!important;
+  background:linear-gradient(180deg,#f9fafb,#eef2f6)!important;
+}
+.score-inner{
+  color:var(--jr-green)!important;
+}
+.score-inner strong{
+  font-family:var(--jr-number)!important;
+  font-size:56px!important;
+  font-weight:520!important;
+  letter-spacing:-.065em!important;
+}
+.score-inner span{
+  margin-top:7px!important;
+  font-size:11px!important;
+  line-height:1.12!important;
+  font-weight:520!important;
+  letter-spacing:-.005em!important;
+}
+.side-score.left{color:#4d70ca!important}
+.side-score.right{color:var(--jr-yellow)!important}
+.side-score b{
+  font-family:var(--jr-number)!important;
+  font-size:32px!important;
+  font-weight:430!important;
+  letter-spacing:-.045em!important;
+}
+.side-score span{
+  margin-top:5px!important;
+  font-size:12px!important;
+  font-weight:430!important;
+}
+.side-score:before{
+  width:20px!important;
+  height:132px!important;
+  opacity:.62!important;
+}
+
+/* card typography */
+.insight-title-row strong,
+.focus-title-row strong,
+.activity-head strong{
+  color:var(--jr-ink)!important;
+  font-size:19px!important;
+  line-height:1.28!important;
+  font-weight:500!important;
+  letter-spacing:-.028em!important;
+}
+.insight-title-row span{
+  min-width:43px!important;
+  height:36px!important;
+  border-radius:12px!important;
+  background:#aebbe6!important;
+  font-size:19px!important;
+  font-family:var(--jr-number)!important;
+  font-weight:520!important;
+}
+.insight-card p,
+.focus-card p,
+.activity-head p{
+  margin-top:13px!important;
+  color:var(--jr-text)!important;
+  font-size:16px!important;
+  line-height:1.58!important;
+  font-weight:380!important;
+  letter-spacing:-.012em!important;
+}
+.insight-actions{
+  margin-top:15px!important;
+  gap:26px!important;
+}
+.insight-actions span{
+  width:22px!important;
+  height:22px!important;
+  border-color:#313946!important;
+  border-width:1.8px!important;
+  opacity:.68!important;
+}
+
+/* focus balance */
+.focus-title-row span{
+  color:var(--jr-text)!important;
+  font-size:14px!important;
+  font-weight:400!important;
+}
+.balance-row{
+  margin-top:17px!important;
+}
+.balance-row b{
+  font-family:var(--jr-number)!important;
+  font-size:24px!important;
+  font-weight:440!important;
+  letter-spacing:-.045em!important;
+}
+.balance-row span{
+  margin-top:5px!important;
+  color:var(--jr-muted)!important;
+  font-size:11px!important;
+  font-weight:400!important;
+}
+.balance-bar{
+  height:12px!important;
+  margin:18px 0 13px!important;
+  gap:4px!important;
+}
+.balance-bar i{
+  border-radius:3px!important;
+}
+.balance-bar .blue{
+  background:#1b9adc!important;
+}
+.balance-bar .green{
+  background:var(--jr-green)!important;
+}
+.balance-bar em{
+  width:3px!important;
+  height:32px!important;
+  top:-11px!important;
+  background:#111827!important;
+}
+.balance-labels{
+  font-size:14px!important;
+  font-weight:400!important;
+  color:var(--jr-green)!important;
+}
+.balance-labels span:first-child{
+  color:#1b9adc!important;
+}
+
+/* activity card */
+.activity-head{
+  gap:14px!important;
+}
+.activity-watermark{
+  width:74px!important;
+  height:74px!important;
+  color:rgba(17,24,39,.075)!important;
+}
+.activity-actions{
+  gap:10px!important;
+  margin-top:17px!important;
+}
+.activity-actions button{
+  border-radius:13px!important;
+  padding:12px 10px!important;
+  font-size:13px!important;
+  font-weight:500!important;
+  letter-spacing:-.012em!important;
+}
+.activity-actions button:first-child{
+  background:#111827!important;
+  color:#fff!important;
+}
+.activity-actions button:last-child{
+  background:#eef1f5!important;
+  color:#1f2937!important;
+}
+
+/* quick cards */
+.quick-grid-zepp{
+  gap:12px!important;
+}
+.quick-zepp-card{
+  padding:18px!important;
+}
+.quick-svg{
+  width:32px!important;
+  height:32px!important;
+  color:var(--jr-green)!important;
+  margin-bottom:15px!important;
+}
+.quick-zepp-card:nth-child(2) .quick-svg{
+  color:var(--jr-blue)!important;
+}
+.quick-zepp-card small{
+  color:var(--jr-muted)!important;
+  font-size:10.5px!important;
+  font-weight:560!important;
+  letter-spacing:.075em!important;
+}
+.quick-zepp-card strong{
+  margin-top:8px!important;
+  color:var(--jr-ink)!important;
+  font-family:var(--jr-number)!important;
+  font-size:27px!important;
+  font-weight:430!important;
+  letter-spacing:-.045em!important;
+}
+.quick-zepp-card span{
+  margin-top:9px!important;
+  color:var(--jr-text)!important;
+  font-size:13px!important;
+  font-weight:380!important;
+  line-height:1.32!important;
+}
+
+/* bottom nav: less toy-like */
+.bottom-tabs{
+  border-radius:30px!important;
+  box-shadow:var(--jr-shadow-float)!important;
+}
+.bottom-tab{
+  color:#697180!important;
+}
+.bottom-tab.active{
+  background:#e8f6ee!important;
+  color:var(--jr-green)!important;
+}
+.bottom-tab b{
+  font-size:9.5px!important;
+  font-weight:560!important;
+  letter-spacing:-.005em!important;
+}
+.tab-svg{
+  width:21px!important;
+  height:21px!important;
+  stroke-width:1.8!important;
+}
+
+/* global overlay for route/record/settings simple pages */
+.simple-page{
+  background:linear-gradient(180deg,var(--jr-bg),var(--jr-bg-2))!important;
+}
+.simple-head strong{
+  color:var(--jr-ink)!important;
+  font-size:24px!important;
+  font-weight:560!important;
+  letter-spacing:-.035em!important;
+}
+.simple-head small{
+  color:var(--jr-muted)!important;
+  font-size:10px!important;
+  font-weight:560!important;
+  letter-spacing:.08em!important;
+}
+.route-mode-guide,
+.route-item,
+.log-item,
+.setting-card{
+  border-radius:var(--jr-radius-card)!important;
+  background:var(--jr-card)!important;
+  box-shadow:var(--jr-shadow-card)!important;
+  border:0!important;
+}
+
+/* keep old blue-card home hidden */
+.daily-ride-card,
+.home-metrics-strip,
+.journey-card-v2,
+.home-card-grid-v2,
+.achievement-card-v2{
+  display:none!important;
+}
+
+@media(max-height:740px){
+  .home-zepp{padding-top:calc(env(safe-area-inset-top) + 8px)!important}
+  .zepp-ring-stage{height:218px!important}
+  .main-score-ring{width:148px!important;height:148px!important}
+  .main-score-ring:before{width:112px!important;height:112px!important}
+  .score-inner strong{font-size:48px!important}
+  .side-score{top:73px!important}
+  .side-score:before{height:108px!important;top:-30px!important}
+  .insight-card,.focus-card,.activity-card{padding:18px!important;margin-bottom:12px!important}
+  .insight-card p,.focus-card p,.activity-head p{font-size:15px!important;line-height:1.52!important}
+}
+
+
+/* D66-50: Safe Recovery
+   D66-48/D66-49の広域CSS適用は失敗。
+   この版はD66-47を基点に戻し、走行画面破綻を復旧する。
+   以後、アプリ全体統一は広域CSSではなく画面ごとに設計する。
+*/
+
+
+/* D66-51: Ride Dock Scoped Polish
+   D66-50復旧版ベース。
+   広域CSSは禁止。走行画面下部の実DOMだけを狙う。
+   対象:
+   - .mini-dock
+   - .meter-row
+   - .speed-chip
+   - .ring-card
+   - .action-card / .action-btn
+   - .pedal-control
+   - .zone-card
+   - .dock-grid / .dock-card
+*/
+
+/* 走行パネル全体：位置は触らず、質感だけ寄せる */
+.mini-dock{
+  background:rgba(255,255,255,.94)!important;
+  border:1px solid rgba(255,255,255,.82)!important;
+  box-shadow:0 -8px 22px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.92)!important;
+  border-radius:22px!important;
+  padding:7px 7px 6px!important;
+  backdrop-filter:blur(18px)!important;
+  -webkit-backdrop-filter:blur(18px)!important;
+}
+
+/* 上段3分割：黒/赤の強さを落とす。サイズ/配置は壊さない */
+.meter-row{
+  gap:7px!important;
+  margin-bottom:6px!important;
+}
+.speed-chip{
+  background:#ffffff!important;
+  color:var(--jr-ink,#111827)!important;
+  border:1px solid rgba(17,24,39,.06)!important;
+  box-shadow:0 6px 16px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.92)!important;
+  border-radius:18px!important;
+}
+.speed-num{
+  color:var(--jr-ink,#111827)!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-size:30px!important;
+  font-weight:520!important;
+  letter-spacing:-.05em!important;
+}
+.speed-unit{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:10.5px!important;
+  font-weight:500!important;
+  opacity:1!important;
+}
+
+.ring-card{
+  background:#ffffff!important;
+  border:1px solid rgba(17,24,39,.06)!important;
+  box-shadow:0 6px 16px rgba(15,23,42,.065), inset 0 1px 0 rgba(255,255,255,.92)!important;
+  border-radius:18px!important;
+}
+.ring-track{
+  stroke:#e3e8ef!important;
+}
+.ring-progress{
+  stroke:var(--jr-green,#168f61)!important;
+}
+.ring-value{
+  fill:var(--jr-ink,#111827)!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-weight:520!important;
+}
+.ring-main{
+  color:var(--jr-ink,#111827)!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-weight:520!important;
+  letter-spacing:-.035em!important;
+}
+.ring-sub{
+  color:var(--jr-muted,#6b7280)!important;
+  font-weight:430!important;
+  letter-spacing:-.005em!important;
+}
+
+.action-card{
+  background:#fff1f2!important;
+  border:1px solid rgba(190,18,60,.07)!important;
+  box-shadow:none!important;
+  border-radius:18px!important;
+}
+.action-btn{
+  background:transparent!important;
+  color:#be123c!important;
+  box-shadow:none!important;
+  border-radius:18px!important;
+  font-size:14px!important;
+  font-weight:560!important;
+  letter-spacing:-.01em!important;
+}
+.action-btn.stop{
+  background:transparent!important;
+  color:#be123c!important;
+}
+.action-btn.running,
+.action-btn.resume{
+  background:#111827!important;
+  color:#fff!important;
+}
+
+/* 手入力RPM：pillの質感に統一 */
+.phone.manual .pedal-control{
+  display:grid!important;
+}
+.pedal-control{
+  gap:7px!important;
+  margin:7px 0!important;
+}
+.pedal-btn{
+  background:#f2f5f8!important;
+  color:var(--jr-text,#4b5563)!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:999px!important;
+  font-size:11px!important;
+  font-weight:520!important;
+  letter-spacing:-.01em!important;
+  padding:8px 6px!important;
+}
+.pedal-btn.plus{
+  background:#edf3ff!important;
+  color:var(--jr-blue,#2875c7)!important;
+}
+.pedal-readout{
+  background:#ffffff!important;
+  border:1px solid rgba(17,24,39,.06)!important;
+  color:var(--jr-ink,#111827)!important;
+  box-shadow:0 4px 12px rgba(15,23,42,.045)!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-weight:520!important;
+}
+.pedal-readout small{
+  color:var(--jr-muted,#6b7280)!important;
+  font-weight:420!important;
+}
+
+/* 心拍ゾーン：🔥を消し、カードとして落ち着かせる */
+.zone-card{
+  background:#ffffff!important;
+  border:1px solid rgba(17,24,39,.06)!important;
+  box-shadow:0 6px 16px rgba(15,23,42,.06), inset 0 1px 0 rgba(255,255,255,.92)!important;
+  border-radius:18px!important;
+  padding:10px 11px 9px!important;
+}
+.zone-head{
+  gap:10px!important;
+}
+.zone-dot{
+  width:12px!important;
+  height:12px!important;
+  background:var(--jr-green,#168f61)!important;
+  box-shadow:0 0 0 4px rgba(22,143,97,.10)!important;
+}
+.zone-kicker{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:9.5px!important;
+  font-weight:500!important;
+  letter-spacing:.03em!important;
+}
+.zone-main{
+  color:var(--jr-green,#168f61)!important;
+  font-family:var(--jr-font,var(--app-font))!important;
+  font-size:20px!important;
+  font-weight:560!important;
+  letter-spacing:-.035em!important;
+}
+.zone-fire{
+  display:none!important;
+}
+.zone-bpm .num{
+  color:#e85a7a!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-size:24px!important;
+  font-weight:540!important;
+  letter-spacing:-.045em!important;
+}
+.zone-bpm .u{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:10px!important;
+  font-weight:430!important;
+}
+.zone-line{
+  height:8px!important;
+  gap:5px!important;
+  margin-top:8px!important;
+}
+.zone-seg{
+  opacity:.18!important;
+  border-radius:999px!important;
+}
+.zone-seg.active{
+  opacity:.88!important;
+  box-shadow:none!important;
+}
+.zone-guide{
+  margin-top:6px!important;
+  color:var(--jr-text,#4b5563)!important;
+  font-size:10px!important;
+  line-height:1.28!important;
+  font-weight:400!important;
+}
+.zone-guide .zone-name{
+  color:var(--jr-ink,#111827)!important;
+  font-weight:500!important;
+}
+.zone-guide .zone-tip{
+  color:var(--jr-muted,#6b7280)!important;
+  font-weight:400!important;
+}
+
+/* 下段メトリクス：ホームの白カードに近づける */
+.dock-grid{
+  gap:6px!important;
+  margin-top:6px!important;
+}
+.dock-card{
+  background:#ffffff!important;
+  border:1px solid rgba(17,24,39,.055)!important;
+  box-shadow:0 5px 14px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.92)!important;
+  border-radius:16px!important;
+  padding:8px 8px 7px!important;
+}
+.dock-card.tap:after{
+  color:#a7afbd!important;
+  font-weight:520!important;
+}
+.label{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:9.5px!important;
+  font-weight:500!important;
+  letter-spacing:.005em!important;
+}
+.value{
+  color:var(--jr-ink,#111827)!important;
+  font-family:var(--jr-number,var(--display-font))!important;
+  font-size:17px!important;
+  font-weight:520!important;
+  letter-spacing:-.045em!important;
+}
+.unit{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:8.5px!important;
+  font-weight:400!important;
+}
+.hr .value{
+  color:#e85a7a!important;
+}
+
+/* compact時は高さを守る */
+@media(max-height:740px){
+  .mini-dock{
+    padding:6px!important;
+  }
+  .meter-row{
+    gap:6px!important;
+  }
+  .speed-num{
+    font-size:28px!important;
+  }
+  .ring-main{
+    font-size:14px!important;
+  }
+  .action-btn{
+    min-height:52px!important;
+    font-size:13px!important;
+  }
+  .zone-card{
+    padding:8px 10px!important;
+  }
+  .zone-main{
+    font-size:18px!important;
+  }
+  .zone-bpm .num{
+    font-size:22px!important;
+  }
+  .dock-card{
+    padding:6px 7px!important;
+  }
+  .value{
+    font-size:15px!important;
+  }
+}
+
+
+/* D66-52: Ride Typography / Color / Mystery Icon Cleanup
+   D66-51ベース。
+   レイアウト位置は触らず、走行画面の文字・色・謎アイコンだけを調整する。
+*/
+
+/* 参考アプリ寄せ: 丸ゴシック感と太すぎる文字を抑える */
+:root{
+  --jr-font:"Noto Sans CJK JP","Noto Sans JP","Roboto",system-ui,-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif;
+  --jr-number:"Roboto","Noto Sans CJK JP","Noto Sans JP",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  --app-font:var(--jr-font);
+  --display-font:var(--jr-number);
+}
+html,body,.phone,button,input,textarea,select{
+  font-family:var(--jr-font)!important;
+  font-weight:400!important;
+  letter-spacing:-.004em!important;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ルートカード左の謎マークは消す。参考アプリのように余計な装飾を減らす */
+.hero-icon{
+  display:none!important;
+}
+.hero-main{
+  gap:0!important;
+}
+.eyebrow{
+  color:var(--jr-green,#168f61)!important;
+  font-size:12px!important;
+  font-weight:450!important;
+  letter-spacing:-.005em!important;
+}
+.landmark{
+  font-family:var(--jr-font)!important;
+  color:var(--jr-ink,#111827)!important;
+  font-size:31px!important;
+  font-weight:560!important;
+  letter-spacing:-.055em!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+}
+.remain{
+  color:var(--jr-text,#4b5563)!important;
+  font-size:13px!important;
+  font-weight:400!important;
+}
+.subgoals{
+  color:var(--jr-muted,#6b7280)!important;
+  font-size:10.5px!important;
+  font-weight:420!important;
+}
+
+/* 上の操作チップ: 黒/青のバラつきを抑えて統一 */
+.top-chips .label-toggle{
+  background:rgba(255,255,255,.94)!important;
+  color:var(--jr-ink,#111827)!important;
+  border:1px solid rgba(17,24,39,.055)!important;
+  box-shadow:0 6px 16px rgba(15,23,42,.055)!important;
+  font-family:var(--jr-font)!important;
+  font-size:12px!important;
+  font-weight:430!important;
+  letter-spacing:-.01em!important;
+}
+.top-chips .map-tools-toggle{
+  background:#eef4ff!important;
+  color:var(--jr-blue,#2875c7)!important;
+}
+.top-chips .label-toggle.off{
+  background:rgba(255,255,255,.94)!important;
+  color:var(--jr-muted,#6b7280)!important;
+}
+.top-chips .label-toggle.warn{
+  background:#fff7ed!important;
+  color:#b45309!important;
+}
+
+/* ストップ: 強い赤塗り/低コントラストをやめる */
+.action-card{
+  background:#fff1f2!important;
+  border:1px solid rgba(190,18,60,.08)!important;
+  box-shadow:0 6px 16px rgba(190,18,60,.055)!important;
+}
+#runBtnTop,
+.action-card .action-btn,
+.action-card .action-btn.stop,
+.action-card .action-btn.pause{
+  background:#fff1f2!important;
+  color:#be123c!important;
+  border:0!important;
+  box-shadow:none!important;
+  font-family:var(--jr-font)!important;
+  font-size:14px!important;
+  font-weight:560!important;
+  letter-spacing:-.01em!important;
+}
+.action-card .action-btn.resume,
+.action-card .action-btn.start,
+#runBtnTop.resume,
+#runBtnTop.start{
+  background:#111827!important;
+  color:#fff!important;
+}
+
+/* 走行ドック内の文字をもう一段軽くする */
+.speed-num{
+  font-family:var(--jr-number)!important;
+  font-weight:430!important;
+  letter-spacing:-.055em!important;
+}
+.speed-unit,
+.ring-sub,
+.pedal-readout small,
+.zone-kicker,
+.zone-guide,
+.label,
+.unit{
+  font-family:var(--jr-font)!important;
+  font-weight:380!important;
+}
+.ring-main,
+.pedal-readout,
+.zone-main,
+.value{
+  font-family:var(--jr-number)!important;
+  font-weight:470!important;
+}
+.zone-main{
+  color:var(--jr-green,#168f61)!important;
+  font-family:var(--jr-font)!important;
+  font-weight:500!important;
+}
+.zone-fire{
+  display:none!important;
+}
+.zone-bpm .num{
+  font-family:var(--jr-number)!important;
+  font-weight:500!important;
+}
+
+
+/* D66-53: Landmark / Dock / Resume Tune
+   D66-52ベース。今回は3点だけ限定修正。
+   1) 名古屋城などランドマーク見出しの安っぽさを軽減
+   2) 走行ドックを少し下げて地図の見える面積を増やす
+   3) 再開/スタートの黒ボタンをやめて、緑系アクセントに統一
+   走行ロジック・保存・追従・地図描画は触らない。
+*/
+.landmark{
+  font-family:var(--jr-font,var(--app-font))!important;
+  font-size:28px!important;
+  line-height:1.02!important;
+  font-weight:500!important;
+  letter-spacing:-.075em!important;
+  color:#0f172a!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+  font-feature-settings:"palt" 1;
+}
+@media(max-width:370px){
+  .landmark{font-size:26px!important;}
+}
+@media(max-height:740px){
+  .landmark{font-size:26px!important;}
+}
+
+/* 下のドックとタブバーの隙間を詰める。重ならない範囲で少しだけ下げる */
+.mini-dock{
+  bottom:calc(env(safe-area-inset-bottom) + 64px)!important;
+}
+@media(max-height:760px){
+  .mini-dock{bottom:calc(env(safe-area-inset-bottom) + 60px)!important;}
+}
+@media(max-width:370px){
+  .mini-dock{bottom:calc(env(safe-area-inset-bottom) + 60px)!important;}
+}
+
+/* 再開/スタートの黒をやめる。ストップは赤、再開は緑に統一 */
+.action-card .action-btn.resume,
+.action-card .action-btn.start,
+#runBtnTop.resume,
+#runBtnTop.start{
+  background:linear-gradient(180deg,#1cb874,#168f61)!important;
+  color:#ffffff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+/* stop/pause側も少し視認性を上げる */
+.action-card .action-btn.stop,
+.action-card .action-btn.pause,
+#runBtnTop.stop,
+#runBtnTop.pause{
+  background:#fff1f2!important;
+  color:#be123c!important;
+}
+
+
+
+/* D66-54: Dock Gap + App Font Bold
+   D66-53ベース。
+   変更は2点だけ:
+   1) 走行ドックと下タブの隙間をさらに詰める
+   2) 名古屋城などランドマーク見出しを、アプリUI寄りのsystem boldに変更
+*/
+
+/* ほとんど隙間なし。下タブには触らず、mini-dockだけ少し下げる */
+.mini-dock{
+  bottom:calc(env(safe-area-inset-bottom) + 58px)!important;
+}
+@media(max-height:760px){
+  .mini-dock{
+    bottom:calc(env(safe-area-inset-bottom) + 56px)!important;
+  }
+}
+@media(max-width:370px){
+  .mini-dock{
+    bottom:calc(env(safe-area-inset-bottom) + 56px)!important;
+  }
+}
+
+/* ChatGPT/AndroidアプリUIに近いsystem bold寄せ。
+   変な装飾・極端な字間を避けて、自然な太字にする。 */
+.landmark{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans JP","Noto Sans CJK JP","Roboto","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif!important;
+  font-size:29px!important;
+  line-height:1.03!important;
+  font-weight:700!important;
+  letter-spacing:-.045em!important;
+  color:#111827!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+  font-feature-settings:"palt" 1;
+}
+@media(max-height:740px){
+  .landmark{
+    font-size:27px!important;
+  }
+}
+@media(max-width:370px){
+  .landmark{
+    font-size:26px!important;
+  }
+}
+
+
+/* D66-55: Rounded Landmark Font
+   D66-54ベース。
+   変更はフォント寄せのみ。
+   名古屋城などランドマーク見出しを、もう少し丸みのある M PLUS Rounded 1c に寄せる。
+   数字や計測UIは可読性優先で既存寄りのまま。
+*/
+.landmark{
+  font-family:"M PLUS Rounded 1c",system-ui,-apple-system,BlinkMacSystemFont,"Noto Sans JP","Noto Sans CJK JP","Roboto","Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif!important;
+  font-size:28px!important;
+  line-height:1.04!important;
+  font-weight:800!important;
+  letter-spacing:-.03em!important;
+  color:#111827!important;
+  -webkit-text-stroke:0!important;
+  text-shadow:none!important;
+  font-feature-settings:"palt" 1;
+}
+@media(max-height:740px){
+  .landmark{
+    font-size:26px!important;
+  }
+}
+@media(max-width:370px){
+  .landmark{
+    font-size:25px!important;
+  }
+}
+
+
+/* D66-56: BLE Sensor Diagnostic UI
+   設定画面内だけ。走行画面/地図/保存ロジックには触らない。
+*/
+.sensor-diag{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding-bottom:10px;
+}
+.sensor-hero-card,
+.sensor-help-card,
+.sensor-card,
+.sensor-note{
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:22px;
+  box-shadow:0 8px 22px rgba(15,23,42,.055), inset 0 1px 0 rgba(255,255,255,.92);
+}
+.sensor-hero-card{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px;
+}
+.sensor-hero-card small{
+  display:block;
+  color:var(--jr-green,#168f61);
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.08em;
+}
+.sensor-hero-card strong{
+  display:block;
+  margin-top:3px;
+  color:var(--jr-ink,#111827);
+  font-size:24px;
+  line-height:1.08;
+  font-family:"M PLUS Rounded 1c",var(--jr-font,system-ui),sans-serif;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.sensor-hero-card p,
+.sensor-help-card p,
+.sensor-note p{
+  margin:7px 0 0;
+  color:var(--jr-text,#4b5563);
+  font-size:12.5px;
+  line-height:1.55;
+}
+.sensor-status-pill{
+  flex:0 0 auto;
+  border-radius:999px;
+  padding:7px 10px;
+  background:#f2f5f8;
+  color:#667085;
+  font-size:11px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.sensor-status-pill.connected{
+  background:#e9f7ef;
+  color:#12895b;
+}
+.sensor-status-pill.error{
+  background:#fff1f2;
+  color:#be123c;
+}
+.sensor-actions{
+  display:grid;
+  grid-template-columns:1.2fr .8fr .8fr;
+  gap:8px;
+}
+.sensor-actions button{
+  border:0;
+  border-radius:16px;
+  min-height:46px;
+  font-family:var(--jr-font,system-ui);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:-.015em;
+}
+.sensor-primary{
+  background:linear-gradient(180deg,#1cb874,#168f61);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(22,143,97,.18), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.sensor-secondary{
+  background:#f2f5f8;
+  color:#4b5563;
+}
+.sensor-help-card,
+.sensor-note{
+  padding:12px 14px;
+}
+.sensor-help-card strong,
+.sensor-note strong{
+  color:#111827;
+  font-size:13px;
+}
+.sensor-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.sensor-metric{
+  min-width:0;
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:18px;
+  padding:10px 10px 9px;
+  box-shadow:0 6px 16px rgba(15,23,42,.045), inset 0 1px 0 rgba(255,255,255,.92);
+}
+.sensor-metric small{
+  display:block;
+  color:#6b7280;
+  font-size:10px;
+  font-weight:600;
+}
+.sensor-metric b{
+  display:block;
+  margin-top:4px;
+  color:#111827;
+  font-size:22px;
+  line-height:1;
+  font-family:var(--jr-number,Roboto,system-ui);
+  font-weight:650;
+  letter-spacing:-.04em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.sensor-metric em{
+  display:block;
+  margin-top:4px;
+  color:#98a2b3;
+  font-size:9px;
+  font-style:normal;
+}
+.sensor-card{
+  padding:13px;
+}
+.sensor-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.sensor-card-head strong{
+  color:#111827;
+  font-size:14px;
+}
+.sensor-card-head span{
+  color:#98a2b3;
+  font-size:10px;
+  white-space:nowrap;
+}
+.sensor-table{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:7px;
+}
+.sensor-table>div,
+.sensor-service-item{
+  background:#f7f9fc;
+  border:1px solid rgba(17,24,39,.04);
+  border-radius:14px;
+  padding:9px 10px;
+}
+.sensor-table small,
+.sensor-service-item small{
+  display:block;
+  color:#6b7280;
+  font-size:9.5px;
+  font-weight:600;
+}
+.sensor-table b,
+.sensor-service-item b{
+  display:block;
+  color:#111827;
+  font-size:12px;
+  margin-top:3px;
+  word-break:break-word;
+}
+.sensor-service-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.sensor-empty-line{
+  color:#98a2b3;
+  font-size:12px;
+  background:#f7f9fc;
+  border-radius:14px;
+  padding:10px;
+}
+.sensor-log{
+  background:#0f172a;
+  color:#dbeafe;
+  border-radius:16px;
+  padding:10px;
+  min-height:92px;
+  max-height:190px;
+  overflow:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10.5px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+@media(max-width:370px){
+  .sensor-actions{grid-template-columns:1fr;gap:7px}
+  .sensor-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sensor-hero-card{flex-direction:column}
+}
 </style>
-</head>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&amp;display=swap" rel="stylesheet"/></head>
 <body>
 <div class="phone">
-<div aria-hidden="false" class="app-splash" id="appSplash">
-<div class="splash-card">
-<div class="splash-bike">🚴</div>
-<div class="splash-route"></div>
-<strong>Japan Ride</strong>
-<small>家のバイクで、日本一周へ</small>
-</div>
-</div>
-
+<div aria-hidden="false" class="app-splash" id="appSplash"><div class="splash-zepp-shell"><div class="splash-zepp-ring"><svg aria-hidden="true" class="splash-zepp-svg" viewbox="0 0 24 24"><circle cx="6.2" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><circle cx="17.8" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><path d="M7 17.2 10.2 9.8h3.2l4.2 7.4M10.2 9.8l3 7.4M9 7.2h4.8M14.5 7.2l-1.3 2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"></path></svg></div><strong>Japan Ride</strong><small>家のバイクで、日本一周へ</small></div></div>
 <div class="map" id="map"></div>
 <div class="map-tools-panel" id="mapToolsPanel"><button class="map-tool text" id="detailFromMapView">詳細表示</button>
-<button class="map-tool" id="recenterBtn2">⌖</button><button class="map-tool text toggle on" id="autoFollowTogglePanel">追従 ON</button>
+<button class="map-tool" id="recenterBtn2"><svg aria-hidden="true" class="svg-icon map-tool-svg" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="none" r="7.5" stroke="currentColor" stroke-width="2"></circle><circle cx="12" cy="12" fill="none" r="2.5" stroke="currentColor" stroke-width="2"></circle><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path></svg></button><button class="map-tool text toggle on" id="autoFollowTogglePanel">追従 ON</button>
 <button class="map-tool" id="zoomInBtn">＋</button>
 <button class="map-tool" id="zoomOutBtn">−</button>
 <button class="map-tool text toggle" id="buildingTogglePanel">建物 OFF</button><button class="map-tool text toggle" id="terrainTogglePanel">地形 OFF</button><button class="map-tool text" id="closeMapTools">閉じる</button>
@@ -2377,10 +3752,10 @@
 <div><small>距離</small><b><span id="mapHudDist">0.00</span><em>km</em></b></div>
 </div>
 <nav aria-label="メインメニュー" class="bottom-tabs" id="bottomTabs">
-<button class="bottom-tab active" data-main-tab="home"><span>🏠</span><b>ホーム</b></button><button class="bottom-tab" data-main-tab="ride"><span>🚴</span><b>走る</b></button>
-<button class="bottom-tab" data-main-tab="routes"><span>🗺️</span><b>ルート</b></button>
-<button class="bottom-tab" data-main-tab="records"><span>📊</span><b>記録</b></button>
-<button class="bottom-tab" data-main-tab="settings"><span>⚙️</span><b>設定</b></button>
+<button class="bottom-tab active" data-main-tab="home"><svg aria-hidden="true" class="svg-icon tab-svg" viewbox="0 0 24 24"><path d="M4 10.8 12 4l8 6.8v8.4a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 19.2v-8.4Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2.2"></path><path d="M9.2 20.5v-6.2h5.6v6.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2"></path></svg><b>ホーム</b></button><button class="bottom-tab" data-main-tab="ride"><svg aria-hidden="true" class="svg-icon tab-svg" viewbox="0 0 24 24"><circle cx="6.2" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><circle cx="17.8" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><path d="M7 17.2 10.2 9.8h3.2l4.2 7.4M10.2 9.8l3 7.4M9 7.2h4.8M14.5 7.2l-1.3 2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"></path></svg><b>走る</b></button>
+<button class="bottom-tab" data-main-tab="routes"><svg aria-hidden="true" class="svg-icon tab-svg" viewbox="0 0 24 24"><path d="M5.2 19.5c4-6.8 9.6-2.3 13.6-15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2"></path><circle cx="5.2" cy="19.5" fill="none" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="18.8" cy="4.5" fill="none" r="2.2" stroke="currentColor" stroke-width="2"></circle></svg><b>ルート</b></button>
+<button class="bottom-tab" data-main-tab="records"><svg aria-hidden="true" class="svg-icon tab-svg" viewbox="0 0 24 24"><path d="M5 19V9m7 10V5m7 14v-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4"></path><path d="M4 20h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.1"></path></svg><b>記録</b></button>
+<button class="bottom-tab" data-main-tab="settings"><svg aria-hidden="true" class="svg-icon tab-svg" viewbox="0 0 24 24"><circle cx="12" cy="12" fill="none" r="3.2" stroke="currentColor" stroke-width="2.1"></circle><path d="M12 3.8v2.1m0 12.2v2.1M4.4 7.2l1.8 1.1m11.6 7.4 1.8 1.1M4.4 16.8l1.8-1.1m11.6-7.4 1.8-1.1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.1"></path></svg><b>設定</b></button>
 </nav>
 <section class="simple-page" id="routesPage">
 <div class="simple-sheet route-sheet">
@@ -2412,7 +3787,58 @@
 <section class="simple-page" id="settingsPage">
 <div class="simple-sheet">
 <div class="simple-head"><div><small>SETTINGS</small><strong>設定</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
-<div class="simple-body"><div class="simple-empty">入力方式・センサー・表示設定を入れる画面。</div></div>
+<div class="simple-body">
+<div class="sensor-diag">
+<div class="sensor-hero-card">
+<div>
+<small>SENSOR DIAGNOSTIC</small>
+<strong>ケイデンス診断</strong>
+<p>まずはセンサーがどんな形式でデータを出しているか確認します。走行速度にはまだ反映しません。</p>
+</div>
+<div class="sensor-status-pill" id="sensorDiagStatus">未接続</div>
+</div>
+<div class="sensor-actions">
+<button class="sensor-primary" id="sensorConnectBtn">センサー接続</button>
+<button class="sensor-secondary" id="sensorDisconnectBtn">切断</button>
+<button class="sensor-secondary" id="sensorClearLogBtn">ログ消去</button>
+</div>
+<div class="sensor-help-card">
+<strong>接続前にやること</strong>
+<p>電池を入れて、クランクを回すかセンサーを振って起こしてください。検索中も回している方が検出されやすいです。</p>
+</div>
+<div class="sensor-metrics">
+<div class="sensor-metric"><small>RPM</small><b id="sensorRpm">—</b><em>cadence</em></div>
+<div class="sensor-metric"><small>速度</small><b id="sensorSpeed">—</b><em>km/h</em></div>
+<div class="sensor-metric"><small>Power</small><b id="sensorPower">—</b><em>watt</em></div>
+<div class="sensor-metric"><small>HR</small><b id="sensorHr">—</b><em>bpm</em></div>
+<div class="sensor-metric"><small>電池</small><b id="sensorBattery">—</b><em>%</em></div>
+<div class="sensor-metric"><small>最終受信</small><b id="sensorLastRx">—</b><em>time</em></div>
+</div>
+<div class="sensor-card">
+<div class="sensor-card-head"><strong>接続デバイス</strong><span id="sensorDeviceName">—</span></div>
+<div class="sensor-table">
+<div><small>接続方式</small><b id="sensorTransport">Web Bluetooth / BLE</b></div>
+<div><small>読み取り形式</small><b id="sensorDetectedType">未判定</b></div>
+<div><small>Manufacturer</small><b id="sensorManufacturer">—</b></div>
+<div><small>Model</small><b id="sensorModel">—</b></div>
+</div>
+</div>
+<div class="sensor-card">
+<div class="sensor-card-head"><strong>検出サービス</strong><span>読み取れた規格だけ表示</span></div>
+<div class="sensor-service-list" id="sensorServiceList">
+<div class="sensor-empty-line">まだ接続していません。</div>
+</div>
+</div>
+<div class="sensor-card">
+<div class="sensor-card-head"><strong>受信ログ / Raw HEX</strong><span>最新20件</span></div>
+<div class="sensor-log" id="sensorRawLog">ログなし</div>
+</div>
+<div class="sensor-note">
+<strong>設計メモ</strong>
+<p>標準CSCなら累計クランク回転数とイベント時刻の差分からRPMを計算します。スマートスピンバイクはFTMS Indoor Bike Data、パワーメーター系はCycling Powerも読む設計です。未知のデータは捨てずにHEXで表示します。</p>
+</div>
+</div>
+</div>
 </div>
 </section>
 <button class="display-float" id="displayFloat">詳細表示</button>
@@ -2430,7 +3856,7 @@
 <div class="ride-mode-hint" id="rideModeHint">日本一周モード</div>
 <div class="mode" id="mode">追従 ON</div>
 <div class="hero-main">
-<div class="hero-icon">🏯</div>
+<div class="hero-icon"></div>
 <div style="flex:1;min-width:0">
 <div class="eyebrow" id="heroEyebrow">次の名所</div>
 <div class="landmark" id="landmarkTitle">名古屋城</div>
@@ -2451,10 +3877,10 @@
 <b><span id="myRouteNextName">未設定</span><span id="myRouteNextRemain"></span></b>
 </div>
 </div>
-<div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike">🚴</div></div>
+<div class="progress"><div class="base"></div><div class="fill" id="fill"></div><div id="dots"></div><div class="bike" id="bike"></div></div>
 <div class="subgoals"><span id="smallGoal">通過地点 3.8km</span><span id="mediumGoal">中継地 大井川 27km</span></div>
 </div>
-<div class="top-chips"><button class="label-toggle place-chip" id="placeChip">📍 静岡県 焼津市 八楠</button>
+<div class="top-chips"><button class="label-toggle place-chip" id="placeChip">静岡県 焼津市 八楠</button>
 <button class="label-toggle" id="displayToggle">簡易表示</button>
 <button class="label-toggle" id="inputModeToggle">センサー入力</button>
 <button class="label-toggle map-tools-toggle" id="mapToolsToggle">地図操作</button></div>
@@ -2491,63 +3917,52 @@
 </div>
 </div>
 <section aria-label="ホーム" class="home-page open" id="homePage">
-<div class="home-scroll">
-<header class="home-hero">
-<div>
-<small>JAPAN RIDE</small>
-<h1>今日のライド</h1>
-<p>家のバイクで、日本一周へ。</p>
-</div>
-<button class="home-primary-btn" id="homeQuickRideBtn">すぐ走る</button>
+<div class="home-scroll home-zepp">
+<header class="zepp-topbar">
+<button aria-label="device" class="zepp-top-icon" id="homeDeviceBtn"><svg aria-hidden="true" class="zepp-top-svg" viewbox="0 0 24 24"><path d="M6 20V5.2m0 0c3.8-1.6 6.2 1.6 10 0v8.2c-3.8 1.6-6.2-1.6-10 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"></path></svg></button>
+<div class="zepp-center-nav"><span class="zepp-chevron">‹</span><span class="zepp-dot-ring"></span><span class="zepp-chevron">›</span></div>
+<button aria-label="profile" class="zepp-top-icon" id="homeProfileBtn"><svg aria-hidden="true" class="zepp-top-svg" viewbox="0 0 24 24"><circle cx="12" cy="8" fill="none" r="3.3" stroke="currentColor" stroke-width="2.1"></circle><path d="M5.5 20c.9-4 3.2-6 6.5-6s5.6 2 6.5 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.1"></path></svg></button>
 </header>
-<section class="home-score-card">
-<div>
-<small>今日</small>
-<strong id="homeTodayDistance">0.00</strong><span>km</span>
-</div>
-<div>
-<small>時間</small>
-<strong id="homeTodayTime">00:00</strong>
-</div>
-<div>
-<small>消費</small>
-<strong id="homeTodayCal">0</strong><span>kcal</span>
-</div>
+<nav aria-label="ホームカテゴリ" class="home-segment">
+<button class="active" data-home-section="summary">概要</button>
+<button data-home-section="japan">日本一周</button>
+<button data-home-section="route">マイルート</button>
+<button data-home-section="record">記録</button>
+</nav>
+<section class="zepp-ring-stage">
+<div class="side-score left"><b id="homeSideDistance">0.00</b><span>距離 km</span></div>
+<div class="main-score-ring" id="homeRideScoreRing"><div class="score-inner"><strong id="homeRideScore">0</strong><span>RIDE<br/>SCORE</span></div></div>
+<div class="side-score right"><b id="homeSideRoutes">0</b><span>ルート</span></div>
 </section>
-<section class="home-card home-japan-card">
-<div class="home-card-main">
-<small>日本一周</small>
-<strong id="homeJapanTitle">旅の続き</strong>
-<p id="homeJapanSub">現在地と次の名所を確認して走る。</p>
-</div>
-<button class="home-card-action" id="homeStartJapanBtn">走る</button>
+<section class="insight-card zepp-card">
+<div class="insight-title-row"><strong>デイリー ライド インサイト</strong><span id="homeInsightBadge">0</span></div>
+<p id="homeCoachText">まだ今日は走行記録がありません。短いライドでも、旅の続きとして記録されます。</p>
+<div aria-hidden="true" class="insight-actions"><span></span><span></span></div>
 </section>
-<section class="home-card home-route-card">
-<div class="home-card-main">
-<small>マイルート</small>
-<strong id="homeRouteTitle">自分の道を走る</strong>
-<p id="homeRouteSub">保存ルートから選ぶ、または新しく作る。</p>
+<section class="focus-card zepp-card">
+<div class="focus-title-row"><strong>今日のフォーカス</strong><span>過去7日間</span></div>
+<p id="homeNextGoalSub">7日間、ワークアウトを記録し、運動の負荷を見えるようにしましょう。</p>
+<div class="balance-row">
+<div><b id="homeTodayDistance">0.00</b><span>km</span></div>
+<div><b id="homeTodayTime">00:00</b><span>time</span></div>
+<div><b id="homeTodayCal">0</b><span>kcal</span></div>
 </div>
-<button class="home-card-action secondary" id="homePickRouteBtn">選ぶ</button>
+<div class="balance-bar"><i class="blue"></i><i class="green"></i><em></em></div>
+<div class="balance-labels"><span>日本一周</span><span>マイルート</span></div>
 </section>
-<section class="home-mini-grid">
-<button class="home-mini-card" id="homeRecordsBtn">
-<small>記録</small>
-<strong id="homeLogCount">0件</strong>
-<span>走行履歴を見る</span>
-</button>
-<button class="home-mini-card" id="homeRoutesBtn">
-<small>ルート</small>
-<strong id="homeRouteCount">0本</strong>
-<span>作成・編集する</span>
-</button>
+<section class="activity-card zepp-card">
+<div class="activity-head"><div><strong>アクティビティ</strong><p>今日のセッションでベストを尽くしましょう。</p></div><svg aria-hidden="true" class="activity-watermark" viewbox="0 0 24 24"><circle cx="6.2" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><circle cx="17.8" cy="17.4" fill="none" r="3.1" stroke="currentColor" stroke-width="2.1"></circle><path d="M7 17.2 10.2 9.8h3.2l4.2 7.4M10.2 9.8l3 7.4M9 7.2h4.8M14.5 7.2l-1.3 2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.1"></path></svg></div>
+<div class="activity-actions"><button id="homeStartJapanBtn">日本一周を走る</button><button id="homePickRouteBtn">マイルートを選ぶ</button></div>
+</section>
+<section class="quick-grid-zepp">
+<button class="quick-zepp-card" id="homeRoutesBtn"><svg aria-hidden="true" class="quick-svg" viewbox="0 0 24 24"><path d="M5.2 19.5c4-6.8 9.6-2.3 13.6-15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2"></path><circle cx="5.2" cy="19.5" fill="none" r="2.2" stroke="currentColor" stroke-width="2"></circle><circle cx="18.8" cy="4.5" fill="none" r="2.2" stroke="currentColor" stroke-width="2"></circle></svg><small>ROUTES</small><strong id="homeRouteCount">0本</strong><span id="homeRouteSub">作成・編集・選択</span></button>
+<button class="quick-zepp-card" id="homeRecordsBtn"><svg aria-hidden="true" class="quick-svg" viewbox="0 0 24 24"><path d="M5 19V9m7 10V5m7 14v-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4"></path><path d="M4 20h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.1"></path></svg><small>RECORDS</small><strong id="homeLogCount">0件</strong><span>走行履歴を見る</span></button>
 </section>
 </div>
 </section>
-
 <div aria-hidden="true" class="checkpoint-arrival-effect" id="checkpointArrivalEffect">
 <div class="checkpoint-arrival-card">
-<div class="checkpoint-arrival-icons">🎉🚴‍♂️✨</div>
+<div class="checkpoint-arrival-icons"></div>
 <strong id="checkpointArrivalName">チェックポイント到達！</strong>
 <small>チェックポイント到達！</small>
 </div>
@@ -6915,6 +8330,488 @@ function ensureMapReady(callback){
  };
 })();
 
+
+/* D66-42 premium home quality
+   参考アプリから取り入れる: 大きい主役カード、スコアリング、円形リング、カード階層。
+   注意: 保存/読込/編集/追従/描画ロジックは触らない。
+*/
+function updatePremiumHomeDashboard(){
+ const logs=(typeof loadRideLogs==='function') ? loadRideLogs() : [];
+ const routes=(typeof loadMyRoutes==='function') ? loadMyRoutes() : [];
+ const todayKey=new Date().toISOString().slice(0,10);
+ const today=logs.filter(l=>String(l.createdAt||'').slice(0,10)===todayKey);
+ const dist=today.reduce((s,l)=>s+Number(l.distanceKm||0),0);
+ const time=today.reduce((s,l)=>s+Number(l.timeSec||0),0);
+ const cal=today.reduce((s,l)=>s+Number(l.calories||0),0);
+ const score=Math.max(0,Math.min(100,Math.round(dist*28 + time/90 + cal/8)));
+ const deg=Math.round(score*3.6);
+ if($('homeTodayDistance')) $('homeTodayDistance').textContent=dist.toFixed(2);
+ if($('homeTodayTime')) $('homeTodayTime').textContent=fmtTime(time);
+ if($('homeTodayCal')) $('homeTodayCal').textContent=String(Math.round(cal));
+ if($('homeRideScore')) $('homeRideScore').textContent=String(score);
+ if($('homeRideScoreRing')) $('homeRideScoreRing').style.setProperty('--score-deg',deg+'deg');
+ if($('homeCoachText')) $('homeCoachText').textContent=dist>0 ? '今日も進んでいます。少し足すだけで旅が伸びる。' : '軽く回して、旅の続きを進めよう。';
+ if($('homeLogCount')) $('homeLogCount').textContent=logs.length+'件';
+ if($('homeRouteCount')) $('homeRouteCount').textContent=routes.length+'本';
+ if($('homeRouteSub')){
+   const recent=routes[0];
+   $('homeRouteSub').textContent=recent ? '前回: '+(recent.name||'マイルート') : '作成・編集・選択';
+ }
+ if($('homeNextGoal')){
+   const remain=Math.max(0,1-dist);
+   $('homeNextGoal').textContent=dist>=1 ? '今日の1km達成' : 'あと '+remain.toFixed(2)+'km';
+ }
+ if($('homeNextGoalSub')) $('homeNextGoalSub').textContent=dist>=1 ? '次は2km、またはお気に入りルートを完走。' : 'まずは1km。短くても記録に残る。';
+ if($('homeJapanProgressLine')){
+   const pct=Math.max(2,Math.min(100,((Number(st.km||0)%100)/100)*100));
+   $('homeJapanProgressLine').style.setProperty('--journey-progress',pct.toFixed(0)+'%');
+ }
+}
+(function(){
+ const prevUpdateHomeDashboard=updateHomeDashboard;
+ updateHomeDashboard=function(){
+   prevUpdateHomeDashboard();
+   updatePremiumHomeDashboard();
+ };
+})();
+
+
+/* D66-45 stable SVG icon cleanup
+   renderUIなど旧処理が絵文字テキストを入れても、表示上は空に戻す。
+   保存/読込/編集/地図/追従ロジックは触らない。
+*/
+function cleanEmojiUi(){
+ const hero=document.querySelector('.hero-icon');
+ if(hero) hero.textContent='';
+ const bike=$('bike');
+ if(bike) bike.textContent='';
+ const place=$('placeChip');
+ if(place) place.textContent=place.textContent.replace(/[📍🚴🏠🗺️📊⚙️🛣️🏅🗾🎉✨]/g,'').trim();
+}
+(function(){
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   prevRenderUI();
+   cleanEmojiUi();
+ };
+})();
+
+
+/* D66-46 Zepp-like Home V3
+   ホームだけを参考アプリ寄せに作り直す。
+   保存/読込/編集/地図/追従/走行ロジックは触らない。
+*/
+function updateZeppHomeDashboard(){
+ const logs=(typeof loadRideLogs==='function') ? loadRideLogs() : [];
+ const routes=(typeof loadMyRoutes==='function') ? loadMyRoutes() : [];
+ const todayKey=new Date().toISOString().slice(0,10);
+ const today=logs.filter(l=>String(l.createdAt||'').slice(0,10)===todayKey);
+ const dist=today.reduce((s,l)=>s+Number(l.distanceKm||0),0);
+ const time=today.reduce((s,l)=>s+Number(l.timeSec||0),0);
+ const cal=today.reduce((s,l)=>s+Number(l.calories||0),0);
+ const score=Math.max(0,Math.min(100,Math.round(dist*30 + time/80 + cal/9)));
+ const deg=Math.round(score*3.6);
+ if($('homeRideScore')) $('homeRideScore').textContent=String(score);
+ if($('homeRideScoreRing')) $('homeRideScoreRing').style.setProperty('--score-deg',deg+'deg');
+ if($('homeSideDistance')) $('homeSideDistance').textContent=dist.toFixed(2);
+ if($('homeSideRoutes')) $('homeSideRoutes').textContent=String(routes.length);
+ if($('homeTodayDistance')) $('homeTodayDistance').textContent=dist.toFixed(2);
+ if($('homeTodayTime')) $('homeTodayTime').textContent=fmtTime(time);
+ if($('homeTodayCal')) $('homeTodayCal').textContent=String(Math.round(cal));
+ if($('homeInsightBadge')) $('homeInsightBadge').textContent=String(Math.max(0,Math.min(9,logs.length)));
+ if($('homeCoachText')) $('homeCoachText').textContent=dist>0 ? '今日のライドで旅が少し進みました。余裕があれば、あと5分だけ回してみましょう。' : 'まだ今日は走行記録がありません。短いライドでも、旅の続きとして記録されます。';
+ if($('homeNextGoalSub')) $('homeNextGoalSub').textContent=dist>=1 ? '今日の1kmは達成済み。次はお気に入りのマイルート完走を狙えます。' : '7日間、ワークアウトを記録し、運動の負荷を見えるようにしましょう。';
+ if($('homeRouteCount')) $('homeRouteCount').textContent=routes.length+'本';
+ if($('homeLogCount')) $('homeLogCount').textContent=logs.length+'件';
+ if($('homeRouteSub')){
+   const recent=routes[0];
+   $('homeRouteSub').textContent=recent ? '前回: '+(recent.name||'マイルート') : '作成・編集・選択';
+ }
+ const blue=Math.max(12,Math.min(88,Math.round(85 - Math.min(70,dist*16))));
+ const marker=Math.max(18,Math.min(82,blue));
+ const bar=document.querySelector('.balance-bar');
+ if(bar){
+   bar.style.setProperty('--balance-blue',blue+'%');
+   bar.style.setProperty('--balance-marker',marker+'%');
+ }
+}
+(function(){
+ const prevUpdateHomeDashboard=updateHomeDashboard;
+ updateHomeDashboard=function(){
+   prevUpdateHomeDashboard();
+   updateZeppHomeDashboard();
+ };
+})();
+
+
+/* D66-51 ride dock scoped cleanup
+   走行ドック内の装飾だけを表示クリーニング。
+   保存/読込/編集/地図/追従/走行ロジックは触らない。
+*/
+function cleanRideDockDecor(){
+ const fire=$('zoneFire');
+ if(fire) fire.textContent='';
+}
+(function(){
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   prevRenderUI();
+   cleanRideDockDecor();
+ };
+})();
+
+
+/* D66-52 ride text/icon cleanup
+   表示だけのクリーニング。保存/読込/編集/地図/追従/走行ロジックは触らない。
+*/
+function cleanRideTypographyDecor(){
+ const fire=$('zoneFire');
+ if(fire) fire.textContent='';
+ const hero=document.querySelector('.hero-icon');
+ if(hero) hero.textContent='';
+ const bike=$('bike');
+ if(bike) bike.textContent='';
+ const place=$('placeChip');
+ if(place) place.textContent=place.textContent.replace(/[📍🚴🏠🗺️📊⚙️🛣️🏅🗾🔥🎉✨]/g,'').trim();
+}
+(function(){
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   prevRenderUI();
+   cleanRideTypographyDecor();
+ };
+})();
+
+
+/* D66-56 BLE Sensor Diagnostic
+   本番走行にはまだ反映しない診断版。
+   センサー形式差で落ちないように、標準CSC / FTMS / Cycling Power / Battery / Device Infoを
+   読める範囲だけ読み、未知の値はRaw HEXで表示する。
+*/
+const JR_BLE_UUID={
+ cscService:'00001816-0000-1000-8000-00805f9b34fb',
+ cscMeasurement:'00002a5b-0000-1000-8000-00805f9b34fb',
+ ftmsService:'00001826-0000-1000-8000-00805f9b34fb',
+ indoorBikeData:'00002ad2-0000-1000-8000-00805f9b34fb',
+ cyclingPowerService:'00001818-0000-1000-8000-00805f9b34fb',
+ cyclingPowerMeasurement:'00002a63-0000-1000-8000-00805f9b34fb',
+ batteryService:'0000180f-0000-1000-8000-00805f9b34fb',
+ batteryLevel:'00002a19-0000-1000-8000-00805f9b34fb',
+ deviceInfoService:'0000180a-0000-1000-8000-00805f9b34fb',
+ manufacturerName:'00002a29-0000-1000-8000-00805f9b34fb',
+ modelNumber:'00002a24-0000-1000-8000-00805f9b34fb'
+};
+const JR_SENSOR_OPTIONAL_SERVICES=[
+ JR_BLE_UUID.cscService,
+ JR_BLE_UUID.ftmsService,
+ JR_BLE_UUID.cyclingPowerService,
+ JR_BLE_UUID.batteryService,
+ JR_BLE_UUID.deviceInfoService
+];
+let jrSensorDiag={
+ device:null,server:null,
+ connected:false,
+ services:[],
+ chars:[],
+ logs:[],
+ metrics:{rpm:null,speed:null,power:null,hr:null,battery:null,lastRx:null,type:'未判定',manufacturer:'—',model:'—'},
+ lastCsc:null,lastPower:null
+};
+function jrBleShort(uuid){return String(uuid||'').toLowerCase().slice(4,8)}
+function jrSetText(id,txt){const el=$(id); if(el) el.textContent=txt}
+function jrSensorNow(){return new Date().toLocaleTimeString('ja-JP',{hour12:false})}
+function jrHex(view){
+ try{
+   const arr=[];
+   for(let i=0;i<view.byteLength;i++) arr.push(view.getUint8(i).toString(16).padStart(2,'0'));
+   return arr.join(' ').toUpperCase();
+ }catch(e){return ''}
+}
+function jrSafeRead(fn,fallback=null){try{return fn()}catch(e){return fallback}}
+function jrPushSensorLog(kind,msg,hex){
+ const line='['+jrSensorNow()+'] '+kind+'  '+msg+(hex?'  HEX: '+hex:'');
+ jrSensorDiag.logs.unshift(line);
+ jrSensorDiag.logs=jrSensorDiag.logs.slice(0,20);
+ renderSensorDiagUI();
+}
+function jrWrapDiff(curr,prev,mod){
+ let d=Number(curr)-Number(prev);
+ if(!Number.isFinite(d)) return 0;
+ if(d<0) d+=mod;
+ return d;
+}
+function jrCalcRpm(prevRev,rev,prevTime,time,revMod){
+ const revDiff=jrWrapDiff(rev,prevRev,revMod);
+ const tickDiff=jrWrapDiff(time,prevTime,65536);
+ if(tickDiff<=0) return null;
+ const rpm=revDiff*60/(tickDiff/1024);
+ if(!Number.isFinite(rpm) || rpm<0 || rpm>300) return null;
+ return rpm;
+}
+function jrGetUint24(view,offset){
+ if(offset+3>view.byteLength) return null;
+ return view.getUint8(offset) | (view.getUint8(offset+1)<<8) | (view.getUint8(offset+2)<<16);
+}
+function jrReadUtf8(view){
+ const bytes=[];
+ for(let i=0;i<view.byteLength;i++) bytes.push(view.getUint8(i));
+ try{return new TextDecoder('utf-8').decode(new Uint8Array(bytes)).trim() || '—'}catch(e){return '—'}
+}
+function parseCscMeasurement(view){
+ const hex=jrHex(view);
+ if(view.byteLength<1){jrPushSensorLog('CSC','too short',hex);return}
+ const flags=view.getUint8(0);
+ let o=1;
+ const hasWheel=!!(flags&0x01);
+ const hasCrank=!!(flags&0x02);
+ let out=[];
+ if(hasWheel && o+6<=view.byteLength){
+   const wheelRev=view.getUint32(o,true); o+=4;
+   const wheelTime=view.getUint16(o,true); o+=2;
+   if(jrSensorDiag.lastCsc && jrSensorDiag.lastCsc.wheelRev!=null){
+     const revDiff=jrWrapDiff(wheelRev,jrSensorDiag.lastCsc.wheelRev,4294967296);
+     const tickDiff=jrWrapDiff(wheelTime,jrSensorDiag.lastCsc.wheelTime,65536);
+     if(tickDiff>0){
+       const speed=revDiff*2.105/(tickDiff/1024)*3.6;
+       if(Number.isFinite(speed) && speed>=0 && speed<120){
+         jrSensorDiag.metrics.speed=speed;
+         out.push('speed '+speed.toFixed(1)+'km/h');
+       }
+     }
+   }
+   jrSensorDiag.lastCsc=Object.assign({},jrSensorDiag.lastCsc||{},{wheelRev,wheelTime});
+ }
+ if(hasCrank && o+4<=view.byteLength){
+   const crankRev=view.getUint16(o,true); o+=2;
+   const crankTime=view.getUint16(o,true); o+=2;
+   if(jrSensorDiag.lastCsc && jrSensorDiag.lastCsc.crankRev!=null){
+     const rpm=jrCalcRpm(jrSensorDiag.lastCsc.crankRev,crankRev,jrSensorDiag.lastCsc.crankTime,crankTime,65536);
+     if(rpm!=null){
+       jrSensorDiag.metrics.rpm=rpm;
+       out.push('rpm '+rpm.toFixed(1));
+     }
+   }
+   jrSensorDiag.lastCsc=Object.assign({},jrSensorDiag.lastCsc||{},{crankRev,crankTime});
+ }
+ jrSensorDiag.metrics.type='CSC / Cycling Speed and Cadence';
+ jrSensorDiag.metrics.lastRx=jrSensorNow();
+ jrPushSensorLog('CSC',out.length?out.join(' / '):'received flags='+flags,hex);
+}
+function parseIndoorBikeData(view){
+ const hex=jrHex(view);
+ if(view.byteLength<2){jrPushSensorLog('FTMS','too short',hex);return}
+ const flags=view.getUint16(0,true);
+ let o=2;
+ const out=[];
+ function need(n){return o+n<=view.byteLength}
+ // FTMS Indoor Bike Data: if More Data bit is 0, instantaneous speed is present.
+ if(!(flags&0x0001) && need(2)){
+   const speed=view.getUint16(o,true)/100; o+=2;
+   if(Number.isFinite(speed)){jrSensorDiag.metrics.speed=speed;out.push('speed '+speed.toFixed(1)+'km/h')}
+ }
+ if((flags&0x0002) && need(2)){o+=2} // average speed
+ if((flags&0x0004) && need(2)){
+   const rpm=view.getUint16(o,true)/2; o+=2;
+   if(Number.isFinite(rpm)){jrSensorDiag.metrics.rpm=rpm;out.push('rpm '+rpm.toFixed(1))}
+ }
+ if((flags&0x0008) && need(2)){o+=2} // average cadence
+ if((flags&0x0010) && need(3)){o+=3} // total distance
+ if((flags&0x0020) && need(2)){o+=2} // resistance level
+ if((flags&0x0040) && need(2)){
+   const power=view.getInt16(o,true); o+=2;
+   jrSensorDiag.metrics.power=power; out.push('power '+power+'W');
+ }
+ if((flags&0x0080) && need(2)){o+=2} // average power
+ if((flags&0x0100) && need(5)){o+=5} // expended energy
+ if((flags&0x0200) && need(1)){
+   const hr=view.getUint8(o); o+=1;
+   jrSensorDiag.metrics.hr=hr; out.push('hr '+hr);
+ }
+ if((flags&0x0400) && need(1)){o+=1} // MET
+ if((flags&0x0800) && need(2)){o+=2} // elapsed time
+ if((flags&0x1000) && need(2)){o+=2} // remaining time
+ jrSensorDiag.metrics.type='FTMS / Indoor Bike Data';
+ jrSensorDiag.metrics.lastRx=jrSensorNow();
+ jrPushSensorLog('FTMS',out.length?out.join(' / '):'received flags=0x'+flags.toString(16),hex);
+}
+function parseCyclingPowerMeasurement(view){
+ const hex=jrHex(view);
+ if(view.byteLength<4){jrPushSensorLog('POWER','too short',hex);return}
+ const flags=view.getUint16(0,true);
+ let o=2;
+ const power=view.getInt16(o,true); o+=2;
+ const out=['power '+power+'W'];
+ jrSensorDiag.metrics.power=power;
+ if((flags&0x0001) && o+1<=view.byteLength) o+=1; // pedal power balance
+ if((flags&0x0004) && o+2<=view.byteLength) o+=2; // accumulated torque
+ if((flags&0x0010) && o+6<=view.byteLength){ // wheel revolution data
+   o+=6;
+ }
+ if((flags&0x0020) && o+4<=view.byteLength){ // crank revolution data
+   const crankRev=view.getUint16(o,true); o+=2;
+   const crankTime=view.getUint16(o,true); o+=2;
+   if(jrSensorDiag.lastPower && jrSensorDiag.lastPower.crankRev!=null){
+     const rpm=jrCalcRpm(jrSensorDiag.lastPower.crankRev,crankRev,jrSensorDiag.lastPower.crankTime,crankTime,65536);
+     if(rpm!=null){jrSensorDiag.metrics.rpm=rpm;out.push('rpm '+rpm.toFixed(1))}
+   }
+   jrSensorDiag.lastPower={crankRev,crankTime};
+ }
+ jrSensorDiag.metrics.type='Cycling Power';
+ jrSensorDiag.metrics.lastRx=jrSensorNow();
+ jrPushSensorLog('POWER',out.join(' / '),hex);
+}
+function handleSensorNotification(ev){
+ try{
+   const uuid=String(ev.target.uuid||'').toLowerCase();
+   const view=ev.target.value;
+   if(uuid.includes('2a5b')) parseCscMeasurement(view);
+   else if(uuid.includes('2ad2')) parseIndoorBikeData(view);
+   else if(uuid.includes('2a63')) parseCyclingPowerMeasurement(view);
+   else jrPushSensorLog('RAW',jrBleShort(uuid),jrHex(view));
+ }catch(err){
+   jrPushSensorLog('ERROR','parse failed: '+(err&&err.message?err.message:String(err)));
+ }
+}
+function renderSensorDiagUI(){
+ const m=jrSensorDiag.metrics||{};
+ const connected=!!(jrSensorDiag.device && jrSensorDiag.device.gatt && jrSensorDiag.device.gatt.connected);
+ const status=$('sensorDiagStatus');
+ if(status){
+   status.textContent=connected?'接続中':(jrSensorDiag.error?'エラー':'未接続');
+   status.classList.toggle('connected',connected);
+   status.classList.toggle('error',!!jrSensorDiag.error);
+ }
+ jrSetText('sensorRpm',m.rpm==null?'—':Number(m.rpm).toFixed(1));
+ jrSetText('sensorSpeed',m.speed==null?'—':Number(m.speed).toFixed(1));
+ jrSetText('sensorPower',m.power==null?'—':String(Math.round(Number(m.power))));
+ jrSetText('sensorHr',m.hr==null?'—':String(Math.round(Number(m.hr))));
+ jrSetText('sensorBattery',m.battery==null?'—':String(Math.round(Number(m.battery))));
+ jrSetText('sensorLastRx',m.lastRx||'—');
+ jrSetText('sensorDeviceName',jrSensorDiag.device?(jrSensorDiag.device.name||'名称なし'):'—');
+ jrSetText('sensorDetectedType',m.type||'未判定');
+ jrSetText('sensorManufacturer',m.manufacturer||'—');
+ jrSetText('sensorModel',m.model||'—');
+ const list=$('sensorServiceList');
+ if(list){
+   if(jrSensorDiag.services && jrSensorDiag.services.length){
+     list.innerHTML=jrSensorDiag.services.map(s=>'<div class="sensor-service-item"><small>'+s.kind+'</small><b>'+s.status+'</b></div>').join('');
+   }else{
+     list.innerHTML='<div class="sensor-empty-line">まだ接続していません。</div>';
+   }
+ }
+ const log=$('sensorRawLog');
+ if(log) log.textContent=jrSensorDiag.logs.length?jrSensorDiag.logs.join('\n'):'ログなし';
+}
+function onSensorDisconnected(){
+ jrSensorDiag.connected=false;
+ jrPushSensorLog('SYSTEM','disconnected');
+ renderSensorDiagUI();
+}
+async function jrTryService(server,def){
+ try{
+   const service=await server.getPrimaryService(def.service);
+   jrSensorDiag.services.push({kind:def.kind,status:'service OK'});
+   if(def.reads){
+     for(const r of def.reads){
+       try{
+         const ch=await service.getCharacteristic(r.uuid);
+         const v=await ch.readValue();
+         if(r.type==='utf8') jrSensorDiag.metrics[r.field]=jrReadUtf8(v);
+         if(r.type==='uint8') jrSensorDiag.metrics[r.field]=v.getUint8(0);
+         jrSensorDiag.services.push({kind:def.kind+' / '+r.name,status:'read OK'});
+       }catch(e){
+         jrSensorDiag.services.push({kind:def.kind+' / '+r.name,status:'read不可'});
+       }
+     }
+   }
+   if(def.notifies){
+     for(const n of def.notifies){
+       try{
+         const ch=await service.getCharacteristic(n.uuid);
+         await ch.startNotifications();
+         ch.addEventListener('characteristicvaluechanged',handleSensorNotification);
+         jrSensorDiag.chars.push(ch);
+         jrSensorDiag.services.push({kind:def.kind+' / '+n.name,status:'notify OK'});
+       }catch(e){
+         jrSensorDiag.services.push({kind:def.kind+' / '+n.name,status:'notify不可'});
+       }
+     }
+   }
+ }catch(e){
+   jrSensorDiag.services.push({kind:def.kind,status:'serviceなし'});
+ }
+ renderSensorDiagUI();
+}
+async function connectSensorDiagnostic(){
+ jrSensorDiag.error='';
+ if(!navigator.bluetooth){
+   jrSensorDiag.error='unsupported';
+   jrPushSensorLog('ERROR','このブラウザはWeb Bluetooth未対応です。Android Chromeで試してください。');
+   renderSensorDiagUI();
+   return;
+ }
+ try{
+   jrPushSensorLog('SYSTEM','request device');
+   const device=await navigator.bluetooth.requestDevice({
+     acceptAllDevices:true,
+     optionalServices:JR_SENSOR_OPTIONAL_SERVICES
+   });
+   jrSensorDiag.device=device;
+   device.addEventListener('gattserverdisconnected',onSensorDisconnected);
+   jrPushSensorLog('SYSTEM','selected '+(device.name||'名称なし'));
+   const server=await device.gatt.connect();
+   jrSensorDiag.server=server;
+   jrSensorDiag.connected=true;
+   jrSensorDiag.services=[];
+   jrSensorDiag.chars=[];
+   jrSensorDiag.metrics=Object.assign(jrSensorDiag.metrics,{rpm:null,speed:null,power:null,hr:null,battery:null,lastRx:null,type:'未判定',manufacturer:'—',model:'—'});
+   renderSensorDiagUI();
+
+   const defs=[
+     {kind:'CSC / ケイデンス標準', service:JR_BLE_UUID.cscService, notifies:[{name:'CSC Measurement',uuid:JR_BLE_UUID.cscMeasurement}]},
+     {kind:'FTMS / スマートバイク標準', service:JR_BLE_UUID.ftmsService, notifies:[{name:'Indoor Bike Data',uuid:JR_BLE_UUID.indoorBikeData}]},
+     {kind:'Cycling Power', service:JR_BLE_UUID.cyclingPowerService, notifies:[{name:'Power Measurement',uuid:JR_BLE_UUID.cyclingPowerMeasurement}]},
+     {kind:'Battery', service:JR_BLE_UUID.batteryService, reads:[{name:'Battery Level',uuid:JR_BLE_UUID.batteryLevel,type:'uint8',field:'battery'}]},
+     {kind:'Device Information', service:JR_BLE_UUID.deviceInfoService, reads:[
+       {name:'Manufacturer',uuid:JR_BLE_UUID.manufacturerName,type:'utf8',field:'manufacturer'},
+       {name:'Model',uuid:JR_BLE_UUID.modelNumber,type:'utf8',field:'model'}
+     ]}
+   ];
+   for(const d of defs) await jrTryService(server,d);
+   jrPushSensorLog('SYSTEM','ready. クランクを回してください。');
+   renderSensorDiagUI();
+ }catch(err){
+   jrSensorDiag.error=err&&err.message?err.message:String(err);
+   jrPushSensorLog('ERROR',jrSensorDiag.error);
+   renderSensorDiagUI();
+ }
+}
+function disconnectSensorDiagnostic(){
+ try{
+   (jrSensorDiag.chars||[]).forEach(ch=>{try{ch.removeEventListener('characteristicvaluechanged',handleSensorNotification)}catch(e){}});
+   if(jrSensorDiag.device && jrSensorDiag.device.gatt && jrSensorDiag.device.gatt.connected) jrSensorDiag.device.gatt.disconnect();
+ }catch(e){}
+ jrSensorDiag.connected=false;
+ renderSensorDiagUI();
+}
+function clearSensorDiagnosticLog(){
+ jrSensorDiag.logs=[];
+ renderSensorDiagUI();
+}
+(function(){
+ const prevSetTabTo=setTabTo;
+ setTabTo=function(tab){
+   prevSetTabTo(tab);
+   if(tab==='settings') renderSensorDiagUI();
+ };
+})();
+document.addEventListener('click',function(e){
+ if(e.target.closest('#sensorConnectBtn')){connectSensorDiagnostic();return}
+ if(e.target.closest('#sensorDisconnectBtn')){disconnectSensorDiagnostic();return}
+ if(e.target.closest('#sensorClearLogBtn')){clearSensorDiagnosticLog();return}
+});
+setTimeout(renderSensorDiagUI,0);
+
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
  if(e.target.closest('#discardRideLogBtn')){finishActiveRide(false);return}
@@ -7003,9 +8900,14 @@ updateModeNavVisibility();
 updateRideModeNavigation();
 syncAutoFollowButton();
 startSmoothRideLoop();
+cleanRideTypographyDecor();
+cleanRideDockDecor();
+cleanEmojiUi();
 
 setTabTo('home');
 updateHomeDashboard();
+updateZeppHomeDashboard();
+updatePremiumHomeDashboard();
 setTimeout(hideAppSplash,900);
 
 
