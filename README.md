@@ -1,62 +1,52 @@
-D66-56 BLE Sensor Diagnostic
+D66-58 Language Settings / I18n
 
-D66-55ベース。
-設定画面にケイデンス/スマートバイク用のBluetooth診断画面を追加。
+D66-57ベース。
+設定画面にLanguageを追加し、主要UI文言の多言語切替に対応。
 
-目的:
-- 本番走行に組み込む前に、センサーがどんな形式でデータを出しているか確認する
-- メーカー差・機種差でアプリが落ちないように、読めるものだけ読む
-- まだ走行速度/RPMには反映しない
+対応言語:
+- 日本語
+- English
+- 繁體中文
+- 한국어
 
-対応診断:
-- Cycling Speed and Cadence Service
-  - service 0x1816
-  - CSC Measurement 0x2A5B
-  - 累計クランク回転数とイベント時刻差分からRPM計算
-  - wheelデータがあれば速度も参考計算
-- Fitness Machine Service / Indoor Bike Data
-  - service 0x1826
-  - Indoor Bike Data 0x2AD2
-  - rpm / speed / power / heart rateを読める範囲で表示
-- Cycling Power
-  - service 0x1818
-  - Cycling Power Measurement 0x2A63
-  - power / crank revolution dataがあればRPM計算
-- Battery
-  - service 0x180F
-  - Battery Level 0x2A19
-- Device Information
-  - service 0x180A
-  - Manufacturer / Model
-- 未知の形式
-  - エラーにせずRaw HEXログに表示
+仕様:
+- 設定画面上部にLanguageカード追加
+- 選択言語はlocalStorage保存
+- renderUI後に文言を再適用
+- 地名/ルート名/保存データは翻訳しない
+- 操作文言・設定/診断UI・走行画面の主要ラベルを翻訳
 
-UI:
-- 設定 > ケイデンス診断
-- センサー接続
-- 切断
-- ログ消去
-- RPM / 速度 / Power / HR / 電池 / 最終受信
-- 接続デバイス
-- 検出サービス
-- Raw HEXログ最新20件
+翻訳対象:
+- 下タブ
+- 設定タイトル
+- ケイデンス診断UI
+- センサー接続/切断/ログ消去
+- RPM/速度/電池/最終受信などの診断ラベル
+- 検出サービス/Raw HEX/設計メモ
+- 走行画面の次の名所/残り/通過地点/中継地
+- 簡易表示/手動入力/地図操作
+- ストップ/再開/スタート
+- ペダル+/-
+- 心拍ゾーン/メトリクスラベル
 
 安全策:
-- 本番走行にはまだ反映しない
-- st.rpmへ代入しない
-- 走行ロジック・保存/読込/編集・追従・地図描画には触らない
+- 走行ロジックには触らない
+- BLE解析ロジックには触らない
+- 地図描画には触らない
+- 保存/読込/編集系関数には触らない
+- st.rpmには代入しない
 - D66-48/D66-49の失敗CSSは含めない
 
 検証済み:
 - JS構文チェック
-- 診断UI存在
-- CSC / FTMS / Cycling Power / Battery / Device Info UUID存在
-- Raw HEX表示ロジック存在
-- D66-56追加部で保存/読込/編集系関数を上書きしていない
-- st.rpmへ代入しない
-- D66-55の丸みフォント維持
-- 追従bearing仕様、青/緑split仕様、追従ON/OFF、START/GOAL仕様が残っている
+- Language UI存在
+- 4言語ボタン存在
+- localStorage key存在
+- renderUI wrapper存在
+- D66-56 BLE診断維持
+- D66-57設定スクロール維持
+- D66-55丸みフォント維持
+- 追従bearing仕様、青/緑split仕様、追従ON/OFF、START/GOAL仕様維持
 
 未検証:
-- 実機Android Chrome + センサー接続
-- センサーごとの通知データ実測
+- 実機で全画面全ラベルの翻訳漏れ

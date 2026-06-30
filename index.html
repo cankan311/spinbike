@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-56 BLE Sensor Diagnostic</title>
+<title>Japan Ride D66-58 Language Settings I18n</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -3697,6 +3697,103 @@ html,body,.phone,button,input,textarea,select{
   .sensor-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sensor-hero-card{flex-direction:column}
 }
+
+
+/* D66-57: Settings Sensor Scroll Fix
+   D66-56で診断カードを増やしたが、設定シートがoverflow:hiddenのままで
+   下の「検出サービス」「Raw HEXログ」までスクロールできなかった問題を修正。
+   設定画面だけに限定。走行画面/地図/センサー解析ロジックは触らない。
+*/
+#settingsPage .simple-sheet{
+  display:flex!important;
+  flex-direction:column!important;
+  max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 34px)!important;
+  overflow:hidden!important;
+}
+#settingsPage .simple-head{
+  flex:0 0 auto!important;
+}
+#settingsPage .simple-body{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  padding-bottom:calc(env(safe-area-inset-bottom) + 24px)!important;
+}
+#settingsPage .sensor-diag{
+  padding-bottom:18px!important;
+}
+#settingsPage .sensor-log{
+  max-height:180px!important;
+}
+
+
+/* D66-58: Language Settings / I18n
+   設定画面にLanguage切替を追加。主要UI文言を多言語化。
+   走行ロジック・BLE解析・地図・保存/読込には触らない。
+*/
+.language-card{
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:22px;
+  padding:14px;
+  box-shadow:0 8px 22px rgba(15,23,42,.055), inset 0 1px 0 rgba(255,255,255,.92);
+}
+.language-head small{
+  display:block;
+  color:var(--jr-green,#168f61);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.08em;
+}
+.language-head strong{
+  display:block;
+  margin-top:3px;
+  color:var(--jr-ink,#111827);
+  font-size:21px;
+  line-height:1.08;
+  font-family:"M PLUS Rounded 1c",var(--jr-font,system-ui),sans-serif;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.language-head p{
+  margin:7px 0 0;
+  color:var(--jr-text,#4b5563);
+  font-size:12px;
+  line-height:1.5;
+}
+.language-options{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-top:12px;
+}
+.language-option{
+  min-height:42px;
+  border:0;
+  border-radius:16px;
+  background:#f2f5f8;
+  color:#4b5563;
+  font-family:var(--jr-font,system-ui);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:-.015em;
+}
+.language-option.active{
+  background:linear-gradient(180deg,#1cb874,#168f61);
+  color:#fff;
+  box-shadow:0 8px 18px rgba(22,143,97,.16), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.language-select{
+  position:absolute!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  width:1px!important;
+  height:1px!important;
+}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&amp;display=swap" rel="stylesheet"/></head>
 <body>
@@ -3789,6 +3886,28 @@ html,body,.phone,button,input,textarea,select{
 <div class="simple-head"><div><small>SETTINGS</small><strong>設定</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
 <div class="simple-body">
 <div class="sensor-diag">
+<div class="language-card">
+<div class="language-head">
+<div>
+<small data-i18n="languageKicker">LANGUAGE</small>
+<strong data-i18n="languageTitle">表示言語</strong>
+<p data-i18n="languageDescription">アプリ内の操作文言を切り替えます。地名やルート名はそのまま表示します。</p>
+</div>
+</div>
+<div aria-label="Language" class="language-options" id="languageOptions" role="group">
+<button class="language-option" data-lang="ja" type="button">日本語</button>
+<button class="language-option" data-lang="en" type="button">English</button>
+<button class="language-option" data-lang="zh-TW" type="button">繁體中文</button>
+<button class="language-option" data-lang="ko" type="button">한국어</button>
+</div>
+<select aria-label="Language" class="language-select" id="languageSelect">
+<option value="ja">日本語</option>
+<option value="en">English</option>
+<option value="zh-TW">繁體中文</option>
+<option value="ko">한국어</option>
+</select>
+</div>
+
 <div class="sensor-hero-card">
 <div>
 <small>SENSOR DIAGNOSTIC</small>
@@ -8811,6 +8930,247 @@ document.addEventListener('click',function(e){
  if(e.target.closest('#sensorClearLogBtn')){clearSensorDiagnosticLog();return}
 });
 setTimeout(renderSensorDiagUI,0);
+
+
+/* D66-58 Language Settings / I18n
+   主要UI文言だけを多言語化。
+   地名・ルート名・保存データは翻訳しない。
+   走行ロジック / BLE解析 / 地図 / 保存読込には触らない。
+*/
+const JR_LANG_KEY='japanRide.language.v1';
+const JR_I18N={
+ ja:{
+  languageKicker:'LANGUAGE',languageTitle:'表示言語',languageDescription:'アプリ内の操作文言を切り替えます。地名やルート名はそのまま表示します。',
+  settings:'設定',home:'ホーム',ride:'走る',route:'ルート',records:'記録',
+  sensorKicker:'SENSOR DIAGNOSTIC',sensorTitle:'ケイデンス診断',sensorDesc:'まずはセンサーがどんな形式でデータを出しているか確認します。走行速度にはまだ反映しません。',
+  connected:'接続中',notConnected:'未接続',error:'エラー',
+  sensorConnect:'センサー接続',disconnect:'切断',clearLog:'ログ消去',
+  beforeConnect:'接続前にやること',beforeConnectDesc:'電池を入れて、クランクを回すかセンサーを振って起こしてください。検索中も回している方が検出されやすいです。',
+  rpm:'RPM',speed:'速度',power:'Power',hr:'HR',battery:'電池',lastRx:'最終受信',
+  cadence:'cadence',kmh:'km/h',watt:'watt',bpm:'bpm',percent:'%',time:'time',
+  device:'接続デバイス',transport:'接続方式',detectedType:'読み取り形式',manufacturer:'Manufacturer',model:'Model',
+  detectedServices:'検出サービス',detectedServicesSub:'読み取れた規格だけ表示',
+  rawLog:'受信ログ / Raw HEX',rawLogSub:'最新20件',noLog:'ログなし',noConnection:'まだ接続していません。',
+  designMemo:'設計メモ',designMemoDesc:'標準CSCなら累計クランク回転数とイベント時刻の差分からRPMを計算します。スマートスピンバイクはFTMS Indoor Bike Data、パワーメーター系はCycling Powerも読む設計です。未知のデータは捨てずにHEXで表示します。',
+  nextPlace:'次の名所',remainPrefix:'あと ',passed:'通過地点',relay:'中継地',simple:'簡易表示',manual:'手動入力',mapControl:'地図操作',
+  followOn:'追従 ON',followOff:'追従 OFF',stop:'ストップ',resume:'再開',start:'スタート',complete:'完走',
+  pedalMinus:'ペダル−',pedalPlus:'ペダル＋',cadenceLabel:'ケイデンス',
+  heartZone:'心拍ゾーン',fatBurn:'脂肪燃焼',fatBurnNow:'今は脂肪燃焼ゾーンです',
+  distance:'距離',duration:'時間',calories:'消費',max:'最高',xp:'XP',total:'累計'
+ },
+ en:{
+  languageKicker:'LANGUAGE',languageTitle:'Language',languageDescription:'Switch app UI text. Place names and route names stay unchanged.',
+  settings:'Settings',home:'Home',ride:'Ride',route:'Route',records:'Records',
+  sensorKicker:'SENSOR DIAGNOSTIC',sensorTitle:'Cadence Diagnostic',sensorDesc:'Check what data format the sensor sends. It is not applied to ride speed yet.',
+  connected:'Connected',notConnected:'Not connected',error:'Error',
+  sensorConnect:'Connect Sensor',disconnect:'Disconnect',clearLog:'Clear Log',
+  beforeConnect:'Before connecting',beforeConnectDesc:'Insert the battery, then spin the crank or shake the sensor to wake it. Keep it moving while searching.',
+  rpm:'RPM',speed:'Speed',power:'Power',hr:'HR',battery:'Battery',lastRx:'Last RX',
+  cadence:'cadence',kmh:'km/h',watt:'watt',bpm:'bpm',percent:'%',time:'time',
+  device:'Connected device',transport:'Transport',detectedType:'Detected format',manufacturer:'Manufacturer',model:'Model',
+  detectedServices:'Detected services',detectedServicesSub:'Only readable standards are shown',
+  rawLog:'Receive log / Raw HEX',rawLogSub:'Latest 20',noLog:'No log',noConnection:'Not connected yet.',
+  designMemo:'Design memo',designMemoDesc:'Standard CSC calculates RPM from cumulative crank revolutions and event time differences. Smart spin bikes can use FTMS Indoor Bike Data, and power meters can use Cycling Power. Unknown data is kept as HEX.',
+  nextPlace:'Next place',remainPrefix:'Remaining ',passed:'Passed',relay:'Relay',simple:'Simple',manual:'Manual',mapControl:'Map tools',
+  followOn:'Follow ON',followOff:'Follow OFF',stop:'Stop',resume:'Resume',start:'Start',complete:'Complete',
+  pedalMinus:'Pedal −',pedalPlus:'Pedal +',cadenceLabel:'Cadence',
+  heartZone:'Heart zone',fatBurn:'Fat burn',fatBurnNow:'You are in the fat-burn zone',
+  distance:'Distance',duration:'Time',calories:'Calories',max:'Max',xp:'XP',total:'Total'
+ },
+ 'zh-TW':{
+  languageKicker:'LANGUAGE',languageTitle:'顯示語言',languageDescription:'切換應用程式內的操作文字。地名與路線名稱會保持原樣。',
+  settings:'設定',home:'首頁',ride:'騎乘',route:'路線',records:'紀錄',
+  sensorKicker:'SENSOR DIAGNOSTIC',sensorTitle:'踏頻診斷',sensorDesc:'先確認感測器輸出的資料格式。尚未套用到騎乘速度。',
+  connected:'已連線',notConnected:'未連線',error:'錯誤',
+  sensorConnect:'連接感測器',disconnect:'斷線',clearLog:'清除紀錄',
+  beforeConnect:'連接前準備',beforeConnectDesc:'裝入電池後，轉動曲柄或搖晃感測器喚醒它。搜尋時保持轉動會更容易偵測。',
+  rpm:'RPM',speed:'速度',power:'Power',hr:'HR',battery:'電池',lastRx:'最後接收',
+  cadence:'踏頻',kmh:'km/h',watt:'watt',bpm:'bpm',percent:'%',time:'time',
+  device:'連接裝置',transport:'連接方式',detectedType:'讀取格式',manufacturer:'Manufacturer',model:'Model',
+  detectedServices:'偵測到的服務',detectedServicesSub:'只顯示可讀取的規格',
+  rawLog:'接收紀錄 / Raw HEX',rawLogSub:'最新20筆',noLog:'無紀錄',noConnection:'尚未連線。',
+  designMemo:'設計備註',designMemoDesc:'標準CSC會用累計曲柄轉數與事件時間差計算RPM。智慧飛輪可讀取FTMS Indoor Bike Data，功率計則可讀取Cycling Power。未知資料會以HEX保留。',
+  nextPlace:'下一個名所',remainPrefix:'剩餘 ',passed:'已通過',relay:'中繼點',simple:'簡易顯示',manual:'手動輸入',mapControl:'地圖操作',
+  followOn:'跟隨 ON',followOff:'跟隨 OFF',stop:'停止',resume:'繼續',start:'開始',complete:'完成',
+  pedalMinus:'踏板−',pedalPlus:'踏板＋',cadenceLabel:'踏頻',
+  heartZone:'心率區間',fatBurn:'燃脂',fatBurnNow:'目前在燃脂區間',
+  distance:'距離',duration:'時間',calories:'消耗',max:'最高',xp:'XP',total:'累計'
+ },
+ ko:{
+  languageKicker:'LANGUAGE',languageTitle:'표시 언어',languageDescription:'앱 안의 조작 문구를 바꿉니다. 지명과 경로 이름은 그대로 표시합니다.',
+  settings:'설정',home:'홈',ride:'라이드',route:'경로',records:'기록',
+  sensorKicker:'SENSOR DIAGNOSTIC',sensorTitle:'케이던스 진단',sensorDesc:'센서가 어떤 형식으로 데이터를 보내는지 먼저 확인합니다. 아직 주행 속도에는 반영하지 않습니다.',
+  connected:'연결됨',notConnected:'미연결',error:'오류',
+  sensorConnect:'센서 연결',disconnect:'연결 해제',clearLog:'로그 삭제',
+  beforeConnect:'연결 전 준비',beforeConnectDesc:'배터리를 넣고 크랭크를 돌리거나 센서를 흔들어 깨우세요. 검색 중에도 움직이면 더 잘 감지됩니다.',
+  rpm:'RPM',speed:'속도',power:'Power',hr:'HR',battery:'배터리',lastRx:'마지막 수신',
+  cadence:'케이던스',kmh:'km/h',watt:'watt',bpm:'bpm',percent:'%',time:'time',
+  device:'연결 기기',transport:'연결 방식',detectedType:'읽기 형식',manufacturer:'Manufacturer',model:'Model',
+  detectedServices:'감지된 서비스',detectedServicesSub:'읽을 수 있는 규격만 표시',
+  rawLog:'수신 로그 / Raw HEX',rawLogSub:'최신 20개',noLog:'로그 없음',noConnection:'아직 연결되지 않았습니다.',
+  designMemo:'설계 메모',designMemoDesc:'표준 CSC는 누적 크랭크 회전 수와 이벤트 시간 차이로 RPM을 계산합니다. 스마트 스핀바이크는 FTMS Indoor Bike Data, 파워미터는 Cycling Power도 읽는 구조입니다. 알 수 없는 데이터는 HEX로 표시합니다.',
+  nextPlace:'다음 명소',remainPrefix:'남은 거리 ',passed:'통과 지점',relay:'중계 지점',simple:'간단 표시',manual:'수동 입력',mapControl:'지도 조작',
+  followOn:'추적 ON',followOff:'추적 OFF',stop:'정지',resume:'재개',start:'시작',complete:'완주',
+  pedalMinus:'페달−',pedalPlus:'페달＋',cadenceLabel:'케이던스',
+  heartZone:'심박 존',fatBurn:'지방 연소',fatBurnNow:'현재 지방 연소 존입니다',
+  distance:'거리',duration:'시간',calories:'소모',max:'최고',xp:'XP',total:'누계'
+ }
+};
+function jrLang(){try{return localStorage.getItem(JR_LANG_KEY)||'ja'}catch(e){return 'ja'}}
+function jrT(key){const lang=jrLang();return (JR_I18N[lang]&&JR_I18N[lang][key])||(JR_I18N.ja&&JR_I18N.ja[key])||key}
+function applyLanguageUI(){
+ const lang=jrLang();
+ document.documentElement.setAttribute('lang',lang);
+ document.querySelectorAll('[data-i18n]').forEach(el=>{
+   const k=el.getAttribute('data-i18n');
+   if(k) el.textContent=jrT(k);
+ });
+ const sel=$('languageSelect');
+ if(sel) sel.value=lang;
+ document.querySelectorAll('.language-option').forEach(btn=>{
+   btn.classList.toggle('active',btn.getAttribute('data-lang')===lang);
+ });
+ // bottom tabs by stable order
+ const tabs=document.querySelectorAll('.bottom-tab b');
+ if(tabs[0]) tabs[0].textContent=jrT('home');
+ if(tabs[1]) tabs[1].textContent=jrT('ride');
+ if(tabs[2]) tabs[2].textContent=jrT('route');
+ if(tabs[3]) tabs[3].textContent=jrT('records');
+ if(tabs[4]) tabs[4].textContent=jrT('settings');
+
+ // Settings sheet title
+ const setHead=document.querySelector('#settingsPage .simple-head strong');
+ if(setHead) setHead.textContent=jrT('settings');
+
+ // Sensor diagnostic static labels
+ const hero=document.querySelector('.sensor-hero-card');
+ if(hero){
+   const sm=hero.querySelector('small'); if(sm) sm.textContent=jrT('sensorKicker');
+   const stg=hero.querySelector('strong'); if(stg) stg.textContent=jrT('sensorTitle');
+   const p=hero.querySelector('p'); if(p) p.textContent=jrT('sensorDesc');
+ }
+ const act=$('sensorConnectBtn'); if(act) act.textContent=jrT('sensorConnect');
+ const dis=$('sensorDisconnectBtn'); if(dis) dis.textContent=jrT('disconnect');
+ const clr=$('sensorClearLogBtn'); if(clr) clr.textContent=jrT('clearLog');
+
+ const help=document.querySelector('.sensor-help-card');
+ if(help){
+   const s=help.querySelector('strong'); if(s) s.textContent=jrT('beforeConnect');
+   const p=help.querySelector('p'); if(p) p.textContent=jrT('beforeConnectDesc');
+ }
+ const metricKeys=[
+   ['sensorRpm','rpm','cadence'],['sensorSpeed','speed','kmh'],['sensorPower','power','watt'],
+   ['sensorHr','hr','bpm'],['sensorBattery','battery','percent'],['sensorLastRx','lastRx','time']
+ ];
+ metricKeys.forEach(([id,label,unit])=>{
+   const box=$(id)?.closest('.sensor-metric');
+   if(box){
+     const small=box.querySelector('small'); if(small) small.textContent=jrT(label);
+     const em=box.querySelector('em'); if(em) em.textContent=jrT(unit);
+   }
+ });
+ const cards=document.querySelectorAll('.sensor-card');
+ cards.forEach(card=>{
+   const head=card.querySelector('.sensor-card-head strong');
+   const sub=card.querySelector('.sensor-card-head span');
+   if(head && head.textContent.match(/接続デバイス|Connected device|連接裝置|연결 기기/)) head.textContent=jrT('device');
+   if(head && head.textContent.match(/検出サービス|Detected services|偵測到的服務|감지된 서비스/)){head.textContent=jrT('detectedServices'); if(sub) sub.textContent=jrT('detectedServicesSub');}
+   if(head && head.textContent.match(/受信ログ|Receive log|接收紀錄|수신 로그/)){head.textContent=jrT('rawLog'); if(sub) sub.textContent=jrT('rawLogSub');}
+ });
+ const table=$('sensorTransport')?.closest('.sensor-table');
+ if(table){
+   const rows=table.querySelectorAll('div');
+   const labels=[jrT('transport'),jrT('detectedType'),jrT('manufacturer'),jrT('model')];
+   rows.forEach((row,i)=>{const sm=row.querySelector('small'); if(sm&&labels[i]) sm.textContent=labels[i];});
+ }
+ const note=document.querySelector('.sensor-note');
+ if(note){
+   const s=note.querySelector('strong'); if(s) s.textContent=jrT('designMemo');
+   const p=note.querySelector('p'); if(p) p.textContent=jrT('designMemoDesc');
+ }
+ const empty=document.querySelector('.sensor-empty-line');
+ if(empty) empty.textContent=jrT('noConnection');
+ const raw=$('sensorRawLog');
+ if(raw && (raw.textContent==='ログなし'||raw.textContent==='No log'||raw.textContent==='無紀錄'||raw.textContent==='로그 없음')) raw.textContent=jrT('noLog');
+
+ // Ride UI static/dynamic labels. Place names are intentionally kept.
+ const eyebrow=document.querySelector('.eyebrow'); if(eyebrow) eyebrow.textContent=jrT('nextPlace');
+ const remain=$('remainText'); if(remain){
+   const num=(remain.textContent||'').match(/[0-9]+(?:\.[0-9]+)?/);
+   if(num) remain.textContent=jrT('remainPrefix')+num[0]+' km';
+ }
+ const subgoals=document.querySelectorAll('.subgoals span');
+ if(subgoals[0]) subgoals[0].textContent=subgoals[0].textContent.replace(/^.*?([0-9]+(?:\.[0-9]+)?km)$/,(m,d)=>jrT('passed')+' '+d);
+ if(subgoals[1]) subgoals[1].textContent=subgoals[1].textContent.replace(/^.*?(大井川.*)$/,(m,d)=>jrT('relay')+' '+d);
+ const simpleBtn=$('simpleToggle'); if(simpleBtn) simpleBtn.textContent=jrT('simple');
+ const manualBtn=$('manualToggle'); if(manualBtn) manualBtn.textContent=jrT('manual');
+ const mapBtn=$('mapToolsToggle'); if(mapBtn) mapBtn.textContent=jrT('mapControl');
+ const follow=$('autoFollowTogglePanel'); if(follow) follow.textContent=follow.textContent.includes('OFF')?jrT('followOff'):jrT('followOn');
+
+ const run=$('runBtnTop');
+ if(run){
+   if(run.classList.contains('resume')) run.textContent=jrT('resume');
+   else if(run.classList.contains('start')) run.textContent=jrT('start');
+   else if(run.classList.contains('pause')||run.classList.contains('stop')) run.textContent=jrT('stop');
+ }
+ const minus=document.querySelector('.pedal-btn.minus'); if(minus) minus.textContent=jrT('pedalMinus');
+ const plus=document.querySelector('.pedal-btn.plus'); if(plus) plus.textContent=jrT('pedalPlus');
+ const ringSub=$('ringSub'); if(ringSub) ringSub.textContent=jrT('cadenceLabel');
+ const zoneKicker=document.querySelector('.zone-kicker'); if(zoneKicker) zoneKicker.textContent=jrT('heartZone');
+ const zoneMain=document.querySelector('.zone-main'); if(zoneMain && (zoneMain.textContent||'').trim()) zoneMain.childNodes[0].textContent=jrT('fatBurn');
+ const zoneGuide=document.querySelector('.zone-guide'); if(zoneGuide) zoneGuide.textContent=jrT('fatBurnNow');
+
+ document.querySelectorAll('.dock-card .label').forEach(label=>{
+   const t=(label.textContent||'').trim();
+   const map={距離:'distance',時間:'duration',消費:'calories',最高:'max',XP:'xp',累計:'total',
+     Distance:'distance',Time:'duration',Calories:'calories',Max:'max',Total:'total',
+     距離:'distance',時間:'duration',消耗:'calories',最高:'max',累計:'total',
+     거리:'distance',시간:'duration',소모:'calories',최고:'max',누계:'total'};
+   if(map[t]) label.textContent=jrT(map[t]);
+ });
+ renderSensorDiagUI?.();
+}
+function setJapanRideLanguage(lang){
+ if(!JR_I18N[lang]) lang='ja';
+ try{localStorage.setItem(JR_LANG_KEY,lang)}catch(e){}
+ applyLanguageUI();
+}
+(function(){
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   prevRenderUI();
+   applyLanguageUI();
+ };
+ const prevRenderSensorDiagUI=typeof renderSensorDiagUI==='function'?renderSensorDiagUI:null;
+ if(prevRenderSensorDiagUI){
+   renderSensorDiagUI=function(){
+     prevRenderSensorDiagUI();
+     // prevent recursion by only doing non-renderSensor parts soon
+     setTimeout(()=>{try{applyLanguageUINoSensor && applyLanguageUINoSensor()}catch(e){}},0);
+   };
+ }
+})();
+function applyLanguageUINoSensor(){
+ const lang=jrLang();
+ const status=$('sensorDiagStatus');
+ if(status){
+   if(status.classList.contains('connected')) status.textContent=jrT('connected');
+   else if(status.classList.contains('error')) status.textContent=jrT('error');
+   else status.textContent=jrT('notConnected');
+ }
+ const raw=$('sensorRawLog');
+ if(raw && (raw.textContent==='ログなし'||raw.textContent==='No log'||raw.textContent==='無紀錄'||raw.textContent==='로그 없음')) raw.textContent=jrT('noLog');
+ const empty=document.querySelector('.sensor-empty-line');
+ if(empty) empty.textContent=jrT('noConnection');
+}
+document.addEventListener('click',function(e){
+ const langBtn=e.target.closest('.language-option');
+ if(langBtn){setJapanRideLanguage(langBtn.getAttribute('data-lang')||'ja');return}
+});
+document.addEventListener('change',function(e){
+ if(e.target && e.target.id==='languageSelect') setJapanRideLanguage(e.target.value||'ja');
+});
+setTimeout(applyLanguageUI,0);
 
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
