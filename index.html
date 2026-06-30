@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-58 Language Settings I18n</title>
+<title>Japan Ride D66-60 Startup Recursion Fix</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -3794,6 +3794,105 @@ html,body,.phone,button,input,textarea,select{
   width:1px!important;
   height:1px!important;
 }
+
+
+/* D66-59: Sensor Physics Ride Foundation
+   センサーRPMを本番走行に使う土台。
+   ただし距離はセンサー速度を丸呑みしない。
+   自転車タイプ + 仮想ギア + 惰性減衰で現実寄り速度を作る。
+*/
+.physics-card{
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:22px;
+  padding:14px;
+  box-shadow:0 8px 22px rgba(15,23,42,.055), inset 0 1px 0 rgba(255,255,255,.92);
+}
+.physics-head small{
+  display:block;
+  color:var(--jr-green,#168f61);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.08em;
+}
+.physics-head strong{
+  display:block;
+  margin-top:3px;
+  color:var(--jr-ink,#111827);
+  font-size:21px;
+  line-height:1.08;
+  font-family:"M PLUS Rounded 1c",var(--jr-font,system-ui),sans-serif;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.physics-head p{
+  margin:7px 0 0;
+  color:var(--jr-text,#4b5563);
+  font-size:12px;
+  line-height:1.5;
+}
+.physics-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+  margin-top:12px;
+}
+.physics-row label{
+  display:block;
+  background:#f7f9fc;
+  border:1px solid rgba(17,24,39,.055);
+  border-radius:16px;
+  padding:9px 10px;
+}
+.physics-row small{
+  display:block;
+  color:#6b7280;
+  font-size:10px;
+  font-weight:650;
+  margin-bottom:5px;
+}
+.physics-row select{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#111827;
+  font-family:var(--jr-font,system-ui);
+  font-size:13px;
+  font-weight:750;
+}
+.physics-status{
+  margin-top:10px;
+  background:#eefbf3;
+  color:#12895b;
+  border-radius:14px;
+  padding:9px 10px;
+  font-size:11.5px;
+  line-height:1.45;
+  font-weight:650;
+}
+.sensor-ride-chip{
+  background:#e9f7ef!important;
+  color:#12895b!important;
+}
+.sensor-ride-chip.warn{
+  background:#fff7ed!important;
+  color:#b45309!important;
+}
+.sensor-ride-chip.off{
+  background:rgba(255,255,255,.94)!important;
+  color:#667085!important;
+}
+@media(max-width:370px){
+  .physics-row{grid-template-columns:1fr}
+}
+
+
+/* D66-60: Startup Recursion Fix
+   D66-59の currentKmhRaw 上書きが手入力モードで無限再帰し、
+   起動スプラッシュから進まなくなる問題を修正。
+   見た目・地図・保存・BLE解析は変更なし。
+*/
 </style>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&amp;display=swap" rel="stylesheet"/></head>
 <body>
@@ -3907,7 +4006,34 @@ html,body,.phone,button,input,textarea,select{
 <option value="ko">한국어</option>
 </select>
 </div>
-
+<div class="physics-card">
+<div class="physics-head">
+<div>
+<small>RIDE REALISM</small>
+<strong>実車感覚モデル</strong>
+<p>センサーRPMをそのまま距離にせず、自転車タイプと惰性減衰から現実寄りの速度を計算します。</p>
+</div>
+</div>
+<div class="physics-row">
+<label>
+<small>自転車タイプ</small>
+<select id="rideModelSelect">
+<option value="mamachari">ママチャリ</option>
+<option value="cross">クロスバイク</option>
+<option value="road">ロードバイク</option>
+<option value="fitness">軽めフィットネス</option>
+</select>
+</label>
+<label>
+<small>入力モード</small>
+<select id="rideInputModeSelect">
+<option value="manual">手入力RPM</option>
+<option value="sensor">センサーRPM</option>
+</select>
+</label>
+</div>
+<div class="physics-status" id="physicsStatusText">現在は手入力RPMで走行します。</div>
+</div>
 <div class="sensor-hero-card">
 <div>
 <small>SENSOR DIAGNOSTIC</small>
@@ -4002,7 +4128,7 @@ html,body,.phone,button,input,textarea,select{
 <div class="top-chips"><button class="label-toggle place-chip" id="placeChip">静岡県 焼津市 八楠</button>
 <button class="label-toggle" id="displayToggle">簡易表示</button>
 <button class="label-toggle" id="inputModeToggle">センサー入力</button>
-<button class="label-toggle map-tools-toggle" id="mapToolsToggle">地図操作</button></div>
+<button class="label-toggle map-tools-toggle" id="mapToolsToggle">地図操作</button><button class="label-toggle sensor-ride-chip" id="sensorRideChip" type="button">手入力RPM</button></div>
 </div>
 <div class="bottom">
 <div class="mini-dock">
@@ -9171,6 +9297,203 @@ document.addEventListener('change',function(e){
  if(e.target && e.target.id==='languageSelect') setJapanRideLanguage(e.target.value||'ja');
 });
 setTimeout(applyLanguageUI,0);
+
+
+/* D66-59 Sensor Physics Ride Foundation
+   センサーRPMを本番走行入力に使う。
+   重要: センサー速度をそのまま距離に使わず、RPM→仮想自転車モデル→速度→距離で進める。
+   走行停止後は速度を即0にせず、転がり抵抗 + 空気抵抗っぽい惰性減衰で落とす。
+*/
+const JR_RIDE_MODEL_KEY='japanRide.rideModel.v1';
+const JR_INPUT_MODE_KEY='japanRide.inputMode.v1';
+const JR_RIDE_MODELS={
+ mamachari:{name:'ママチャリ',wheelM:2.06,gear:1.72,accel:0.68,roll:0.090,aero:0.018,maxKmh:36},
+ cross:{name:'クロスバイク',wheelM:2.10,gear:2.05,accel:0.78,roll:0.074,aero:0.015,maxKmh:46},
+ road:{name:'ロードバイク',wheelM:2.10,gear:2.35,accel:0.88,roll:0.058,aero:0.012,maxKmh:58},
+ fitness:{name:'軽めフィットネス',wheelM:2.08,gear:1.95,accel:0.72,roll:0.082,aero:0.016,maxKmh:42}
+};
+let jrPhysics={
+ v:0,              // m/s app virtual speed
+ lastT:performance.now(),
+ lastSensorRx:0,
+ lastSensorRpm:null,
+ lastSensorSpeed:null,
+ active:false
+};
+function getRideModelKey(){
+ try{return localStorage.getItem(JR_RIDE_MODEL_KEY)||'mamachari'}catch(e){return 'mamachari'}
+}
+function setRideModelKey(v){
+ if(!JR_RIDE_MODELS[v]) v='mamachari';
+ try{localStorage.setItem(JR_RIDE_MODEL_KEY,v)}catch(e){}
+ renderPhysicsSettings();
+}
+function getRideInputMode(){
+ try{return localStorage.getItem(JR_INPUT_MODE_KEY)||'manual'}catch(e){return 'manual'}
+}
+function setRideInputMode(v){
+ if(v!=='sensor') v='manual';
+ try{localStorage.setItem(JR_INPUT_MODE_KEY,v)}catch(e){}
+ renderPhysicsSettings();
+}
+function getSensorAgeSec(){
+ if(!jrPhysics.lastSensorRx) return 999;
+ return (performance.now()-jrPhysics.lastSensorRx)/1000;
+}
+function getFreshSensorRpm(){
+ const age=getSensorAgeSec();
+ const rpm=Number(jrPhysics.lastSensorRpm);
+ if(!Number.isFinite(rpm) || age>2.8) return 0;
+ if(rpm<0 || rpm>260) return 0;
+ return rpm;
+}
+function targetSpeedFromRpm(rpm,model){
+ const m=model||JR_RIDE_MODELS[getRideModelKey()]||JR_RIDE_MODELS.mamachari;
+ const ms=(Math.max(0,rpm)*m.gear*m.wheelM)/60;
+ const maxMs=m.maxKmh/3.6;
+ return Math.min(ms,maxMs);
+}
+function updateVirtualBikePhysics(dt){
+ const model=JR_RIDE_MODELS[getRideModelKey()]||JR_RIDE_MODELS.mamachari;
+ const inputMode=getRideInputMode();
+ const sensorFresh=getSensorAgeSec()<=2.8;
+ const rpm=inputMode==='sensor'?getFreshSensorRpm():Math.max(0,Number(st.rpm||0));
+ const target=targetSpeedFromRpm(rpm,model);
+
+ // st.rpmはUI表示と既存距離計算の入口。センサーモード時だけ、受信RPMを表示へ反映。
+ if(inputMode==='sensor'){
+   st.rpm=Math.round(rpm);
+ }
+
+ let v=Math.max(0,Number(jrPhysics.v)||0);
+ if(rpm>1){
+   // 漕いでいる時: targetへ瞬時に飛ばさず、加速上限つきで追従。
+   const diff=target-v;
+   const maxUp=model.accel*dt;
+   const maxDown=(model.roll + model.aero*v*v)*dt*0.55;
+   if(diff>0) v+=Math.min(diff,maxUp);
+   else v+=Math.max(diff,-maxDown);
+ }else{
+   // 漕ぎやめ: 即0にしない。現実の惰性っぽく、低速では転がり抵抗、高速では空気抵抗で落とす。
+   const decel=(model.roll + model.aero*v*v)*dt;
+   v=Math.max(0,v-decel);
+   if(v<0.18) v=0;
+ }
+ jrPhysics.v=v;
+ jrPhysics.active=(inputMode==='sensor');
+ return {rpm,target,v,kmh:v*3.6,sensorFresh,inputMode,model};
+}
+function currentKmhPhysicsAware(baseKmhFn){
+ if(getRideInputMode()==='sensor') return Math.max(0,(jrPhysics.v||0)*3.6);
+ if(typeof baseKmhFn==='function') return baseKmhFn();
+ return Math.max(0,Number(st.rpm||0))*2*2.1/60*3.6;
+}
+function renderPhysicsSettings(){
+ const modelSel=$('rideModelSelect');
+ if(modelSel) modelSel.value=getRideModelKey();
+ const inputSel=$('rideInputModeSelect');
+ if(inputSel) inputSel.value=getRideInputMode();
+ const mode=getRideInputMode();
+ const model=JR_RIDE_MODELS[getRideModelKey()]||JR_RIDE_MODELS.mamachari;
+ const chip=$('sensorRideChip');
+ const age=getSensorAgeSec();
+ if(chip){
+   chip.classList.toggle('off',mode!=='sensor');
+   chip.classList.toggle('warn',mode==='sensor'&&age>2.8);
+   chip.textContent=mode==='sensor'
+     ? (age<=2.8 ? 'センサー入力 '+Math.round(getFreshSensorRpm())+'rpm' : 'センサー待機')
+     : '手入力RPM';
+ }
+ const txt=$('physicsStatusText');
+ if(txt){
+   if(mode==='sensor'){
+     txt.textContent='センサーRPMで走行します。距離は'+model.name+'モデルの加速/惰性減衰で計算します。受信が約3秒止まるとペダル停止として扱います。';
+   }else{
+     txt.textContent='現在は手入力RPMで走行します。センサー診断は継続できます。';
+   }
+ }
+}
+(function(){
+ const prevParseCscMeasurement=parseCscMeasurement;
+ parseCscMeasurement=function(view){
+   prevParseCscMeasurement(view);
+   const m=jrSensorDiag.metrics||{};
+   if(m.rpm!=null){
+     const rpm=Number(m.rpm);
+     if(Number.isFinite(rpm) && rpm>=0 && rpm<260){
+       jrPhysics.lastSensorRpm=rpm;
+       jrPhysics.lastSensorRx=performance.now();
+     }
+   }
+   if(m.speed!=null){
+     const sp=Number(m.speed);
+     if(Number.isFinite(sp) && sp>=0 && sp<120) jrPhysics.lastSensorSpeed=sp;
+   }
+   renderPhysicsSettings();
+ };
+ const prevParseIndoorBikeData=parseIndoorBikeData;
+ parseIndoorBikeData=function(view){
+   prevParseIndoorBikeData(view);
+   const m=jrSensorDiag.metrics||{};
+   if(m.rpm!=null){
+     const rpm=Number(m.rpm);
+     if(Number.isFinite(rpm) && rpm>=0 && rpm<260){
+       jrPhysics.lastSensorRpm=rpm;
+       jrPhysics.lastSensorRx=performance.now();
+     }
+   }
+   if(m.speed!=null){
+     const sp=Number(m.speed);
+     if(Number.isFinite(sp) && sp>=0 && sp<120) jrPhysics.lastSensorSpeed=sp;
+   }
+   renderPhysicsSettings();
+ };
+ const prevParseCyclingPowerMeasurement=parseCyclingPowerMeasurement;
+ parseCyclingPowerMeasurement=function(view){
+   prevParseCyclingPowerMeasurement(view);
+   const m=jrSensorDiag.metrics||{};
+   if(m.rpm!=null){
+     const rpm=Number(m.rpm);
+     if(Number.isFinite(rpm) && rpm>=0 && rpm<260){
+       jrPhysics.lastSensorRpm=rpm;
+       jrPhysics.lastSensorRx=performance.now();
+     }
+   }
+   renderPhysicsSettings();
+ };
+ const prevCurrentKmhRaw=currentKmhRaw;
+ currentKmhRaw=function(){
+   return currentKmhPhysicsAware(prevCurrentKmhRaw);
+ };
+ const prevRenderUI=renderUI;
+ renderUI=function(){
+   renderPhysicsSettings();
+   prevRenderUI();
+   renderPhysicsSettings();
+ };
+})();
+document.addEventListener('change',function(e){
+ if(e.target && e.target.id==='rideModelSelect'){setRideModelKey(e.target.value);return}
+ if(e.target && e.target.id==='rideInputModeSelect'){setRideInputMode(e.target.value);return}
+});
+document.addEventListener('click',function(e){
+ if(e.target.closest('#sensorRideChip')){
+   setRideInputMode(getRideInputMode()==='sensor'?'manual':'sensor');
+   return;
+ }
+});
+setInterval(function(){
+ try{
+   const now=performance.now();
+   const dt=Math.min(0.25,Math.max(0.016,(now-jrPhysics.lastT)/1000));
+   jrPhysics.lastT=now;
+   if(getRideInputMode()==='sensor'){
+     updateVirtualBikePhysics(dt);
+   }
+   renderPhysicsSettings();
+ }catch(e){}
+},250);
+setTimeout(renderPhysicsSettings,0);
 
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
