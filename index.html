@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Japan Ride D66-62 Clean Standard Ride Ranking</title>
+<title>Japan Ride D66-64 Idle Zero Auto Pedal Start</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&amp;family=M+PLUS+Rounded+1c:wght@500;700;800;900&amp;display=swap" rel="stylesheet"/>
@@ -3931,6 +3931,175 @@ html,body,.phone,button,input,textarea,select{
 @media(max-width:370px){
   .physics-row.clean{grid-template-columns:1fr}
 }
+
+
+/* D66-63: User Sensor Registration Settings
+   診断画面をユーザー向けのセンサー登録画面へ整理。
+   設定画面の下タブ表示と上部戻るボタン見切れも修正。
+*/
+#settingsPage{
+  align-items:flex-end!important;
+  padding:calc(env(safe-area-inset-top) + 14px) 12px calc(env(safe-area-inset-bottom) + 78px)!important;
+  z-index:9985!important;
+}
+#settingsPage .simple-sheet{
+  max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 108px)!important;
+  margin-top:0!important;
+  border-radius:24px!important;
+}
+#settingsPage .simple-head{
+  padding-top:16px!important;
+}
+#settingsPage .simple-head button{
+  top:14px!important;
+  right:14px!important;
+  width:48px!important;
+  height:48px!important;
+}
+#settingsPage .simple-body{
+  padding-bottom:18px!important;
+}
+.phone.settings-open .bottom-tabs,
+#settingsPage~.bottom-tabs{
+  display:grid!important;
+}
+.settings-clean{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.sensor-user-card,
+.clean-card{
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:22px;
+  padding:14px;
+  box-shadow:0 8px 22px rgba(15,23,42,.055), inset 0 1px 0 rgba(255,255,255,.92);
+}
+.sensor-user-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.sensor-user-head small{
+  display:block;
+  color:var(--jr-green,#168f61);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.08em;
+}
+.sensor-user-head strong{
+  display:block;
+  margin-top:3px;
+  color:var(--jr-ink,#111827);
+  font-size:21px;
+  line-height:1.08;
+  font-family:"M PLUS Rounded 1c",var(--jr-font,system-ui),sans-serif;
+  font-weight:800;
+  letter-spacing:-.04em;
+}
+.sensor-user-head p{
+  margin:7px 0 0;
+  color:var(--jr-text,#4b5563);
+  font-size:12px;
+  line-height:1.5;
+}
+.sensor-current{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
+}
+.sensor-current>div,
+.sensor-mini-metrics>div{
+  background:#f7f9fc;
+  border:1px solid rgba(17,24,39,.055);
+  border-radius:16px;
+  padding:9px 10px;
+}
+.sensor-current small,
+.sensor-mini-metrics small{
+  display:block;
+  color:#6b7280;
+  font-size:10px;
+  font-weight:650;
+  margin-bottom:4px;
+}
+.sensor-current b,
+.sensor-mini-metrics b{
+  display:block;
+  color:#111827;
+  font-size:13px;
+  font-weight:760;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.sensor-actions.user{
+  grid-template-columns:1.15fr .85fr .75fr;
+  margin-top:10px;
+}
+.sensor-forget-btn{
+  width:100%;
+  border:0;
+  background:#fff1f2;
+  color:#be123c;
+  border-radius:15px;
+  min-height:40px;
+  margin-top:8px;
+  font-family:var(--jr-font,system-ui);
+  font-size:12px;
+  font-weight:700;
+}
+.sensor-mini-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.dev-diagnostic{
+  background:#fff;
+  border:1px solid rgba(17,24,39,.06);
+  border-radius:18px;
+  padding:10px 12px;
+}
+.dev-diagnostic summary{
+  color:#6b7280;
+  font-size:12px;
+  font-weight:700;
+}
+.dev-diagnostic[open]{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.dev-clear{
+  width:100%;
+  min-height:42px;
+  border:0;
+  border-radius:14px;
+}
+@media(max-width:370px){
+  .sensor-actions.user{grid-template-columns:1fr}
+  .sensor-current{grid-template-columns:1fr}
+  .sensor-mini-metrics{grid-template-columns:1fr 1fr}
+}
+
+
+/* D66-64: Idle Zero + Auto Pedal Start
+   プロトタイプ初期値の st.rpm=58 / st.running=true による
+   「漕いでいないのに時速が出る」問題を修正。
+   起動時は必ず停止。センサーRPM受信で自動走行開始。
+*/
+.sensor-ride-chip.ready{
+  background:#e9f7ef!important;
+  color:#12895b!important;
+}
+.sensor-ride-chip.idle{
+  background:rgba(255,255,255,.94)!important;
+  color:#667085!important;
+}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&amp;display=swap" rel="stylesheet"/></head>
 <body>
@@ -4022,7 +4191,7 @@ html,body,.phone,button,input,textarea,select{
 <div class="simple-sheet">
 <div class="simple-head"><div><small>SETTINGS</small><strong>設定</strong></div><button class="simple-close" data-main-tab="ride">×</button></div>
 <div class="simple-body">
-<div class="sensor-diag">
+<div class="settings-clean">
 <div class="language-card">
 <div class="language-head">
 <div>
@@ -4044,7 +4213,38 @@ html,body,.phone,button,input,textarea,select{
 <option value="ko">한국어</option>
 </select>
 </div>
-<div class="physics-card">
+<div class="sensor-user-card">
+<div class="sensor-user-head">
+<div>
+<small>CADENCE SENSOR</small>
+<strong>ケイデンスセンサー</strong>
+<p>初回だけセンサーを登録します。次回以降はアプリ起動時に自動接続を試します。</p>
+</div>
+<div class="sensor-status-pill" id="sensorDiagStatus">未接続</div>
+</div>
+<div class="sensor-current">
+<div>
+<small>登録済みセンサー</small>
+<b id="sensorDeviceName">未登録</b>
+</div>
+<div>
+<small>状態</small>
+<b id="sensorDetectedType">未接続</b>
+</div>
+</div>
+<div class="sensor-actions user">
+<button class="sensor-primary" id="sensorConnectBtn">センサー登録</button>
+<button class="sensor-secondary" id="sensorAutoConnectBtn">再接続</button>
+<button class="sensor-secondary" id="sensorDisconnectBtn">切断</button>
+</div>
+<button class="sensor-forget-btn" id="sensorForgetBtn" type="button">登録を解除</button>
+<div class="sensor-mini-metrics">
+<div><small>RPM</small><b id="sensorRpm">—</b></div>
+<div><small>電池</small><b id="sensorBattery">—</b></div>
+<div><small>最終受信</small><b id="sensorLastRx">—</b></div>
+</div>
+</div>
+<div class="physics-card clean-card">
 <div class="physics-head">
 <div>
 <small>RIDE FEEL</small>
@@ -4067,54 +4267,20 @@ html,body,.phone,button,input,textarea,select{
 </div>
 <div class="physics-status" id="physicsStatusText">現在は手入力RPMで走行します。</div>
 </div>
-<div class="sensor-hero-card">
-<div>
-<small>SENSOR DIAGNOSTIC</small>
-<strong>ケイデンス診断</strong>
-<p>まずはセンサーがどんな形式でデータを出しているか確認します。走行速度にはまだ反映しません。</p>
-</div>
-<div class="sensor-status-pill" id="sensorDiagStatus">未接続</div>
-</div>
-<div class="sensor-actions">
-<button class="sensor-primary" id="sensorConnectBtn">センサー接続</button>
-<button class="sensor-secondary" id="sensorDisconnectBtn">切断</button>
-<button class="sensor-secondary" id="sensorClearLogBtn">ログ消去</button>
-</div>
-<div class="sensor-help-card">
-<strong>接続前にやること</strong>
-<p>電池を入れて、クランクを回すかセンサーを振って起こしてください。検索中も回している方が検出されやすいです。</p>
-</div>
-<div class="sensor-metrics">
-<div class="sensor-metric"><small>RPM</small><b id="sensorRpm">—</b><em>cadence</em></div>
-<div class="sensor-metric"><small>速度</small><b id="sensorSpeed">—</b><em>km/h</em></div>
-<div class="sensor-metric"><small>Power</small><b id="sensorPower">—</b><em>watt</em></div>
-<div class="sensor-metric"><small>HR</small><b id="sensorHr">—</b><em>bpm</em></div>
-<div class="sensor-metric"><small>電池</small><b id="sensorBattery">—</b><em>%</em></div>
-<div class="sensor-metric"><small>最終受信</small><b id="sensorLastRx">—</b><em>time</em></div>
-</div>
+<details class="dev-diagnostic">
+<summary>開発者向け診断</summary>
 <div class="sensor-card">
-<div class="sensor-card-head"><strong>接続デバイス</strong><span id="sensorDeviceName">—</span></div>
-<div class="sensor-table">
-<div><small>接続方式</small><b id="sensorTransport">Web Bluetooth / BLE</b></div>
-<div><small>読み取り形式</small><b id="sensorDetectedType">未判定</b></div>
-<div><small>Manufacturer</small><b id="sensorManufacturer">—</b></div>
-<div><small>Model</small><b id="sensorModel">—</b></div>
-</div>
-</div>
-<div class="sensor-card">
-<div class="sensor-card-head"><strong>検出サービス</strong><span>読み取れた規格だけ表示</span></div>
+<div class="sensor-card-head"><strong>検出サービス</strong><span>debug</span></div>
 <div class="sensor-service-list" id="sensorServiceList">
 <div class="sensor-empty-line">まだ接続していません。</div>
 </div>
 </div>
 <div class="sensor-card">
-<div class="sensor-card-head"><strong>受信ログ / Raw HEX</strong><span>最新20件</span></div>
+<div class="sensor-card-head"><strong>受信ログ / Raw HEX</strong><span>debug</span></div>
 <div class="sensor-log" id="sensorRawLog">ログなし</div>
 </div>
-<div class="sensor-note">
-<strong>設計メモ</strong>
-<p>標準CSCなら累計クランク回転数とイベント時刻の差分からRPMを計算します。スマートスピンバイクはFTMS Indoor Bike Data、パワーメーター系はCycling Powerも読む設計です。未知のデータは捨てずにHEXで表示します。</p>
-</div>
+<button class="sensor-secondary dev-clear" id="sensorClearLogBtn" type="button">ログ消去</button>
+</details>
 </div>
 </div>
 </div>
@@ -9580,6 +9746,305 @@ function calcOfficialRankingKmhFromRpm(rpm){
  }
 })();
 setTimeout(renderPhysicsSettings,0);
+
+
+/* D66-63 User Sensor Registration Settings
+   ケイデンス診断をユーザー向けセンサー登録へ整理。
+   初回はrequestDeviceで登録。次回以降はgetDevicesで許可済みデバイスへ自動再接続を試す。
+*/
+const JR_SENSOR_NAME_KEY='japanRide.sensorName.v1';
+const JR_SENSOR_ID_KEY='japanRide.sensorId.v1';
+let jrAutoConnectTried=false;
+function saveRegisteredSensor(device){
+ try{
+   if(device){
+     localStorage.setItem(JR_SENSOR_NAME_KEY,device.name||'名称なし');
+     if(device.id) localStorage.setItem(JR_SENSOR_ID_KEY,device.id);
+   }
+ }catch(e){}
+}
+function getRegisteredSensorName(){
+ try{return localStorage.getItem(JR_SENSOR_NAME_KEY)||''}catch(e){return ''}
+}
+function clearRegisteredSensor(){
+ try{
+   localStorage.removeItem(JR_SENSOR_NAME_KEY);
+   localStorage.removeItem(JR_SENSOR_ID_KEY);
+ }catch(e){}
+ disconnectSensorDiagnostic();
+ jrSensorDiag.device=null;
+ jrSensorDiag.metrics=Object.assign(jrSensorDiag.metrics||{},{rpm:null,speed:null,power:null,hr:null,battery:null,lastRx:null,type:'未接続'});
+ renderSensorDiagUI();
+ renderUserSensorSettings();
+}
+async function autoConnectRegisteredSensor(){
+ if(!navigator.bluetooth || !navigator.bluetooth.getDevices){
+   jrPushSensorLog('SYSTEM','getDevices unsupported. 手動登録が必要です。');
+   renderUserSensorSettings();
+   return false;
+ }
+ try{
+   const devices=await navigator.bluetooth.getDevices();
+   const savedName=getRegisteredSensorName();
+   let target=null;
+   if(devices && devices.length){
+     target=devices.find(d=>savedName && d.name===savedName) || devices[0];
+   }
+   if(!target){
+     jrPushSensorLog('SYSTEM','登録済みセンサーなし');
+     renderUserSensorSettings();
+     return false;
+   }
+   jrSensorDiag.device=target;
+   target.addEventListener('gattserverdisconnected',onSensorDisconnected);
+   jrPushSensorLog('SYSTEM','auto reconnect '+(target.name||'名称なし'));
+   const server=await target.gatt.connect();
+   jrSensorDiag.server=server;
+   jrSensorDiag.connected=true;
+   jrSensorDiag.services=[];
+   jrSensorDiag.chars=[];
+   await jrStartSensorServices(server);
+   saveRegisteredSensor(target);
+   renderUserSensorSettings();
+   return true;
+ }catch(err){
+   jrPushSensorLog('ERROR','auto reconnect failed: '+(err&&err.message?err.message:String(err)));
+   renderUserSensorSettings();
+   return false;
+ }
+}
+async function jrStartSensorServices(server){
+ const defs=[
+   {kind:'CSC / ケイデンス標準', service:JR_BLE_UUID.cscService, notifies:[{name:'CSC Measurement',uuid:JR_BLE_UUID.cscMeasurement}]},
+   {kind:'FTMS / スマートバイク標準', service:JR_BLE_UUID.ftmsService, notifies:[{name:'Indoor Bike Data',uuid:JR_BLE_UUID.indoorBikeData}]},
+   {kind:'Cycling Power', service:JR_BLE_UUID.cyclingPowerService, notifies:[{name:'Power Measurement',uuid:JR_BLE_UUID.cyclingPowerMeasurement}]},
+   {kind:'Battery', service:JR_BLE_UUID.batteryService, reads:[{name:'Battery Level',uuid:JR_BLE_UUID.batteryLevel,type:'uint8',field:'battery'}]},
+   {kind:'Device Information', service:JR_BLE_UUID.deviceInfoService, reads:[
+     {name:'Manufacturer',uuid:JR_BLE_UUID.manufacturerName,type:'utf8',field:'manufacturer'},
+     {name:'Model',uuid:JR_BLE_UUID.modelNumber,type:'utf8',field:'model'}
+   ]}
+ ];
+ for(const d of defs) await jrTryService(server,d);
+ jrPushSensorLog('SYSTEM','ready. 漕ぎ出してください。');
+ renderSensorDiagUI();
+}
+(function(){
+ const prevConnectSensorDiagnostic=connectSensorDiagnostic;
+ connectSensorDiagnostic=async function(){
+   await prevConnectSensorDiagnostic();
+   if(jrSensorDiag.device) saveRegisteredSensor(jrSensorDiag.device);
+   renderUserSensorSettings();
+ };
+ const prevRenderSensorDiagUI=renderSensorDiagUI;
+ renderSensorDiagUI=function(){
+   prevRenderSensorDiagUI();
+   renderUserSensorSettings();
+ };
+ const prevSetTabTo=setTabTo;
+ setTabTo=function(tab){
+   prevSetTabTo(tab);
+   const phone=document.querySelector('.phone');
+   if(phone) phone.classList.toggle('settings-open',tab==='settings');
+   if(tab==='settings'){
+     renderUserSensorSettings();
+     if(!jrAutoConnectTried){
+       jrAutoConnectTried=true;
+       setTimeout(()=>autoConnectRegisteredSensor(),350);
+     }
+   }
+ };
+})();
+function renderUserSensorSettings(){
+ const connected=!!(jrSensorDiag.device && jrSensorDiag.device.gatt && jrSensorDiag.device.gatt.connected);
+ const saved=getRegisteredSensorName();
+ const name=jrSensorDiag.device?(jrSensorDiag.device.name||'名称なし'):(saved||'未登録');
+ jrSetText('sensorDeviceName',name);
+ jrSetText('sensorDetectedType',connected?(jrSensorDiag.metrics.type||'接続中'):(saved?'登録済み / 未接続':'未接続'));
+ const status=$('sensorDiagStatus');
+ if(status){
+   status.textContent=connected?'接続中':(saved?'登録済み':'未接続');
+   status.classList.toggle('connected',connected);
+   status.classList.toggle('error',false);
+ }
+ const btn=$('sensorConnectBtn');
+ if(btn) btn.textContent=saved?'センサー再登録':'センサー登録';
+}
+document.addEventListener('click',function(e){
+ if(e.target.closest('#sensorAutoConnectBtn')){autoConnectRegisteredSensor();return}
+ if(e.target.closest('#sensorForgetBtn')){clearRegisteredSensor();return}
+});
+setTimeout(()=>{try{autoConnectRegisteredSensor()}catch(e){}},900);
+
+
+/* D66-64 Idle Zero + Auto Pedal Start
+   起動時のゴースト速度を禁止。
+   - st.rpm=58 / st.running=true のプロトタイプ初期走行を無効化
+   - センサー登録済みなら入力モードをセンサーRPMに寄せる
+   - センサーRPMを受信したら自動走行開始
+   - 漕いでいない状態では速度0
+*/
+const JR_AUTO_START_RPM=5;
+const JR_IDLE_STOP_SEC=8;
+
+function jrForceIdleAtStartup(){
+ try{
+   st.running=false;
+   st.rpm=0;
+   if(jrPhysics){
+     jrPhysics.v=0;
+     jrPhysics.lastSensorRpm=null;
+     jrPhysics.lastSensorRx=0;
+     jrPhysics.lastT=performance.now();
+   }
+   st.lastSmoothFrameAt=performance.now();
+ }catch(e){}
+}
+
+function jrIsFreshPedaling(){
+ try{
+   return getRideInputMode()==='sensor' && getSensorAgeSec()<=2.8 && getFreshSensorRpm()>=JR_AUTO_START_RPM;
+ }catch(e){
+   return false;
+ }
+}
+
+function jrStartRideFromPedalIfNeeded(){
+ if(!jrIsFreshPedaling()) return false;
+ const phone=document.querySelector('.phone');
+ if(st.activeRouteId){
+   if(st.myRouteRideState==='ready' || st.myRouteRideState==='paused'){
+     st.myRouteRideState='riding';
+     st.running=true;
+     if(phone){
+       phone.classList.remove('my-route-ready','my-route-paused','my-route-complete');
+       phone.classList.add('my-route-riding');
+     }
+     updateSmoothRouteMapPosition?.(true);
+     renderUI();
+     return true;
+   }
+   if(st.myRouteRideState==='riding'){
+     st.running=true;
+     return true;
+   }
+   return false;
+ }
+ st.running=true;
+ renderUI();
+ return true;
+}
+
+function jrStopRideWhenFullyIdle(){
+ if(getRideInputMode()!=='sensor') return;
+ const rpm=getFreshSensorRpm();
+ const v=Number(jrPhysics&&jrPhysics.v||0);
+ const age=getSensorAgeSec();
+ if(rpm>1 || v>0.18 || age<JR_IDLE_STOP_SEC) return;
+
+ if(st.activeRouteId && st.myRouteRideState==='riding'){
+   st.myRouteRideState='paused';
+   st.running=false;
+   const phone=document.querySelector('.phone');
+   if(phone){
+     phone.classList.remove('my-route-riding');
+     phone.classList.add('my-route-paused');
+   }
+ }else if(!st.activeRouteId){
+   st.running=false;
+ }
+ st.rpm=0;
+ if(jrPhysics) jrPhysics.v=0;
+ renderUI();
+}
+
+(function(){
+ jrForceIdleAtStartup();
+
+ const prevCurrentKmhRawD6664=currentKmhRaw;
+ currentKmhRaw=function(){
+   if(getRideInputMode()==='sensor'){
+     const rpm=getFreshSensorRpm();
+     const v=Number(jrPhysics&&jrPhysics.v||0);
+     if(rpm<1 && v<0.18) return 0;
+   }
+   if(!st.running && !isActiveRouteMoving() && !isNormalMoving()) return 0;
+   return prevCurrentKmhRawD6664();
+ };
+
+ const prevUpdateRunButtonD6664=updateRunButton;
+ updateRunButton=function(){
+   prevUpdateRunButtonD6664();
+   const btn=$('runBtnTop');
+   if(btn && !st.activeRouteId && !st.running){
+     btn.textContent='スタート';
+     btn.classList.remove('resume','pause','stop');
+     btn.classList.add('start');
+   }
+ };
+
+ const prevRenderPhysicsSettingsD6664=renderPhysicsSettings;
+ renderPhysicsSettings=function(){
+   prevRenderPhysicsSettingsD6664();
+   const chip=$('sensorRideChip');
+   if(chip && getRideInputMode()==='sensor'){
+     const rpm=getFreshSensorRpm();
+     const age=getSensorAgeSec();
+     chip.classList.toggle('ready',rpm>=JR_AUTO_START_RPM);
+     chip.classList.toggle('idle',rpm<1 && age<=2.8);
+     if(rpm>=JR_AUTO_START_RPM) chip.textContent='センサー入力 '+Math.round(rpm)+'rpm';
+     else if(age<=2.8) chip.textContent='センサー待機 0rpm';
+     else chip.textContent='センサー待機';
+   }
+ };
+
+ const prevConnectSensorDiagnosticD6664=connectSensorDiagnostic;
+ connectSensorDiagnostic=async function(){
+   await prevConnectSensorDiagnosticD6664();
+   if(jrSensorDiag.device){
+     setRideInputMode('sensor');
+     saveRegisteredSensor?.(jrSensorDiag.device);
+   }
+   jrForceIdleAtStartup();
+   renderUI();
+   renderPhysicsSettings();
+ };
+
+ const prevAutoConnectRegisteredSensorD6664=typeof autoConnectRegisteredSensor==='function'?autoConnectRegisteredSensor:null;
+ if(prevAutoConnectRegisteredSensorD6664){
+   autoConnectRegisteredSensor=async function(){
+     const ok=await prevAutoConnectRegisteredSensorD6664();
+     if(ok){
+       setRideInputMode('sensor');
+       jrForceIdleAtStartup();
+       renderUI();
+       renderPhysicsSettings();
+     }
+     return ok;
+   };
+ }
+
+ // 登録済みセンサーがあるなら、次回起動時はセンサー入力を基本にする。
+ try{
+   if(typeof getRegisteredSensorName==='function' && getRegisteredSensorName()){
+     setRideInputMode('sensor');
+   }
+ }catch(e){}
+
+ setInterval(function(){
+   try{
+     if(getRideInputMode()==='sensor'){
+       jrStartRideFromPedalIfNeeded();
+       jrStopRideWhenFullyIdle();
+     }
+   }catch(e){}
+ },250);
+
+ setTimeout(function(){
+   jrForceIdleAtStartup();
+   renderUI();
+   renderPhysicsSettings();
+ },0);
+})();
 
 document.addEventListener('click',e=>{
  if(e.target.closest('#saveRideLogBtn')){finishActiveRide(true);return}
